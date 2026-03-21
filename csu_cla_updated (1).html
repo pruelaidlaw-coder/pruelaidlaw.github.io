@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Assurance by Design: Course-Level Assessment &mdash; Charles Sturt University</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;color:#000;background:#f7f4f0;min-height:100vh}
+.wrap{max-width:900px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:26px;font-weight:500;color:#2e2e2e;line-height:1.2}
+.kicker{font-size:11px;font-weight:500;color:#999;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:3px}
+.header-inner{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.orange-bar{width:3px;height:44px;background:#f0572a;border-radius:2px;flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:8px;margin-bottom:1rem;justify-content:flex-end}
+.print-btn{font-size:12px;padding:6px 14px;border-radius:4px;border:1.5px solid rgba(34,34,34,0.15);background:#fff;cursor:pointer;color:#2e2e2e;font-family:Arial,sans-serif;display:flex;align-items:center;gap:6px}
+.print-btn:hover{background:#f7f4f0}
+.nav{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:0.5rem}
+.nav-btn{display:flex;align-items:center;gap:8px;font-size:13px;padding:7px 14px;border-radius:4px;border:1.5px solid rgba(34,34,34,0.1);background:#fff;cursor:pointer;color:#2e2e2e;font-weight:400;font-family:Arial,sans-serif;transition:all 0.15s}
+.nav-btn.active{background:#f0572a;border-color:#f0572a;color:#fff;font-weight:500}
+.nav-num{font-size:10px;font-weight:700;letter-spacing:0.04em;opacity:0.4}
+.nav-btn.active .nav-num{opacity:0.8}
+.progress-bar{height:3px;background:rgba(34,34,34,0.08);border-radius:2px;margin-bottom:0.75rem;overflow:hidden}
+.progress-fill{height:100%;background:#f0572a;border-radius:2px;transition:width 0.3s}
+.nav-next{font-size:13px;color:#555;margin-bottom:1.75rem;padding:0.75rem 1rem;background:#fff;border-radius:6px;border:1px solid rgba(34,34,34,0.1);display:flex;align-items:center;justify-content:space-between}
+.nav-next-label{font-weight:500;color:#2e2e2e}
+.nav-next a{color:#f0572a;font-weight:500;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:4px}
+.section{display:none}.section.active{display:block}
+.panel{background:#7a6455;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.panel-label{font-size:11px;font-weight:500;color:#ffd4c2;letter-spacing:0.05em;margin-bottom:5px}
+.panel p{font-size:14px;color:rgba(255,255,255,0.92);line-height:1.7;margin:0}
+.panel strong{color:#ffd4c2;font-weight:500}
+.panel-dark{background:#7a6455;border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}
+.panel-dark .panel-label{font-size:11px;font-weight:500;color:#ffd4c2;letter-spacing:0.06em;margin-bottom:8px}
+.panel-dark .lead{font-size:16px;color:rgba(255,255,255,0.95);line-height:1.75;margin:0 0 12px;font-weight:500}
+.panel-dark p{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;margin:0}
+.panel-dark p.italic{font-style:italic;color:rgba(255,255,255,0.9);margin-top:10px}
+.role-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;padding:0.875rem 1rem;background:#fff;border-radius:8px;border:1px solid rgba(34,34,34,0.1)}
+.role-label{font-size:12px;color:#777;font-weight:500;margin-right:4px;align-self:center;white-space:nowrap}
+.role-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1.5px solid rgba(34,34,34,0.12);background:#f7f4f0;cursor:pointer;color:#555;font-family:Arial,sans-serif;font-weight:400;transition:all 0.15s;white-space:nowrap}
+.role-btn.active{background:#f0572a;border-color:#f0572a;color:#fff;font-weight:500}
+.blind-spot{background:#f7f4f0;border-radius:8px;padding:1.25rem;margin-bottom:1.5rem;border:1px solid rgba(34,34,34,0.1)}
+.blind-spot-label{font-size:12px;font-weight:500;color:#f0572a;letter-spacing:0.04em;margin-bottom:12px}
+.blind-spot-row{display:grid;grid-template-columns:1fr 40px 1fr 40px 80px;gap:4px;align-items:center;margin-bottom:8px}
+.bs-cell{border-radius:6px;padding:0.75rem;text-align:center}
+.bs-arrow{text-align:center;font-size:18px;color:rgba(34,34,34,0.2)}
+.bs-warn{background:#ffd700;border-radius:6px;padding:0.75rem;text-align:center;border:2px solid #e6b800}
+.bs-year3{background:#1e2d45;border-radius:6px;padding:0.75rem;display:flex;align-items:center;gap:12px}
+.too-late{background:#f0572a;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;flex-shrink:0}
+.gap-label{font-size:13px;font-weight:500;color:#2e2e2e;margin-bottom:10px}
+.gap-item{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:0.875rem 1rem;margin-bottom:6px;cursor:pointer;transition:border-color 0.15s}
+.gap-item.open{border-color:#f0572a}
+.gap-item.hidden{display:none}
+.gap-inner{display:flex;gap:12px;align-items:flex-start}
+.gap-icon{min-width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.gap-title{font-size:14px;font-weight:500;color:#2e2e2e;margin-bottom:4px;line-height:1.35}
+.gap-body{font-size:13px;color:#000;line-height:1.65}
+.gap-detail{font-size:13px;color:#444;line-height:1.7;margin-top:8px;padding-top:8px;border-top:1px solid rgba(34,34,34,0.1);display:none}
+.gap-item.open .gap-detail{display:block}
+.gap-toggle{font-size:14px;color:#bbb;flex-shrink:0}
+.gap-item.open .gap-toggle{color:#f0572a}
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1.5rem}
+.arch-card{border-radius:8px;border:1.5px solid;overflow:hidden}
+.arch-head{padding:0.75rem 1rem;border-bottom-width:1px;border-bottom-style:solid}
+.arch-body{background:#fff;padding:0.75rem 1rem}
+.arch-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px}
+.arch-dot{min-width:5px;height:5px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.arch-item-text{font-size:12px;color:#000;line-height:1.5}
+.arch-foot{padding:0.5rem 1rem}
+.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid rgba(34,34,34,0.1)}
+.stat-cell{padding:1rem 0.75rem;text-align:center}
+.stat-val{font-size:22px;font-weight:700;line-height:1}
+.stat-lbl{font-size:11px;margin-top:4px;line-height:1.4}
+.sand-box{background:#f7f4f0;border-radius:8px;padding:1.25rem;margin-bottom:1.5rem;border:1px solid rgba(34,34,34,0.1)}
+.sand-box-label{font-size:12px;font-weight:500;color:#f0572a;letter-spacing:0.04em;margin-bottom:12px}
+.continuum-row{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr;gap:4px;align-items:center}
+.cont-cell{border-radius:6px;padding:0.75rem;text-align:center}
+.cont-arrow{text-align:center;font-size:20px;color:#ccc}
+.cont-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.cont-sub{font-size:11px;line-height:1.4}
+.thresh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.thresh-cell{border-radius:6px;padding:0.75rem;text-align:center}
+.thresh-name{font-size:13px;font-weight:500;margin-bottom:3px}
+.thresh-year{font-size:11px;opacity:0.75}
+.cap-row{background:#fff;border-radius:6px;padding:0.875rem 1rem;border:1px solid rgba(34,34,34,0.1);display:flex;gap:12px;align-items:flex-start;margin-bottom:6px}
+.cap-num{font-size:10px;font-weight:700;color:#f0572a;letter-spacing:0.04em}
+.cap-title{font-size:12px;font-weight:500;color:#2e2e2e;margin-top:2px;line-height:1.3}
+.cap-text{font-size:12px;color:#444;line-height:1.6}
+.concept-label{font-size:13px;font-weight:500;color:#2e2e2e;margin-bottom:10px}
+.concepts{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:0.875rem}
+.concept{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:1rem 1.125rem;cursor:pointer;transition:border-color 0.15s}
+.concept.open{border-color:#f0572a}
+.concept-tag{display:inline-block;font-size:11px;font-weight:500;padding:2px 9px;border-radius:4px;margin-bottom:8px}
+.concept-title{font-size:14px;font-weight:500;color:#2e2e2e;margin-bottom:6px;line-height:1.35}
+.concept-body{font-size:13px;color:#000;line-height:1.65}
+.concept-detail{font-size:13px;color:#444;line-height:1.7;margin-top:10px;padding-top:10px;border-top:1px solid rgba(34,34,34,0.1);display:none}
+.concept.open .concept-detail{display:block}
+.concept-toggle{margin-top:8px;font-size:12px;color:#f0572a;font-weight:500}
+.trade-off-box{background:#f7f4f0;border:1px solid rgba(34,34,34,0.1);border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem}
+.trade-off-label{font-size:11px;font-weight:500;color:#f0572a;letter-spacing:0.05em;margin-bottom:6px}
+.trade-off-box p{font-size:14px;color:#000;line-height:1.7;margin:0}
+.view-btns{display:flex;gap:4px;margin-bottom:1.25rem}
+.view-btn{font-size:13px;padding:7px 16px;border-radius:4px;border:1.5px solid rgba(34,34,34,0.1);background:#fff;cursor:pointer;color:#2e2e2e;font-weight:400;font-family:Arial,sans-serif;transition:all 0.15s}
+.view-btn.active{background:#f0572a;border-color:#f0572a;color:#fff;font-weight:500}
+.view-content{display:none}.view-content.active{display:block}
+.diag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+.diag-card{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;overflow:hidden}
+.diag-header{padding:0.75rem 1rem}
+.diag-tag{font-size:11px;font-weight:500;letter-spacing:0.04em;margin-bottom:2px}
+.diag-title{font-size:14px;font-weight:500;color:#fff}
+.diag-body{padding:0.75rem}
+.diag-legend{display:flex;gap:12px;flex-wrap:wrap;padding:0 0.875rem 0.875rem;font-size:11px;color:#555}
+.diag-legend-item{display:flex;align-items:center;gap:5px}
+.diag-legend-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.diag-desc{padding:0 0.875rem 0.875rem;font-size:12px;color:#555;line-height:1.5}
+.sand-note{background:#f7f4f0;border-radius:8px;padding:0.75rem 1rem;font-size:12px;color:#555;line-height:1.5}
+.opt-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1.25rem}
+.opt-card{border-radius:8px;padding:1rem 1.125rem}
+.opt-tag{font-size:11px;font-weight:500;margin-bottom:4px;letter-spacing:0.04em}
+.opt-title{font-size:14px;font-weight:500;color:#2e2e2e;margin-bottom:8px;line-height:1.35}
+.opt-what{font-size:13px;color:#000;line-height:1.65;margin-bottom:10px}
+.opt-keys{border-top:1px solid rgba(0,0,0,0.08);padding-top:8px}
+.opt-key{display:flex;gap:8px;align-items:flex-start;margin-bottom:5px}
+.opt-dot{min-width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.opt-key-text{font-size:12px;color:#000;line-height:1.5}
+.filter-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-btn{font-size:12px;padding:4px 12px;border-radius:4px;border:1.5px solid rgba(34,34,34,0.1);background:#fff;cursor:pointer;color:#555;font-family:Arial,sans-serif;font-weight:400}
+.filter-btn.active{background:#fde8e2;border-color:#f0572a;color:#2e2e2e;font-weight:500}
+.table-wrap{overflow-x:auto;border-radius:8px;border:1px solid rgba(34,34,34,0.1)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:#f7f4f0}
+th{text-align:left;padding:10px 12px;font-weight:500;border-bottom:1px solid rgba(34,34,34,0.1);font-size:12px}
+td{padding:9px 12px;border-bottom:1px solid rgba(34,34,34,0.1);vertical-align:top;line-height:1.6;color:#000}
+tr:nth-child(even) td{background:#f7f4f0}
+.td-feat{color:#2e2e2e;font-weight:500;font-size:12px;line-height:1.45}
+.td-cat{font-weight:400;font-size:11px;color:#999;margin-top:2px}
+.table-note{font-size:12px;color:#777;margin-top:0.75rem;line-height:1.5}
+.phase-strip{display:flex;gap:0;overflow-x:auto;padding-top:14px;margin-bottom:1.25rem}
+.phase-btn{flex:1;min-width:90px;padding:0.65rem 0.4rem;text-align:center;cursor:pointer;border-radius:6px;border:2px solid rgba(34,34,34,0.1);background:#f7f4f0;transition:all 0.15s;position:relative}
+.phase-btn.current{background:#fde8e2;border-color:#f0572a}
+.phase-btn.future-phase{opacity:0.6}
+.phase-connector{width:10px;height:2px;background:rgba(34,34,34,0.1);flex-shrink:0;align-self:center}
+.phase-connector.pilot-zone{background:#c0306a;opacity:0.4}
+.now-pill{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#f0572a;color:#fff;font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;letter-spacing:0.05em;border:2px solid #f7f4f0}
+.phase-num{font-size:11px;font-weight:500}
+.phase-year{font-size:11px;font-weight:500;margin-top:2px;line-height:1.3}
+.pilot-banner{background:#fce8f0;border:1px solid #c0306a;border-radius:6px;padding:6px 12px;font-size:11px;color:#c0306a;font-weight:500;text-align:center;margin-bottom:8px}
+.phase-detail{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:1.25rem;margin-bottom:1rem}
+.phase-detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;gap:12px}
+.phase-circle{min-width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;flex-shrink:0;border-width:2px;border-style:solid}
+.phase-detail-title{font-size:16px;font-weight:500;color:#2e2e2e;margin-bottom:2px}
+.phase-detail-year{font-size:13px;color:#777}
+.status-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.actions-label{font-size:11px;font-weight:500;color:#999;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em}
+.action-item{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start}
+.action-dot{min-width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.action-text{font-size:13px;color:#000;line-height:1.65}
+.outcome-box{border-radius:6px;padding:0.75rem 1rem;border-left-width:3px;border-left-style:solid}
+.outcome-label{font-size:11px;font-weight:500;margin-bottom:3px;text-transform:uppercase;letter-spacing:0.04em}
+.outcome-text{font-size:13px;color:#2e2e2e;line-height:1.6}
+.enablers-wrap{background:#f7f4f0;border-radius:8px;padding:1rem 1.125rem;margin-top:0.5rem}
+.enablers-title{font-size:12px;font-weight:500;color:#2e2e2e;margin-bottom:10px}
+.enablers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px}
+.enabler{font-size:12px;padding:7px 10px;background:#fff;border-radius:5px;border:1.5px solid rgba(34,34,34,0.1);line-height:1.5;cursor:pointer;transition:border-color 0.15s}
+.enabler.open{border-color:#f0572a;background:#fde8e2}
+.enabler-header{display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.enabler-label{font-weight:500;color:#2e2e2e}
+.enabler.open .enabler-label{color:#3d2b1f}
+.enabler-arrow{color:#bbb;flex-shrink:0;font-size:11px}
+.enabler.open .enabler-arrow{color:#f0572a}
+.enabler-detail{font-size:12px;color:#000;line-height:1.6;margin-top:7px;padding-top:7px;border-top:1px solid rgba(240,87,42,0.15);display:none;font-weight:400}
+.enabler.open .enabler-detail{display:block}
+.faq-item{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;margin-bottom:6px;overflow:hidden;transition:border-color 0.15s}
+.faq-item.open{border-color:#f0572a}
+.faq-header{padding:0.875rem 1rem;cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.faq-summary{font-size:12px;color:#f0572a;font-weight:500;margin-top:3px;line-height:1.4}
+.faq-q{font-size:14px;font-weight:500;color:#2e2e2e;line-height:1.35;flex:1}
+.faq-toggle{font-size:14px;color:#bbb;flex-shrink:0;margin-top:2px}
+.faq-item.open .faq-toggle{color:#f0572a}
+.faq-detail{font-size:13px;color:#000;line-height:1.7;padding:0 1rem 0.875rem;display:none}
+.faq-item.open .faq-detail{display:block}
+.search-wrap{position:relative;margin-bottom:1.25rem}
+.search-input{width:100%;font-size:13px;padding:9px 13px 9px 36px;border-radius:6px;border:1.5px solid rgba(34,34,34,0.1);background:#fff;color:#000;font-family:Arial,sans-serif;outline:none}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none}
+.gloss-tabs{display:flex;gap:4px;margin-bottom:1rem}
+.gloss-tab{font-size:12px;padding:5px 14px;border-radius:4px;border:1.5px solid rgba(34,34,34,0.1);background:#fff;cursor:pointer;color:#555;font-family:Arial,sans-serif;font-weight:400}
+.gloss-tab.active{background:#f0572a;border-color:#f0572a;color:#fff;font-weight:500}
+.gloss-list{display:flex;flex-direction:column;gap:2px}
+.gloss-item{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:7px;padding:0.75rem 1rem;cursor:pointer;transition:all 0.12s}
+.gloss-item.open{background:#fde8e2;border-color:#f0572a}
+.gloss-item-header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.gloss-term{font-size:14px;font-weight:500;color:#2e2e2e;line-height:1.3}
+.gloss-item.open .gloss-term{color:#3d2b1f}
+.gloss-arrow{font-size:14px;color:#bbb;flex-shrink:0}
+.gloss-item.open .gloss-arrow{color:#f0572a}
+.gloss-def{font-size:13px;color:#000;line-height:1.7;margin-top:8px;padding-top:8px;border-top:1px solid rgba(240,87,42,0.15);display:none}
+.gloss-item.open .gloss-def{display:block}
+.gloss-count{font-size:11px;color:#999;margin-top:0.875rem}
+.no-results{font-size:13px;color:#999;padding:1rem 0}
+.diag-card{cursor:pointer;transition:box-shadow 0.15s,transform 0.15s}
+.diag-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.12);transform:translateY(-2px)}
+.diag-card-hint{text-align:center;font-size:11px;color:#999;padding:4px 0 6px;letter-spacing:0.03em}
+.diag-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;padding:1rem}
+.diag-modal-overlay.open{display:flex}
+.diag-modal{background:#f7f4f0;border-radius:10px;max-width:1100px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.diag-modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(34,34,34,0.1);position:sticky;top:0;background:#f7f4f0;z-index:1}
+.diag-modal-title{font-size:15px;font-weight:500;color:#2e2e2e}
+.diag-modal-close{font-size:20px;color:#999;cursor:pointer;border:none;background:none;padding:0 4px;line-height:1}
+.diag-modal-close:hover{color:#2e2e2e}
+.diag-modal-body{display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:1.25rem}
+.diag-modal-card{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;overflow:hidden}
+@media(max-width:700px){.diag-modal-body{grid-template-columns:1fr}}
+@media print{
+  .nav,.progress-bar,.nav-next,.print-btn,.header-actions,.role-filter{display:none!important}
+  .section{display:block!important}
+  body{background:#fff}
+  .wrap{max-width:100%;padding:1rem}
+  .phase-strip{overflow:visible}
+}
+@media(max-width:600px){
+  .stat-bar{grid-template-columns:repeat(2,1fr)}
+  .opt-summary-grid{grid-template-columns:1fr}
+  .diag-grid{grid-template-columns:1fr}
+  .arch-grid{grid-template-columns:1fr}
+  .blind-spot-row{grid-template-columns:1fr 24px 1fr 24px 60px}
+  .continuum-row{grid-template-columns:1fr 24px 1fr 24px 1fr}
+  .thresh-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div style="margin-bottom:1.25rem">
+    <div class="header-inner">
+      <div class="orange-bar"></div>
+      <div style="flex:1">
+        <div class="kicker">Charles Sturt University &mdash; Division of Learning and Teaching</div>
+        <h1 style="font-size:30px;margin-bottom:4px">Assurance by design</h1>
+        <div style="font-size:16px;color:#777;font-weight:400;font-family:Arial,sans-serif">Course-level assessment at Charles Sturt University</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="print-btn" onclick="window.print()">&#128438; Print / Save as PDF</button>
+    </div>
+    <p style="font-size:14px;color:#555;line-height:1.75;max-width:680px;margin:0">From the case for change to the decision before us. This briefing walks through the institutional problem, the conceptual model, the two viable pathways and the trade-offs between them, the implementation roadmap, and answers to the questions leaders most commonly ask. Follow the tabs in order, or jump to what matters most.</p>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div id="nav-next" class="nav-next" style="display:none"></div>
+  <div id="section-case" class="section active"></div>
+  <div id="section-what" class="section"></div>
+  <div id="section-pathways" class="section"></div>
+  <div id="section-roadmap" class="section"></div>
+  <div id="section-faq" class="section"></div>
+  <div id="section-glossary" class="section"></div>
+  <div id="section-howmade" class="section"></div>
+</div>
+<script>
+var sections=["The case for change","What it is","The two pathways","The roadmap","FAQs & contact","Glossary","How this was made"];
+var sectionIds=["case","what","pathways","roadmap","faq","glossary","howmade"];
+var nextPreviews=["Next: what does course-level assessment actually mean at CSU?","Next: the two architectural options and the trade-offs between them.","Next: the 2026&ndash;2029 implementation roadmap.","Next: answers to the questions leaders most commonly ask.","Next: a searchable glossary of key terms.","Next: how this briefing was built.",""];
+
+function renderNav(activeIdx){
+  document.getElementById("nav").innerHTML=sections.map(function(s,i){return '<button class="nav-btn'+(i===activeIdx?" active":"")+'" onclick="showSection('+i+')"><span class="nav-num">0'+(i+1)+'</span>'+s+'</button>';}).join("");
+  var pct=Math.round(((activeIdx+1)/sections.length)*100);
+  document.getElementById("progress-fill").style.width=pct+"%";
+  var nextEl=document.getElementById("nav-next");
+  if(activeIdx<sections.length-1){
+    nextEl.style.display="flex";
+    nextEl.innerHTML='<span style="font-size:12px;color:#777">Section '+(activeIdx+1)+' of '+sections.length+'</span><a onclick="showSection('+(activeIdx+1)+')">'+nextPreviews[activeIdx]+'</a>';
+  } else {
+    nextEl.style.display="none";
+  }
+}
+
+function showSection(idx){
+  sectionIds.forEach(function(id,i){document.getElementById("section-"+id).classList.toggle("active",i===idx);});
+  renderNav(idx);
+  window.scrollTo(0,0);
+}
+
+// Role filter data
+var roleCards={
+  all:[0,1,2,3,4,5],
+  dvc:[0,1,2,3],
+  dean:[0,1,2,3,4],
+  aada:[1,2,3,4,5],
+  cd:[1,3,4,5]
+};
+var activeRole="all";
+
+var gaps=[
+  {title:"Credit accumulation is not capability confirmation",icon:"&ne;",iconBg:"#f0572a",roles:["all","dvc","dean","aada","cd"],body:"Subject completion confirms that a student has passed and accumulated credit. It does not confirm that they have developed the whole-of-course capabilities their degree is meant to assure. These are different things and currently only one is formally verified.",detail:"A student can pass every subject in Years 1 and 2 without the institution having formally confirmed whether their Course Learning Outcomes are developing as expected. Credit is awarded. Capability is assumed. The assumption is the gap."},
+  {title:"No structural verification before the capstone",icon:"!",iconBg:"#8a2e10",roles:["all","dvc","dean","aada"],body:"There is currently no structural mechanism to verify foundational and developing capability before a student reaches their final capstone. Assurance risk is deferred entirely to the end of the degree.",detail:"This is the assurance blind spot. If a student arrives at capstone without the expected developmental capability, the institution has no documented evidence of earlier gaps and no earlier opportunity to intervene. The capstone becomes both the test and the first warning."},
+  {title:"Late-stage shock for students and compliance risk for CSU",icon:"&uarr;",iconBg:"#1a3a5c",roles:["all","dvc","dean","cd"],body:"When assurance is concentrated at the end of the degree, students encounter unexpected failure at the point where it is hardest to recover. For the institution, this creates both a student welfare risk and a regulatory defensibility problem.",detail:"TEQSA expects institutions to demonstrate coherent, longitudinal evidence of learning across the degree, not a single high-stakes confirmation at the end. A course-level approach distributes evidence across time, makes gaps visible earlier, and enables structured support before risk compounds."},
+  {title:"Generative AI has made the current model untenable",icon:"AI",iconBg:"#1a4a2e",roles:["all","dvc","dean","aada","cd"],body:"TEQSA has been explicit: reliable detection of unauthorised AI use is limited, and detection-based responses are insufficient. The credible response is coherent course-level assessment design with triangulated longitudinal evidence of independent capability.",detail:"Assessment models that depend heavily on single high-stakes artefacts are particularly vulnerable in an AI-mediated environment. A course-level model distributes evidence across supervised and non-supervised contexts, aligns expectations for AI use progressively, and grounds progression decisions in accumulated evidence rather than isolated tasks."},
+];
+
+var concepts=[
+  {title:"From isolated tasks to patterns of evidence",tag:"Core shift",tagBg:"#f0572a",tagText:"#fff",body:"Each assessment task becomes a data point contributing to a longitudinal picture of capability. Think of a single assessment like a single pixel: it tells you something, but not much. Many data points across time, contexts, and assessment types produce the full image. Formal confirmation decisions are based on triangulated evidence drawn across stages, not any single task.",detail:"This is internationally referred to as programmatic assessment. At CSU it is called course-level assessment to reflect local curriculum architecture. The shift is from episodic grading where each task stands alone, to longitudinal assurance, where capability is confirmed through patterns of evidence over time. High-stakes decisions require abundant data, just as a clearer image requires more pixels."},
+  {title:"Four developmental thresholds",tag:"Progression",tagBg:"#1a3a5c",tagText:"#fff",body:"A shared language for capability development across the degree: Foundational, Developing, Integrated, and Mastered. These thresholds define what is expected at each stage and provide the evidentiary standard against which progression is confirmed.",detail:"Thresholds are defined at course level within the Course Assurance Plan and aligned with AQF requirements and professional accreditation standards where relevant. They are approved through established course governance and reviewed through Course Health Checks and Comprehensive Course Review cycles."},
+  {title:"The Course Assurance Plan",tag:"Key instrument",tagBg:"#1a4a2e",tagText:"#fff",body:"A whole-of-course blueprint: the digital master plan and evidentiary baseline for every degree. It identifies exactly where CLOs are introduced, developed, integrated, and formally confirmed across stages, and provides the objective repository of evidence for teaching teams and governance committees.",detail:"Like an assessment master plan for the whole course, the Course Assurance Plan maps each assessment moment to the overarching structure of Course Learning Outcomes and defines evidentiary thresholds at each stage boundary. It enables interrogation of whether learning outcomes are effectively addressed, whether redundancies exist, and whether high-stakes decisions are grounded in sufficient data points."},
+  {title:"What stays exactly the same",tag:"Important",tagBg:"#2e2e2e",tagText:"#fff",body:"Subject completion remains mandatory. Credit volume and course duration are unchanged. Assessment volume within subjects does not increase. GPA and award rules are unchanged. Academic judgement remains discipline-led. No new learning outcomes are added.",detail:"This reform clarifies how longitudinal evidence is interpreted at defined stage boundaries. It does not introduce additional learning requirements, replace subject-level assessment structures, or require students to repeat entire subjects where capability can be demonstrated through structured supplementary evidence."},
+  {title:"Equity and non-linear study",tag:"Student equity",tagBg:"#2d7a4f",tagText:"#fff",body:"Stage boundaries are triggered by academic level transition, not by calendar year or enrolment intensity. Part-time students, students with advanced standing, and those in non-linear patterns are all accommodated within the same framework.",detail:"In 2025, 48 per cent of CSU students studied part-time. The design intent is developmental: staged confirmation is structured to identify capability gaps earlier and enable targeted support, not to introduce additional barriers."},
+  {title:"Building on existing architecture",tag:"Continuity",tagBg:"#3d2b1f",tagText:"#fff",body:"This approach builds on CSU existing architecture rather than replacing it. It fully integrates with Curriculum Architecture Principles, leverages the Essential Set and Core Subjects, and builds directly on MEA, CDAP mapping, supervised assessment design, and capstone integration already in place.",detail:"Constructive alignment ensures that Subject Learning Outcomes, teaching activities, and assessments are aligned within each subject. Scaffolding describes how capability develops across the sequence of subjects. Course-level assessment sits above both of these. It does not design the learning, and it does not ask staff to redesign their subjects. Assessment generates evidence. Assurance confirms capability."},
+];
+
+var compareRows=[
+  {cat:"Structure",feature:"New subject layer",a:"Yes &mdash; zero-credit subjects at Year 1 and Year 2 boundaries",b:"No &mdash; existing subject architecture retained"},
+  {cat:"Structure",feature:"Progression checkpoint",a:"Enrolment-based &mdash; visible on student record as co-requisite",b:"Governance-based &mdash; confirmed through School Assessment Committee"},
+  {cat:"Structure",feature:"Structural complexity",a:"Higher &mdash; new subject coding, admin, enrolment processes",b:"Lower &mdash; operates within existing governance cycles"},
+  {cat:"Governance",feature:"Governance shift required",a:"Moderate &mdash; new process contained within zero-point structure",b:"Deeper &mdash; committees shift from ratifying marks to interpreting longitudinal evidence"},
+  {cat:"Governance",feature:"Policy change needed",a:"New subject category and progression clause",b:"Revision to progression clause only"},
+  {cat:"Governance",feature:"CDAP/dashboard dependency",a:"Moderate",b:"High &mdash; requires mature longitudinal evidence visibility"},
+  {cat:"Governance",feature:"Workload profile",a:"Concentrated at checkpoints; episodic but intensive",b:"Distributed across teams and governance cycles"},
+  {cat:"Student experience",feature:"Student clarity",a:"Very explicit &mdash; visible checkpoints in enrolment structure",b:"Less visible without strong dashboards and communication"},
+  {cat:"Student experience",feature:"Equity framing",a:"Clear remediation host; explicit second opportunity",b:"Requires strong procedural clarity to avoid perception of hidden gate"},
+  {cat:"Regulatory",feature:"Regulatory defensibility",a:"Highly visible capability confirmation record",b:"Equally defensible &mdash; relies on documented governance process"},
+  {cat:"Regulatory",feature:"Accreditation signalling",a:"Very explicit confirmation architecture",b:"Demonstrated through mapped longitudinal evidence"},
+  {cat:"Sustainability",feature:"Financial impact",a:"Higher setup cost; zero-credit subjects do not attract EFTSL",b:"Lower structural cost; higher governance maturity requirement"},
+  {cat:"Sustainability",feature:"Sector distinctiveness",a:"High",b:"Moderate"},
+  {cat:"Sustainability",feature:"Scalability",a:"Clear structural replication across courses",b:"Requires consistent committee capability across all schools"},
+];
+
+var filterCats=["All","Structure","Governance","Student experience","Regulatory","Sustainability"];
+var optionSummaries=[
+  {tag:"OPTION A",tagColor:"#1a3a5c",bg:"#e6f0f8",border:"#1a3a5c",title:"Zero-point progression subjects",what:"A zero-credit subject is introduced at the end of Year 1 and Year 2. It aggregates evidence from existing credit-bearing subjects and formally records whether developmental CLO thresholds have been met before the student progresses.",key:["Visible checkpoint on enrolment record","Explicit signalling to students, accreditors, and TEQSA","Clear remediation pathway if thresholds not met","Separates capability confirmation from credit award","Higher structural and administrative complexity"]},
+  {tag:"OPTION B",tagColor:"#1a4a2e",bg:"#e8f5ee",border:"#1a4a2e",title:"Embedded stage-based review",what:"No new subject layer is introduced. The School Assessment Committee existing grade ratification process is extended at defined stage boundaries to review longitudinal CLO evidence and confirm developmental attainment.",key:["Embedded within existing governance cycles","No new subject coding or enrolment admin","Relies on strong CDAP dashboard visibility","Requires deeper shift in committee practice","Lower structural cost; higher governance maturity required"]},
+];
+
+var phases=[
+  {num:1,year:"2026",title:"Policy and institutional endorsement",bg:"#e6f0f8",accent:"#1a3a5c",status:"current",zone:"foundation",outcome:"Approved policy framework enabling pilot implementation",actions:["Executive endorsement of course-level assessment architecture in principle","Academic Senate acknowledgement of staged CLO confirmation as a progression requirement","Amendment to Academic Progress Policy to incorporate developmental confirmation","Clarification within Assessment Policy that progression decisions may draw on triangulated longitudinal evidence","Confirmation of governance authority for structured supplementary demonstration"]},
+  {num:2,year:"2026-27",title:"Course design and governance preparation",bg:"#e8f5ee",accent:"#1a4a2e",status:"upcoming",zone:"foundation",outcome:"Approved Course Assurance Plans and stage-based governance processes for pilots",actions:["Review and refinement of CLOs for clarity of developmental staging","Produce Course Assurance Plans for each pilot course","Define developmental thresholds (Foundational, Developing, Integrated, Mastered)","Confirm governance workflows including committee authority and documentation requirements","Define sequencing rules for part-time, advanced standing, and cross-level enrolment"]},
+  {num:3,year:"2026-27",title:"Systems and evidence infrastructure",bg:"#fde8e2",accent:"#8a2e10",status:"upcoming",zone:"foundation",outcome:"Operational evidence aggregation and reporting capability",actions:["Standardised CLO tagging across all assessment tasks in CDAP","Align CDAP mapping and dashboards to display stage-based developmental evidence","Develop threshold monitoring logic to identify insufficient CLO evidence","Build progression trigger logic across all enrolment patterns","Establish documentation and audit trails supporting progression decisions"]},
+  {num:4,year:"2027-28",title:"Pilot implementation",bg:"#fce8f0",accent:"#c0306a",status:"future",zone:"pilot",outcome:"Interim pilot evaluation report to inform refinement",actions:["Implement stage confirmation in selected pilot courses","Monitor progression and retention patterns across enrolment intensities","Assess equity impact including part-time and first-in-family cohorts","Track frequency and nature of supplementary demonstrations required","Evaluate governance workload, efficiency, and student clarity"]},
+  {num:5,year:"2029",title:"Evaluation and scaling decision",bg:"#f5ede8",accent:"#3d2b1f",status:"future",zone:"pilot",outcome:"Executive and Academic Senate determine preferred scaling pathway",actions:["Comprehensive evaluation across all pilot courses","Assess academic standards and defensibility under HESF","Review progression, attrition, and delayed completion patterns","Evaluate workload sustainability and professional accreditation implications","Determine financial impact where zero-credit subjects are introduced"]},
+];
+
+var enablers=[
+  {label:"Clear policy linking progression to developmental attainment",detail:"Academic Progress Policy and Assessment Policy must be amended to formally recognise that progression decisions may draw on accumulated, triangulated longitudinal evidence, not only subject-level pass results."},
+  {label:"Explicit governance authority for course-level confirmation",detail:"School Assessment Committees and course teams need clearly defined authority and accountability for stage-based confirmation decisions. Ambiguity about who holds this authority is a key implementation risk."},
+  {label:"Maintained Course Assurance Plans as governance instruments",detail:"Each pilot course must develop and maintain a Course Assurance Plan. These plans are both design tools and governance references, identifying where CLOs are introduced, developed, integrated, and confirmed."},
+  {label:"Reliable longitudinal CLO evidence visibility in CDAP",detail:"Stage-based confirmation depends on accurate, consistent CLO tagging across all assessment tasks. Dashboard functionality must display evidence at defined stage boundaries before pilot implementation begins."},
+  {label:"Transparent and proportionate remediation pathways",detail:"Where students do not meet developmental thresholds, structured supplementary demonstration pathways must be clearly defined, equitably applied, and documented. Remediation is developmental in intent, not punitive."},
+  {label:"Recognised workload allocation for course-level stewardship",detail:"Course-level confirmation requires sustained academic effort. Course Assurance Plan development, committee review, and longitudinal evidence interpretation all carry workload that must be formally recognised and resourced."},
+];
+
+var faqs=[
+  {q:"What is the key decision facing the institution right now?",summary:"The direction is set. The question is which pathway to use.",a:"The strategic direction is set: CSU will formalise staged confirmation of Course Learning Outcomes across the degree. The decision now is architectural. Option A introduces zero-credit progression subjects at defined stage boundaries, visible on enrolment records. Option B embeds confirmation within existing School Assessment Committee ratification processes. Both achieve equivalent assurance outcomes. The question is where the complexity sits: in curriculum structure or in governance practice."},
+  {q:"What is the assurance blind spot?",summary:"There is currently no formal check on capability before the final capstone.",a:"Under the current framework, subject completion confirms credit accumulation but not developmental capability. There is no structural mechanism to verify that students are developing Course Learning Outcomes before they reach the final capstone. If capability gaps exist, they only become visible very late, often at capstone or close to graduation. Course-level assessment addresses this by making developmental capability visible at defined stage boundaries throughout the degree."},
+  {q:"What are the risks of Option A?",summary:"Higher structural and financial complexity; administrative overhead.",a:"Option A introduces additional structural complexity including new subject coding, enrolment logic, and administrative processes. Zero-credit subjects do not attract EFTSL, which has financial implications. There is also a risk that the additional layer is perceived as burdensome if not clearly differentiated from existing integrative mechanisms. The governance shift required is moderate, but the administrative overhead is higher than Option B."},
+  {q:"What are the risks of Option B?",summary:"Requires deeper cultural and governance maturity; relies heavily on dashboards.",a:"Option B requires a deeper cultural and governance shift. School Assessment Committees must move from ratifying individual marks to interpreting longitudinal evidence of developmental capability, a more demanding and unfamiliar role. The model relies heavily on CDAP dashboard maturity and consistent CLO tagging. Without strong evidence infrastructure and clear policy settings, the confirmation mechanism may lack visibility and defensibility."},
+  {q:"What happens if we do nothing?",summary:"The assurance blind spot remains and TEQSA exposure increases.",a:"The current model leaves an assurance blind spot that is increasingly difficult to defend. TEQSA has been clear that detection-based responses to generative AI are insufficient, and that institutions must strengthen course-level assessment design and longitudinal evidence of learning. Without formalised staged confirmation, CSU cannot demonstrate coherent, triangulated evidence of graduate capability across the degree, which creates both regulatory risk and student welfare risk from late-stage failure."},
+  {q:"How does this affect our TEQSA regulatory position?",summary:"Both options strengthen HESF defensibility under Domains 1, 3, and 5.",a:"Both options strengthen CSU regulatory defensibility under HESF 2021 Domains 1, 3, and 5. Option A provides a highly visible capability confirmation record that is explicit to TEQSA and accrediting bodies. Option B is equally defensible but relies more heavily on documented governance processes. Either way, formalising course-level confirmation responds directly to TEQSA guidance on managing generative AI risk through coherent assessment design and longitudinal evidence."},
+  {q:"How does this affect part-time students?",summary:"Stage boundaries are level-based, not calendar-based &mdash; designed to be equitable.",a:"The design explicitly accommodates part-time and non-linear study. Stage boundaries are triggered by academic level transition, not by calendar year or enrolment intensity. In 2025, 48% of CSU students studied part-time. The intent is developmental: to identify capability gaps earlier and enable targeted support, not to introduce additional barriers."},
+  {q:"What is a Course Assurance Plan and who maintains it?",summary:"A whole-of-course blueprint maintained by the course team and reviewed by School Assessment Committees.",a:"The Course Assurance Plan is the central blueprint for course-level assurance: a whole-of-course map identifying where Course Learning Outcomes are introduced, developed, integrated, and confirmed across stages. It is derived from approved CDAP mappings, maintained by the course team as part of curriculum stewardship, and reviewed by School Assessment Committees at defined stage boundaries."},
+  {q:"What is the financial implication of Option A?",summary:"Zero-credit subjects do not attract EFTSL &mdash; this carries an unrecovered cost.",a:"Zero-credit subjects under Option A do not attract EFTSL. This means the additional structural layer carries a cost that is not offset by Commonwealth funding. There are also setup costs associated with new subject coding, enrolment administration, and ongoing maintenance. Option B avoids these costs but requires investment in governance maturity, CDAP infrastructure, and committee capability instead."},
+  {q:"Does this mean staff will need to redesign their subjects?",summary:"No. This is an interpretive layer on top of existing teaching and assessment.",a:"No. Course-level assessment does not ask staff to redesign their subjects or their teaching. Constructive alignment within subjects and scaffolding across the course sequence continue unchanged. Course-level assessment interprets the evidence already generated across those learning experiences to confirm that Course Learning Outcomes have been achieved. Assessment generates evidence. Assurance confirms capability."},
+];
+
+var keyGlossTerms=["Assessment data point","Assurance blind spot","CLO (Course Learning Outcome)","Course Assurance Plan","Course-level assessment","Developmental thresholds","Triangulated evidence","Zero-point progression subject"];
+
+var glossaryTerms=[
+  {term:"Assessment data point",def:"A discrete piece of assessment evidence contributing to interpretation of a student developmental attainment. Think of a single data point like a single pixel in an image: it has limited utility on its own. High-stakes decisions require many data points, just as many pixels are needed to produce a clear image."},
+  {term:"Assurance architecture",def:"The institutional structures and governance processes through which a university formally confirms that students have achieved the capabilities their degree is meant to assure. Distinct from assessment architecture, which concerns how students are assessed."},
+  {term:"Assurance blind spot",def:"The gap in the current model where no structural mechanism exists to verify foundational and developing capability before a student reaches the final capstone. Assurance risk is deferred entirely to the end of the degree."},
+  {term:"Capstone confirmation",def:"The final integrative assessment point within a course at which students demonstrate Mastered-level attainment of Course Learning Outcomes through triangulated evidence."},
+  {term:"CDAP",def:"CSU Curriculum Design, Accreditation and Publication system, used to map subject-level assessment tasks to Course Learning Outcomes and maintain curriculum documentation."},
+  {term:"CLO (Course Learning Outcome)",def:"The defined knowledge, skills, and capabilities students are expected to demonstrate upon completion of a course, aligned with AQF requirements and professional accreditation standards where applicable."},
+  {term:"Course Assurance Plan",def:"A whole-of-course blueprint: the digital master plan and evidentiary baseline for every degree. It identifies exactly where CLOs are introduced, developed, integrated, and confirmed across stages. It maps each assessment moment to Course Learning Outcomes, defines evidentiary thresholds at stage boundaries, and enables interrogation of whether learning outcomes are effectively addressed and whether high-stakes decisions are grounded in sufficient data points."},
+  {term:"Course-level assessment",def:"An intentional, coordinated approach to assessment design, interpretation, and confirmation across an entire degree, drawing on evidence accumulated over time rather than relying on isolated tasks. Internationally referred to as programmatic assessment."},
+  {term:"Course stage",def:"A defined developmental phase within a degree, typically aligned to Year 1, Year 2, and Year 3, at which CLO attainment expectations shift and may be formally reviewed."},
+  {term:"Developmental thresholds",def:"University-wide descriptors of progression across a degree: Foundational, Developing, Integrated, and Mastered. These provide a shared language for capability development across stages of study."},
+  {term:"EFTSL",def:"Equivalent Full-Time Student Load, the funding unit used in Australian higher education. Zero-credit subjects under Option A do not attract EFTSL, which has financial implications for resourcing."},
+  {term:"Essential Set",def:"Under Curriculum Architecture Principle 8, the essential set includes all compulsory requirements students must meet, delivers the course learning outcomes, and requires subject learning outcomes to be mapped to CLOs. Course-level assessment builds directly on this existing requirement."},
+  {term:"HESF 2021",def:"Higher Education Standards Framework (Threshold Standards) 2021, the regulatory framework administered by TEQSA, setting minimum standards across five domains including student participation and attainment, teaching, and institutional quality assurance."},
+  {term:"MEA (Models of Engagement and Assessment)",def:"CSU institution-wide framework establishing the balance of supervised and non-supervised assessment across subjects. Course-level assessment builds directly on MEA design principles."},
+  {term:"Programmatic assessment",def:"The internationally recognised term for longitudinal, systems-based assessment design. At CSU, referred to as course-level assessment to reflect local curriculum architecture."},
+  {term:"Remediation pathway",def:"A structured supplementary demonstration aligned to specific CLOs, available where developmental thresholds are not met at a stage boundary. Enables confirmation of capability without repeating entire credit-bearing subjects."},
+  {term:"School Assessment Committee",def:"The governance body responsible for ratifying grades at school level. Under Option B, its scope is extended to include review of longitudinal developmental evidence at defined stage boundaries."},
+  {term:"Stage-based review",def:"A structured academic process in which longitudinal CLO evidence is reviewed at defined transition points, through a zero-credit progression subject (Option A) or School Assessment Committee ratification (Option B)."},
+  {term:"Supervised assessment",def:"Assessment involving real-time interaction between student and assessor and/or direct observation under controlled conditions. A key component of the triangulated evidence base."},
+  {term:"TEQSA",def:"Tertiary Education Quality and Standards Agency, the national regulator for Australian higher education. TEQSA has issued guidance emphasising coherent course-level assessment design in response to generative AI, and is clear that detection-based responses are insufficient."},
+  {term:"Triangulated evidence",def:"Evidence drawn from multiple data points across contexts, assessment types, and assessors. Like many pixels producing a clearer image than one, multiple assessments triangulate evidence of learning far more reliably than any single artefact."},
+  {term:"Zero-point progression subject",def:"A zero-credit administrative subject used in Option A to record confirmation of developmental CLO attainment at defined stage boundaries. Contains no assessment tasks, attracts no credit, and appears on the enrolment record as a co-requisite."},
+];
+
+// SVG helpers
+var SUB_TAN="#c8bfa8",SUB_BROWN="#7a6e5f",SUB_NAVY="#1e2d45";
+var COLS=4,TW=118,TH_T=52,TGAP=12,GL=60,GW=COLS*TW+(COLS-1)*TGAP;
+function supervisedIcon(x,y){var s="rgba(255,255,255,0.6)";return '<g transform="translate('+x+','+y+') scale(0.38)"><rect x="0" y="2" width="26" height="30" rx="3" fill="none" stroke="'+s+'" stroke-width="2"/><line x1="5" y1="10" x2="21" y2="10" stroke="'+s+'" stroke-width="1.8"/><line x1="5" y1="15" x2="21" y2="15" stroke="'+s+'" stroke-width="1.8"/><line x1="5" y1="20" x2="15" y2="20" stroke="'+s+'" stroke-width="1.8"/><circle cx="22" cy="24" r="6" fill="none" stroke="'+s+'" stroke-width="2"/><line x1="26" y1="28" x2="30" y2="32" stroke="'+s+'" stroke-width="2" stroke-linecap="round"/></g>';}
+function hollowArrow(cx,y){var aw=32,ah=24;return '<polygon points="'+(cx-aw/2)+','+y+' '+(cx+aw/2)+','+y+' '+(cx+aw/2)+','+(y+ah*0.5)+' '+(cx+aw/2+10)+','+(y+ah*0.5)+' '+cx+','+(y+ah)+' '+(cx-aw/2-10)+','+(y+ah*0.5)+' '+(cx-aw/2)+','+(y+ah*0.5)+'" fill="white" stroke="#444" stroke-width="1.5" stroke-linejoin="round"/>';}
+function subjectGrid(yTop,fill,supervised,capstone){var out="",idx=0;for(var r=0;r<2;r++)for(var c=0;c<COLS;c++){var isCap=capstone&&(r===1&&c===COLS-1),tx=GL+c*(TW+TGAP),ty=yTop+r*(TH_T+10);out+='<rect x="'+tx+'" y="'+ty+'" width="'+TW+'" height="'+TH_T+'" rx="5" fill="'+(isCap?"#f0572a":fill)+'" stroke="none"/>';if(supervised.indexOf(idx)>=0&&!isCap)out+=supervisedIcon(tx+6,ty+8);if(isCap){out+='<text x="'+(tx+TW/2)+'" y="'+(ty+17)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#fff">Capstone</text><text x="'+(tx+TW/2)+'" y="'+(ty+30)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#fde8e2">Integrated CLO</text><text x="'+(tx+TW/2)+'" y="'+(ty+41)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="#fde8e2">Confirmation</text>';}idx++;}return out;}
+function barChartIcon(x,y){return '<g transform="translate('+x+','+y+') scale(0.9)"><rect x="0" y="14" width="6" height="10" fill="rgba(255,255,255,0.85)" rx="1"/><rect x="9" y="8" width="6" height="16" fill="rgba(255,255,255,0.85)" rx="1"/><rect x="18" y="4" width="6" height="20" fill="rgba(255,255,255,0.85)" rx="1"/><line x1="0" y1="25" x2="26" y2="25" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/><polyline points="2,14 10,8 19,4" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>';}
+function peopleIcon(x,y){return '<g transform="translate('+x+','+y+') scale(0.9)"><circle cx="8" cy="7" r="4" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8"/><path d="M1,22 Q1,14 8,14 Q15,14 15,22" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.8" stroke-linecap="round"/><circle cx="20" cy="7" r="3.5" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/><path d="M14,22 Q14,15 20,15 Q26,15 26,22" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round"/></g>';}
+function gradCapIcon(x,y){return '<g transform="translate('+x+','+y+')"><polygon points="16,4 30,12 16,20 2,12" fill="rgba(255,255,255,0.9)"/><path d="M24,16 L24,24 Q16,28 8,24 L8,16" fill="rgba(255,255,255,0.75)"/><line x1="30" y1="12" x2="30" y2="22" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round"/></g>';}
+function buildDiagramSVG(option){var TRGH=2*(TH_T+10)-10,Y1=38,BAR1=Y1+TRGH+36,ARR1=Y1+TRGH+12,Y2=BAR1+52+44,BAR2=Y2+TRGH+36,ARR2=Y2+TRGH+12,Y3=BAR2+52+44,GRAD=Y3+TRGH+52,TOTAL=GRAD+56+24,CX=GL+GW/2,isA=option==="A",BW=isA?GW:GW*0.62,BX=isA?GL:GL+(GW-BW)/2,yl='font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#222"';var s='<svg width="100%" viewBox="0 0 680 '+TOTAL+'" xmlns="http://www.w3.org/2000/svg" style="display:block">';s+='<text x="'+GL+'" y="'+(Y1-8)+'" '+yl+'>Year 1 subjects</text>'+subjectGrid(Y1,SUB_TAN,[1,3,4,6],false)+hollowArrow(CX,ARR1)+'<rect x="'+BX+'" y="'+BAR1+'" width="'+BW+'" height="50" rx="6" fill="#f0572a" stroke="none"/>'+(isA?barChartIcon(BX+14,BAR1+12):peopleIcon(BX+12,BAR1+10))+'<text x="'+(BX+52)+'" y="'+(BAR1+20)+'" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">'+(isA?"Zero-point 1":"Stage 1 review:")+'</text><text x="'+(BX+52)+'" y="'+(BAR1+38)+'" font-family="Arial,sans-serif" font-size="11" fill="#fde8e2">'+(isA?"Developmental CLO Confirmation":"Longitudinal Evidence")+'</text>';s+='<text x="'+GL+'" y="'+(Y2-8)+'" '+yl+'>Year 2 subjects</text>'+subjectGrid(Y2,SUB_BROWN,[0,2,5,7],false)+hollowArrow(CX,ARR2)+'<rect x="'+BX+'" y="'+BAR2+'" width="'+BW+'" height="50" rx="6" fill="#f0572a" stroke="none"/>'+(isA?barChartIcon(BX+14,BAR2+12):peopleIcon(BX+12,BAR2+10))+'<text x="'+(BX+52)+'" y="'+(BAR2+20)+'" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">'+(isA?"Zero-point 2":"Stage 2 review:")+'</text><text x="'+(BX+52)+'" y="'+(BAR2+38)+'" font-family="Arial,sans-serif" font-size="11" fill="#fde8e2">'+(isA?"Developmental CLO Confirmation":"Longitudinal Evidence")+'</text>';s+='<text x="'+GL+'" y="'+(Y3-8)+'" '+yl+'>Year 3 subjects</text>'+subjectGrid(Y3,SUB_NAVY,[1,3,4,6],true)+hollowArrow(CX,Y3+TRGH+12)+'<rect x="'+(CX-120)+'" y="'+GRAD+'" width="240" height="50" rx="6" fill="#f0572a" stroke="none"/>'+gradCapIcon(CX-108,GRAD+9)+'<text x="'+(CX+6)+'" y="'+(GRAD+30)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">Graduation</text></svg>';return s;}
+
+function diagramLegend(){return '<div class="diag-legend"><div class="diag-legend-item"><div class="diag-legend-swatch" style="background:#c8bfa8"></div>Year 1 subject</div><div class="diag-legend-item"><div class="diag-legend-swatch" style="background:#7a6e5f"></div>Year 2 subject</div><div class="diag-legend-item"><div class="diag-legend-swatch" style="background:#1e2d45"></div>Year 3 subject</div><div class="diag-legend-item"><div class="diag-legend-swatch" style="background:#f0572a"></div>Confirmation / capstone</div><div class="diag-legend-item"><div style="width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.5);border-radius:2px;background:rgba(200,191,168,0.6);display:flex;align-items:center;justify-content:center"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="5" cy="5" r="2" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1"/><line x1="6.5" y1="6.5" x2="8" y2="8" stroke="rgba(255,255,255,0.7)" stroke-width="1" stroke-linecap="round"/></svg></div>Supervised assessment</div></div>';}
+
+// Render functions
+function renderCase(){
+  var el=document.getElementById("section-case");
+  var roleFilterHTML='<div class="role-filter"><span class="role-label">Show what matters most to:</span><button class="role-btn active" id="role-all" onclick="setRole(\'all\')">All</button><button class="role-btn" id="role-dvc" onclick="setRole(\'dvc\')">DVC / Executive</button><button class="role-btn" id="role-dean" onclick="setRole(\'dean\')">Dean</button><button class="role-btn" id="role-aada" onclick="setRole(\'aada\')">Associate Dean (Academic)</button><button class="role-btn" id="role-cd" onclick="setRole(\'cd\')">Course Director</button></div>';
+  var gapItems=gaps.map(function(g,i){return '<div class="gap-item" id="gap-'+i+'" onclick="toggleGap('+i+')"><div class="gap-inner"><div class="gap-icon" style="background:'+g.iconBg+'">'+g.icon+'</div><div style="flex:1"><div class="gap-title">'+g.title+'</div><div class="gap-body">'+g.body+'</div><div class="gap-detail">'+g.detail+'</div></div><div class="gap-toggle">&darr;</div></div></div>';}).join("");
+  el.innerHTML='<div class="panel-dark"><div class="panel-label">THE INSTITUTIONAL CASE</div><p class="lead">Charles Sturt University already has strong foundations for assurance of learning. The next step is to make that assurance explicit.</p><p>Currently, subject completion confirms credit accumulation. It does not formally confirm staged attainment of Course Learning Outcomes at defined points across the degree. In a sector where TEQSA expects coherent, longitudinal evidence of learning and where generative AI has increased pressure on assessment credibility, making that confirmation visible, structured, and defensible is the logical and necessary next step.</p><p class="italic">This is not a redesign. It is a formalisation of what CSU already does well.</p></div>'
+  +roleFilterHTML
+  +'<div class="blind-spot"><div class="blind-spot-label">THE ASSURANCE BLIND SPOT</div><div class="blind-spot-row"><div class="bs-cell" style="background:#c8bfa8"><div style="font-size:11px;font-weight:500;color:#3d2b1f;margin-bottom:4px">YEAR 1</div><div style="font-size:12px;color:#3d2b1f">8 subjects passed</div><div style="font-size:11px;color:#6b5a4e;margin-top:2px">Credit confirmed</div></div><div class="bs-arrow">&rarr;</div><div class="bs-cell" style="background:#7a6e5f"><div style="font-size:11px;font-weight:500;color:#f7f4f0;margin-bottom:4px">YEAR 2</div><div style="font-size:12px;color:#f7f4f0">8 subjects passed</div><div style="font-size:11px;color:rgba(247,244,240,0.7);margin-top:2px">Credit confirmed</div></div><div class="bs-arrow">&rarr;</div><div class="bs-warn"><div style="font-size:16px;margin-bottom:2px">&#9888;</div><div style="font-size:10px;font-weight:700;color:#3d2b00">ASSURANCE BLIND SPOT</div></div></div><div style="margin-top:4px"><div class="bs-year3"><div style="flex:1"><div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.6);margin-bottom:2px">YEAR 3 &mdash; CAPSTONE</div><div style="font-size:12px;color:#fff">First formal confirmation of capability &mdash; but by now, remediation options are limited</div></div><div class="too-late">Too late</div></div></div></div>'
+  +'<div class="gap-label" id="gap-label">Four reasons the current model is no longer sufficient</div>'+gapItems
+  +'<div style="margin-top:1.5rem"><div class="gap-label">Assessment architecture vs assurance architecture</div><div class="arch-grid"><div class="arch-card" style="border-color:rgba(34,34,34,0.1)"><div class="arch-head" style="background:#f7f4f0;border-bottom-color:rgba(34,34,34,0.1)"><div style="font-size:13px;font-weight:500;color:#2e2e2e">Assessment architecture</div><div style="font-size:11px;color:#666;margin-top:2px">How students are assessed</div></div><div class="arch-body"><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Subject assessments and grading</div></div><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Academic integrity checks</div></div><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Subject pass / fail decisions</div></div></div><div class="arch-foot" style="background:rgba(34,34,34,0.06)"><div style="font-size:11px;font-weight:500;color:#2e2e2e">Outcome: Credit accumulation</div></div></div><div class="arch-card" style="border-color:#1a4a2e"><div class="arch-head" style="background:#e8f5ee;border-bottom-color:#1a4a2e"><div style="font-size:13px;font-weight:500;color:#1a4a2e">Assurance architecture</div><div style="font-size:11px;color:#2d7a4f;margin-top:2px">How the university confirms capability</div></div><div class="arch-body"><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Course Learning Outcomes across the degree</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Longitudinal evidence of capability</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Staged confirmation of developmental CLOs</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Capstone confirmation of mastery</div></div></div><div class="arch-foot" style="background:#1a4a2e"><div style="font-size:11px;font-weight:500;color:#fff">Outcome: Capability assurance</div></div></div></div></div>'
+  +'<div style="background:#7a6455;border-radius:8px;padding:0.875rem 1.25rem;margin-top:1rem"><p style="font-size:14px;color:rgba(255,255,255,0.92);line-height:1.7;margin:0">CSU has a strong assessment architecture. The present work is about strengthening the assurance architecture &mdash; building the structural and governance layer that formally confirms capability has been demonstrated across the degree, not just at its end.</p></div>';
+}
+
+function setRole(role){
+  activeRole=role;
+  document.querySelectorAll(".role-btn").forEach(function(b){b.classList.remove("active");});
+  document.getElementById("role-"+role).classList.add("active");
+  gaps.forEach(function(g,i){
+    var el=document.getElementById("gap-"+i);
+    if(el) el.classList.toggle("hidden", g.roles.indexOf(role)<0);
+  });
+  var lbl=document.getElementById("gap-label");
+  if(lbl){
+    var visible=gaps.filter(function(g){return g.roles.indexOf(role)>=0;}).length;
+    lbl.textContent=role==="all"?"Four reasons the current model is no longer sufficient":visible+" reasons most relevant to your role";
+  }
+}
+
+function toggleGap(i){var el=document.getElementById("gap-"+i);var tog=el.querySelector(".gap-toggle");var open=el.classList.toggle("open");tog.innerHTML=open?"&uarr;":"&darr;";}
+
+function renderWhat(){
+  var el=document.getElementById("section-what");
+  var conceptCards=concepts.map(function(c,i){return '<div class="concept" id="concept-'+i+'" onclick="toggleConcept('+i+')"><span class="concept-tag" style="background:'+c.tagBg+';color:'+c.tagText+'">'+c.tag+'</span><div class="concept-title">'+c.title+'</div><div class="concept-body">'+c.body+'</div><div class="concept-detail">'+c.detail+'</div><div class="concept-toggle" id="ctog-'+i+'">Read more &darr;</div></div>';}).join("");
+  el.innerHTML='<div class="panel"><div class="panel-label">WHAT COURSE-LEVEL ASSESSMENT MEANS AT CSU</div><p>Course-level assessment reframes how CSU interprets evidence of learning &mdash; treating individual assessment tasks as data points in a longitudinal picture of capability, rather than isolated pass/fail events. The decision to proceed is made. The question is how to structurally host confirmation of developmental CLO attainment within the existing curriculum architecture.</p></div>'
+  +'<div class="stat-bar"><div class="stat-cell" style="background:#7a6455;border-right:1px solid rgba(255,255,255,0.1)"><div class="stat-val" style="color:#fff">293</div><div class="stat-lbl" style="color:rgba(255,255,255,0.75)">courses in scope</div></div><div class="stat-cell" style="background:#1a3a5c;border-right:1px solid rgba(255,255,255,0.1)"><div class="stat-val" style="color:#fff">48%</div><div class="stat-lbl" style="color:rgba(255,255,255,0.72)">of students study part-time</div></div><div class="stat-cell" style="background:#1a4a2e;border-right:1px solid rgba(255,255,255,0.1)"><div class="stat-val" style="color:#fff">2026&ndash;29</div><div class="stat-lbl" style="color:rgba(255,255,255,0.72)">implementation window</div></div><div class="stat-cell" style="background:#f7f4f0"><div class="stat-val" style="color:#3d2b1f">2</div><div class="stat-lbl" style="color:#888">viable pathways identified</div></div></div>'
+  +'<div class="sand-box"><div class="sand-box-label">THE SHIFT: FROM ISOLATED TASKS TO CONFIRMED CAPABILITY</div><div class="continuum-row"><div class="cont-cell" style="background:rgba(34,34,34,0.06)"><div class="cont-title" style="color:#2e2e2e">Isolated tasks</div><div class="cont-sub" style="color:#666">Individual assessments, standalone pass/fail</div></div><div class="cont-arrow">&rarr;</div><div class="cont-cell" style="background:#e6f0f8"><div class="cont-title" style="color:#1a3a5c">Patterns of evidence</div><div class="cont-sub" style="color:#1a3a5c;opacity:0.75">Data points interpreted longitudinally</div></div><div class="cont-arrow">&rarr;</div><div class="cont-cell" style="background:#e8f5ee"><div class="cont-title" style="color:#1a4a2e">Confirmed capability</div><div class="cont-sub" style="color:#1a4a2e;opacity:0.75">Formal triangulated confirmation</div></div></div></div>'
+  +'<div class="sand-box"><div class="sand-box-label">FOUR DEVELOPMENTAL THRESHOLDS</div><div class="thresh-grid"><div class="thresh-cell" style="background:#e6f0f8"><div class="thresh-name" style="color:#1a3a5c">Foundational</div><div class="thresh-year" style="color:#1a3a5c">Year 1</div></div><div class="thresh-cell" style="background:#e8f5ee"><div class="thresh-name" style="color:#1a4a2e">Developing</div><div class="thresh-year" style="color:#1a4a2e">Year 2</div></div><div class="thresh-cell" style="background:#fde8e2"><div class="thresh-name" style="color:#8a2e10">Integrated</div><div class="thresh-year" style="color:#8a2e10">Year 3</div></div><div class="thresh-cell" style="background:#f0572a"><div class="thresh-name" style="color:#fff">Mastered</div><div class="thresh-year" style="color:rgba(255,255,255,0.8)">Capstone</div></div></div></div>'
+  +'<div class="sand-box"><div class="sand-box-label">GROUNDED IN EXISTING CURRICULUM ARCHITECTURE PRINCIPLES</div><p style="font-size:13px;color:#555;line-height:1.6;margin-bottom:12px">Course-level assessment does not introduce new requirements. It formalises confirmation of what the Curriculum Architecture Principles already require of every course.</p>'
+  +'<div class="cap-row"><div style="min-width:90px;flex-shrink:0"><div class="cap-num">Principle 8</div><div class="cap-title">Essential Set</div></div><div class="cap-text">Clause 8.3 already requires the essential set to deliver Course Learning Outcomes, and 8.3.1 requires subject learning outcomes to be mapped to CLOs through combinations of subjects. Course-level assessment formalises the confirmation of what this principle already requires.</div></div>'
+  +'<div class="cap-row"><div style="min-width:90px;flex-shrink:0"><div class="cap-num">Principle 10</div><div class="cap-title">Core subjects</div></div><div class="cap-text">Core subjects are already the evidentiary backbone of CLO delivery. Principle 10 requires all students to pass core subjects &mdash; course-level assessment builds on this by interpreting that evidence longitudinally across the degree.</div></div>'
+  +'<div class="cap-row"><div style="min-width:90px;flex-shrink:0"><div class="cap-num">Principle 13</div><div class="cap-title">Restricted electives</div></div><div class="cap-text">Clause 13.2 already requires restricted elective learning outcomes to combine with core subject outcomes to ensure all Course Learning Outcomes are achieved. Course-level assessment makes this combination explicit and auditable.</div></div>'
+  +'<div class="cap-row"><div style="min-width:90px;flex-shrink:0"><div class="cap-num">Principle 3</div><div class="cap-title">Quality assurance</div></div><div class="cap-text">Quality assurance of courses is already required to certify compliance with internal and external standards. The Course Assurance Plan operationalises this requirement by providing a structured, documented evidentiary basis for course-level confirmation decisions.</div></div>'
+  +'<div class="cap-row" style="margin-bottom:0"><div style="min-width:90px;flex-shrink:0"><div class="cap-num">Principle 22</div><div class="cap-title">Course viability</div></div><div class="cap-text">The Course Assurance Plan maps directly onto the Annual Course Health Check and Comprehensive Course Review cycles already required under this principle &mdash; strengthening rather than duplicating existing quality assurance processes.</div></div>'
+  +'</div>'
+  +'<div class="concept-label">Key concepts</div><div class="concepts">'+conceptCards+'</div>';
+}
+
+function toggleConcept(i){var el=document.getElementById("concept-"+i);var tog=document.getElementById("ctog-"+i);var open=el.classList.toggle("open");tog.innerHTML=open?"Show less &uarr;":"Read more &darr;";}
+
+var activeFilter="All";
+function renderPathways(){
+  var el=document.getElementById("section-pathways");
+  var filterBtns=filterCats.map(function(c){return '<button class="filter-btn'+(c===activeFilter?" active":"")+'" onclick="filterTable(\''+c+'\',this)">'+c+'</button>';}).join("");
+  var tableRows=compareRows.map(function(row){return '<tr data-cat="'+row.cat+'"'+(activeFilter!=="All"&&row.cat!==activeFilter?' style="display:none"':'')+'>   <td><div class="td-feat">'+row.feature+'</div><div class="td-cat">'+row.cat+'</div></td><td>'+row.a+'</td><td>'+row.b+'</td></tr>';}).join("");
+  var optCards=optionSummaries.map(function(opt){return '<div class="opt-card" style="background:'+opt.bg+';border-left:4px solid '+opt.border+'"><div class="opt-tag" style="color:'+opt.tagColor+'">'+opt.tag+'</div><div class="opt-title">'+opt.title+'</div><div class="opt-what">'+opt.what+'</div><div class="opt-keys">'+opt.key.map(function(k){return '<div class="opt-key"><div class="opt-dot" style="background:'+opt.tagColor+'"></div><div class="opt-key-text">'+k+'</div></div>';}).join("")+'</div></div>';}).join("");
+  el.innerHTML='<div class="panel"><div class="panel-label">THE ARCHITECTURAL DECISION</div><p>The decision to formalise staged confirmation of developmental CLOs is made. Both options achieve equivalent assurance outcomes and align with HESF 2021. The question is where complexity is hosted: <strong>Option A</strong> places it in curriculum structure &mdash; visible, legible, but administratively demanding. <strong>Option B</strong> places it in governance practice &mdash; structurally lighter, but requiring deeper cultural and committee maturity.</p></div><div class="trade-off-box"><div class="trade-off-label">THE CORE TRADE-OFF IN ONE SENTENCE</div><p>Option A asks: are we prepared to introduce a visible structural layer? Option B asks: are our governance committees ready to interpret longitudinal evidence as a matter of routine practice?</p></div><div class="view-btns"><button class="view-btn active" onclick="switchView(\'diagrams\',this)">Course structure diagrams</button><button class="view-btn" onclick="switchView(\'compare\',this)">Detailed comparison</button></div><div id="view-diagrams" class="view-content active"><div class="diag-grid"><div class="diag-card" onclick="openDiagModal()"><div class="diag-header" style="background:#1a3a5c"><div class="diag-tag" style="color:#b5d4f4">OPTION A</div><div class="diag-title">Zero-point progression subjects</div></div><div class="diag-body">'+buildDiagramSVG("A")+'</div>'+diagramLegend()+'<div class="diag-desc">Confirmation is hosted in a zero-credit subject on the student enrolment record. Evidence is drawn from existing credit-bearing subjects.</div><div class="diag-card-hint">&#128269; Click to enlarge both diagrams</div></div><div class="diag-card" onclick="openDiagModal()"><div class="diag-header" style="background:#1a4a2e"><div class="diag-tag" style="color:#9FE1CB">OPTION B</div><div class="diag-title">Embedded stage-based review</div></div><div class="diag-body">'+buildDiagramSVG("B")+'</div>'+diagramLegend()+'<div class="diag-desc">Confirmation is embedded within the School Assessment Committee existing ratification process. No new subject layer is introduced.</div><div class="diag-card-hint">&#128269; Click to enlarge both diagrams</div></div></div><div class="sand-note">In both models, subject completion is mandatory, the capstone confirms integrated Mastered-level attainment, and graduation follows accumulated triangulated evidence across the course.</div></div><div id="view-compare" class="view-content"><div class="opt-summary-grid">'+optCards+'</div><div class="filter-btns">'+filterBtns+'</div><div class="table-wrap"><table><thead><tr><th style="width:20%;color:#2e2e2e">Feature</th><th style="width:40%;color:#1a3a5c">Option A &mdash; Zero-point</th><th style="width:40%;color:#1a4a2e">Option B &mdash; Embedded</th></tr></thead><tbody id="compare-tbody">'+tableRows+'</tbody></table></div><p class="table-note">Both options require pilot testing across 2027&ndash;2029 before broader rollout.</p></div>';
+}
+
+function switchView(view,btn){document.querySelectorAll(".view-btn").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");document.querySelectorAll(".view-content").forEach(function(v){v.classList.remove("active");});document.getElementById("view-"+view).classList.add("active");}
+function filterTable(cat,btn){activeFilter=cat;document.querySelectorAll(".filter-btn").forEach(function(b){b.classList.remove("active");});btn.classList.add("active");document.querySelectorAll("#compare-tbody tr").forEach(function(row){row.style.display=(cat==="All"||row.dataset.cat===cat)?"":"none";});}
+
+var activePhase=0;
+function renderRoadmap(){
+  var el=document.getElementById("section-roadmap");
+  var statusLabel={current:"In progress",upcoming:"Next",future:"Planned"};
+  var statusColor={current:"#f0572a",upcoming:"#1a4a2e",future:"#999"};
+  var strip=phases.map(function(p,i){return '<div style="display:flex;align-items:center;flex:1;min-width:90px"><div class="phase-btn'+(p.status==="current"?" current":"")+(p.status==="future"?" future-phase":"")+'" id="phase-btn-'+i+'" onclick="showPhase('+i+')" style="'+(activePhase===i?'background:'+p.bg+';border-color:'+p.accent:'')+'">'+(p.status==="current"?'<div class="now-pill">NOW</div>':'')+'<div class="phase-num" style="color:'+(p.status==="current"?p.accent:activePhase===i?p.accent:"#888")+';margin-top:'+(p.status==="current"?4:0)+'px">Phase '+p.num+'</div><div class="phase-year" style="color:'+(activePhase===i?p.accent:p.status==="current"?"#3d2b1f":"#2e2e2e")+'">'+p.year+'</div></div>'+(i<phases.length-1?'<div class="phase-connector'+(phases[i].zone==="pilot"&&phases[i+1]&&phases[i+1].zone==="pilot"?" pilot-zone":"")+'" ></div>':'')+'</div>';}).join("");
+  var p=phases[activePhase];
+  var pilotNote=p.zone==="pilot"?'<div class="pilot-banner">&#9888; Pilot zone &mdash; implementation is intentionally contained. Real-world evaluation before any scaling decision.</div>':'';
+  var detail='<div class="phase-detail">'+pilotNote+'<div class="phase-detail-header"><div style="display:flex;align-items:flex-start;gap:12px"><div class="phase-circle" style="background:'+p.bg+';border-color:'+p.accent+';color:'+p.accent+'">'+p.num+'</div><div><div class="phase-detail-title">'+p.title+'</div><div class="phase-detail-year">'+p.year+'</div></div></div><span class="status-badge" style="background:'+p.bg+';color:'+statusColor[p.status]+'">'+statusLabel[p.status]+'</span></div><div style="margin-bottom:1rem"><div class="actions-label">Key actions</div>'+p.actions.map(function(a){return '<div class="action-item"><div class="action-dot" style="background:'+p.accent+'"></div><div class="action-text">'+a+'</div></div>';}).join("")+'</div><div class="outcome-box" style="background:'+p.bg+';border-left-color:'+p.accent+'"><div class="outcome-label" style="color:'+p.accent+'">Phase outcome</div><div class="outcome-text">'+p.outcome+'</div></div></div>';
+  var enablerTiles=enablers.map(function(e,i){return '<div class="enabler" id="enabler-'+i+'" onclick="toggleEnabler('+i+')"><div class="enabler-header"><span class="enabler-label">'+e.label+'</span><span class="enabler-arrow" id="earrow-'+i+'">&darr;</span></div><div class="enabler-detail">'+e.detail+'</div></div>';}).join("");
+  el.innerHTML='<div class="panel"><div class="panel-label">CURRENT POSITION</div><p>CSU is currently at <strong>Phase 1 &mdash; policy and institutional endorsement</strong>. The direction is set. We are not flipping a switch overnight. Guidance is sought on the preferred architectural pathway to enable policy refinement, pilot course selection, and implementation planning for 2027&ndash;2029.</p></div><div class="phase-strip">'+strip+'</div>'+detail+'<div class="enablers-wrap"><div class="enablers-title">Critical enablers across all phases</div><div class="enablers-grid">'+enablerTiles+'</div></div>';
+}
+
+function showPhase(i){activePhase=i;renderRoadmap();}
+function toggleEnabler(i){var el=document.getElementById("enabler-"+i);var open=el.classList.toggle("open");document.getElementById("earrow-"+i).innerHTML=open?"&uarr;":"&darr;";}
+
+function renderFAQ(){
+  var el=document.getElementById("section-faq");
+  var faqItems=faqs.map(function(f,i){return '<div class="faq-item" id="faq-'+i+'"><div class="faq-header" onclick="toggleFAQ('+i+')"><div style="flex:1"><div class="faq-q">'+f.q+'</div><div class="faq-summary">'+f.summary+'</div></div><div class="faq-toggle" id="faq-toggle-'+i+'">&darr;</div></div><div class="faq-detail" id="faq-detail-'+i+'">'+f.a+'</div></div>';}).join("");
+  el.innerHTML='<div class="panel"><div class="panel-label">FREQUENTLY ASKED QUESTIONS</div><p>Common questions about course-level assessment at CSU, addressed for a leadership audience. Each question shows a brief answer &mdash; click to expand the full detail.</p></div><div style="margin-bottom:1.5rem">'+faqItems+'</div><div style="background:#fff;border-radius:8px;border:1.5px solid rgba(34,34,34,0.1);overflow:hidden"><div style="background:#f0572a;padding:1rem 1.25rem"><div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.05em;margin-bottom:4px">CONTACT</div><div style="font-size:15px;font-weight:500;color:#fff">For further information</div></div><div style="padding:1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem"><div><div style="font-size:13px;font-weight:500;color:#2e2e2e;margin-bottom:3px">A/Prof Prue Laidlaw</div><div style="font-size:12px;color:#666;margin-bottom:2px">Academic Director, Education Strategy</div><div style="font-size:12px;color:#666;margin-bottom:8px">Division of Learning and Teaching</div><a href="mailto:plaidlaw@csu.edu.au" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#f0572a;text-decoration:none;font-weight:500;border:1.5px solid #f0572a;padding:6px 14px;border-radius:4px">&#9993; plaidlaw@csu.edu.au</a></div><div><div style="font-size:13px;font-weight:500;color:#2e2e2e;margin-bottom:3px">Rebecca Acheson</div><div style="font-size:12px;color:#666;margin-bottom:2px">Associate Director (Curriculum Development)</div><div style="font-size:12px;color:#666;margin-bottom:8px">Division of Learning and Teaching</div><a href="mailto:racheson@csu.edu.au" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#f0572a;text-decoration:none;font-weight:500;border:1.5px solid #f0572a;padding:6px 14px;border-radius:4px">&#9993; racheson@csu.edu.au</a></div></div><div style="background:#f7f4f0;padding:0.75rem 1.25rem;font-size:12px;color:#666;line-height:1.5">Charles Sturt University &mdash; Division of Learning and Teaching. TEQSA Provider Identification: PRV12018. CRICOS Provider: 00005F.</div></div>';
+}
+
+function toggleFAQ(i){var item=document.getElementById("faq-"+i);var detail=document.getElementById("faq-detail-"+i);var tog=document.getElementById("faq-toggle-"+i);var open=item.classList.toggle("open");detail.style.display=open?"block":"none";tog.innerHTML=open?"&uarr;":"&darr;";}
+
+var glossaryOpen=null;
+var glossView="key";
+function renderGlossary(search){
+  search=search||"";
+  var el=document.getElementById("section-glossary");
+  var sourceTerms=glossView==="key"?glossaryTerms.filter(function(t){return keyGlossTerms.indexOf(t.term)>=0;}):glossaryTerms;
+  var filtered=sourceTerms.filter(function(t){return t.term.toLowerCase().indexOf(search.toLowerCase())>=0||t.def.toLowerCase().indexOf(search.toLowerCase())>=0;});
+  var items=filtered.length===0?'<div class="no-results">No terms match your search.</div>':filtered.map(function(t,i){return '<div class="gloss-item'+(glossaryOpen===i?" open":"")+'" onclick="toggleGloss('+i+')"><div class="gloss-item-header"><div class="gloss-term">'+t.term+'</div><div class="gloss-arrow">'+(glossaryOpen===i?"&uarr;":"&darr;")+'</div></div><div class="gloss-def">'+t.def+'</div></div>';}).join("");
+  el.innerHTML='<div class="panel"><div class="panel-label">GLOSSARY</div><p>Key terms used in the course-level assessment initiative. Use the tabs to switch between essential terms and the full reference list.</p></div>'
+  +'<div class="gloss-tabs"><button class="gloss-tab'+(glossView==="key"?" active":"")+'" onclick="setGlossView(\'key\')">Essential terms ('+keyGlossTerms.length+')</button><button class="gloss-tab'+(glossView==="all"?" active":"")+'" onclick="setGlossView(\'all\')">Full glossary ('+glossaryTerms.length+')</button></div>'
+  +'<div class="search-wrap"><svg class="search-icon" width="14" height="14" viewBox="0 0 14 14"><circle cx="6" cy="6" r="4.5" fill="none" stroke="#222" stroke-width="1.5"/><line x1="9.5" y1="9.5" x2="13" y2="13" stroke="#222" stroke-width="1.5" stroke-linecap="round"/></svg><input class="search-input" id="gloss-search" placeholder="Search terms..." value="'+search+'" oninput="glossaryOpen=null;renderGlossary(this.value)"/></div>'
+  +'<div class="gloss-list">'+items+'</div>'
+  +'<div class="gloss-count">'+(filtered.length>0?(search?"Showing "+filtered.length+" of "+sourceTerms.length+" terms matching your search.":"Showing "+filtered.length+" terms."):"")+'</div>';
+}
+
+function setGlossView(view){glossView=view;glossaryOpen=null;renderGlossary("");}
+function toggleGloss(i){var search=document.getElementById("gloss-search")?document.getElementById("gloss-search").value:"";glossaryOpen=(glossaryOpen===i?null:i);renderGlossary(search);}
+
+function renderHowMade(){
+  var el=document.getElementById("section-howmade");
+  el.innerHTML='<div class="panel-dark"><div class="panel-label">HOW THIS WAS MADE</div><p class="lead">This briefing was built using Claude, an AI assistant developed by Anthropic. It was created through conversation &mdash; no coding expertise, design software, or web development was required.</p></div>'
+  +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:0.875rem;margin-bottom:1.5rem">'
+  +'<div style="background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:1rem 1.125rem"><div style="font-size:11px;font-weight:500;color:#f0572a;letter-spacing:0.05em;margin-bottom:8px">THE SOURCE MATERIAL</div><div style="font-size:13px;color:#000;line-height:1.7">The content draws directly on four CSU documents: the MEA paper on course-level assessment, the APLT presentation and script, and the CSU Curriculum Architecture Principles, as well as the Southern Cross University programmatic assessment guide for sector context. All documents were uploaded into the conversation and read by Claude to build the content.</div></div>'
+  +'<div style="background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:1rem 1.125rem"><div style="font-size:11px;font-weight:500;color:#f0572a;letter-spacing:0.05em;margin-bottom:8px">THE PROCESS</div><div style="font-size:13px;color:#000;line-height:1.7">The tool was built iteratively over multiple sessions. Structure, tone, visual design, and content were developed through dialogue &mdash; Claude proposing, drafting, and building; Prue Laidlaw reviewing, redirecting, and refining. The CSU brand guidelines were provided and applied throughout. Nothing was finalised without editorial judgement and approval.</div></div>'
+  +'</div>'
+  +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1.5rem">'
+  +'<div style="background:#e6f0f8;border:1.5px solid #1a3a5c;border-radius:8px;padding:1rem 1.125rem"><div style="font-size:11px;font-weight:500;color:#1a3a5c;letter-spacing:0.05em;margin-bottom:8px">WHAT AI CONTRIBUTED</div><div style="font-size:13px;color:#000;line-height:1.7">All the code, the visual diagrams, the written content across every section, and the glossary definitions. Claude also synthesised across multiple source documents to surface connections and sharpen the argument.</div></div>'
+  +'<div style="background:#e8f5ee;border:1.5px solid #1a4a2e;border-radius:8px;padding:1rem 1.125rem"><div style="font-size:11px;font-weight:500;color:#1a4a2e;letter-spacing:0.05em;margin-bottom:8px">WHAT THE HUMAN BROUGHT</div><div style="font-size:13px;color:#000;line-height:1.7">The expertise, the strategic framing, and every substantive decision about what to include, how to position the argument, and what would resonate with a CSU leadership audience. The AI was the builder. The academic was the architect.</div></div>'
+  +'</div>'
+  +'<div style="background:#fff;border:1.5px solid #1a3a5c;border-radius:8px;overflow:hidden;margin-bottom:1.5rem">'
+  +'<div style="background:#1a3a5c;padding:0.875rem 1.25rem"><div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.8);letter-spacing:0.05em;margin-bottom:3px">RESPONSIBLE AI USE</div><div style="font-size:15px;font-weight:500;color:#fff">S.E.C.U.R.E. GenAI Use Framework</div></div>'
+  +'<div style="padding:1.125rem">'
+  +'<div style="font-size:13px;color:#000;line-height:1.7;margin-bottom:1rem">This briefing was created in alignment with the S.E.C.U.R.E. GenAI Use Framework for Staff, developed by Mark Bassett at Charles Sturt University. The framework guides staff in making informed decisions about GenAI use by assessing risk across six categories.</div>'
+  +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px;margin-bottom:1rem">'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Security credentials</div></div>'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Ethical use</div></div>'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Confidential information</div></div>'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Personal information</div></div>'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Rights protection</div></div>'
+  +'<div style="background:#f7f4f0;border-radius:6px;padding:0.6rem 0.875rem;display:flex;align-items:center;gap:8px"><div style="min-width:18px;height:18px;background:#1a3a5c;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">&#10003;</div><div style="font-size:12px;font-weight:500;color:#2e2e2e">Evaluation of outputs</div></div>'
+  +'</div>'
+  +'<div style="background:#e6f0f8;border-left:3px solid #1a3a5c;border-radius:0 6px 6px 0;padding:0.75rem 1rem;font-size:13px;color:#1a3a5c;line-height:1.6;margin-bottom:0.875rem">This project returned &ldquo;No&rdquo; to all six questions &mdash; placing it clearly within the low-risk zone. No confidential or personal data was entered, no third-party copyrighted material was reproduced, and all outputs were reviewed and evaluated before use.</div>'
+  +'<div style="font-size:12px;color:#666">The framework can be downloaded at <a href="https://secureframework.ai/" target="_blank" style="color:#1a3a5c;font-weight:500">secureframework.ai</a></div>'
+  +'</div></div>'
+  +'<div style="background:#7a6455;border-radius:8px;padding:1rem 1.25rem"><div style="font-size:11px;font-weight:500;color:#ffd4c2;letter-spacing:0.05em;margin-bottom:6px">WHY WE&rsquo;RE SHARING THIS</div><p style="font-size:14px;color:rgba(255,255,255,0.92);line-height:1.7;margin:0">This tool is itself an example of what responsible, purposeful use of AI looks like in higher education &mdash; using it to communicate complex ideas clearly, efficiently, and in service of genuine institutional work.</p></div>';
+}
+
+renderNav(0);
+renderCase();
+renderWhat();
+renderPathways();
+renderRoadmap();
+renderFAQ();
+renderGlossary();
+renderHowMade();
+</script>
+<div class="diag-modal-overlay" id="diag-modal-overlay" onclick="closeDiagModal(event)">
+  <div class="diag-modal">
+    <div class="diag-modal-header">
+      <div class="diag-modal-title">Course structure diagrams &mdash; Option A &amp; Option B</div>
+      <button class="diag-modal-close" onclick="closeDiagModal()">&times;</button>
+    </div>
+    <div class="diag-modal-body" id="diag-modal-body"></div>
+  </div>
+</div>
+<script>
+function openDiagModal(){
+  var body=document.getElementById('diag-modal-body');
+  body.innerHTML=
+    '<div class="diag-modal-card"><div class="diag-header" style="background:#1a3a5c"><div class="diag-tag" style="color:#b5d4f4">OPTION A</div><div class="diag-title">Zero-point progression subjects</div></div><div class="diag-body">'+buildDiagramSVG("A")+'</div>'+diagramLegend()+'<div class="diag-desc">Confirmation is hosted in a zero-credit subject on the student enrolment record. Evidence is drawn from existing credit-bearing subjects.</div></div>'
+   +'<div class="diag-modal-card"><div class="diag-header" style="background:#1a4a2e"><div class="diag-tag" style="color:#9FE1CB">OPTION B</div><div class="diag-title">Embedded stage-based review</div></div><div class="diag-body">'+buildDiagramSVG("B")+'</div>'+diagramLegend()+'<div class="diag-desc">Confirmation is embedded within the School Assessment Committee existing ratification process. No new subject layer is introduced.</div></div>';
+  document.getElementById('diag-modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDiagModal(e){
+  if(e&&e.target!==document.getElementById('diag-modal-overlay'))return;
+  document.getElementById('diag-modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDiagModal();});
+</script>
+</body>
+</html>
