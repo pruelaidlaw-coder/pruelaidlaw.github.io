@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEA Course Transition Plan — Charles Sturt University</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#fafaf9;color:#222;min-height:100vh;-webkit-text-size-adjust:100%}
+input,select,textarea{font-family:Arial,sans-serif;font-size:16px;color:#222;border:1px solid #c7b8a0;border-radius:4px;padding:10px 12px;width:100%;background:#fff;outline:none;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2371634e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+input:focus,select:focus,textarea:focus{border-color:#f0572a;box-shadow:0 0 0 3px rgba(240,87,42,0.15)}
+textarea{resize:vertical;line-height:1.6;font-size:15px}
+button{font-family:Arial,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+table{border-collapse:collapse}
+@media print{.no-print{display:none!important}body{background:#fff}}
+@media(max-width:640px){input,select,textarea{font-size:16px;padding:11px 12px}.hide-mobile{display:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect}=React;
+
+const STORAGE_KEY="mea_ctp_v3";
+const C={orange:"#f0572a",charcoal:"#222222",white:"#ffffff",darkGreen:"#07342d",lightGreen:"#3c8364",darkBlue:"#222944",lightBlue:"#5675bc",pink:"#e9ceca",lightBrown:"#c7b8a0",darkBrown:"#71634e"};
+
+const MODELS=["Fully Online","In-Person Immersive","Combined"];
+const FACULTIES=["Faculty of Arts & Education","Faculty of Business, Justice & Behavioural Sciences","Faculty of Science & Health","Faculty of Agribusiness & Commerce"];
+const COMPLEXITY=["Low","Medium","High"];
+const GO_LIVE=["Group 1 — 2027","Group 2 — 2028","Group 3 — 2029"];
+const RISK=["Low","Medium","High","Critical"];
+const STATUS=["Not started","In progress","Complete"];
+const GOV_FIELDS=[
+  {key:"ccr",label:"Comprehensive Course Review"},
+  {key:"accreditation",label:"Professional accreditation"},
+  {key:"teachout",label:"Teach out"},
+  {key:"cricos",label:"CRICOS compatibility"},
+  {key:"thirdparty",label:"Third party partnerships"},
+  {key:"campus",label:"Campus footprint / regional delivery"},
+  {key:"cdap",label:"Course mode classification in CDAP"},
+  {key:"governance",label:"Governance approvals"},
+];
+const SECTION_C=[
+  {id:"1",title:"Designed for intentional pedagogy"},
+  {id:"2",title:"Synchronous and asynchronous learning activity"},
+  {id:"3",title:"Attendance / use of campus"},
+  {id:"4",title:"Transition and preparedness"},
+  {id:"5",title:"Teaching presence"},
+  {id:"6",title:"Assessment"},
+  {id:"7",title:"Work integrated learning (WIL)"},
+  {id:"8",title:"Student support"},
+];
+
+const emptyAR=()=>({activity:"",subject:"",responsible:"",startDate:"",endDate:""});
+
+const emptyCourse=()=>({
+  id:Date.now().toString(),
+  faculty:"",school:"",courseName:"",courseCode:"",locations:"",currentMode:"",nominatedModel:"",complexity:"",mainCampus:"",group1candidate:"No",
+  execDean:"",adAcademic:"",headOfSchool:"",courseDirector:"",dltContact:"",additionalContacts:"",
+  ccrStart:"",ccrEnd:"",ccrNote:"",
+  govFlags:Object.fromEntries(GOV_FIELDS.map(f=>[f.key,{flagged:"No",note:"",actions:[]}])),
+  govApprovals:{schoolBoard:"No",facultyBoard:"No",aqsc:"No",ucc:"No",ibs:"No",senate:"No",actions:[]},
+  sectionC:Object.fromEntries(SECTION_C.map(s=>[s.id,{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"",actions:[]}])),
+  ocbChanges:"No",printedGuideChanges:"No",ugGuideChanges:"No",studentComms:"",marketingActions:[],
+  pdRequired:"No",facilityConstraints:"No",staffingViable:"Yes",digitalCapability:"No",staffingNote:"",staffActions:[],
+  riskSummary:"",overallRisk:"",goLiveGroup:"",additionalComments:"",additionalConditions:"",
+});
+
+const normaliseCourse=c=>{
+  const base=emptyCourse();
+  return {
+    ...base,...c,
+    govFlags:{...base.govFlags,...(c.govFlags||{})},
+    govApprovals:{...base.govApprovals,...(c.govApprovals||{})},
+    sectionC:{...base.sectionC,...(c.sectionC||{})},
+  };
+};
+
+// ─── SAMPLE DATA ─────────────────────────────────────────────
+const makeSample=()=>{
+
+const s1=normaliseCourse({
+  id:"s1",faculty:"Faculty of Science & Health",school:"School of Nursing, Paramedicine & Healthcare Sciences",
+  courseName:"Bachelor of Nursing",courseCode:"BN001",locations:"Bathurst, Orange, Dubbo",
+  currentMode:"In-Person Immersive",nominatedModel:"Combined",complexity:"High",mainCampus:"Bathurst",group1candidate:"No",
+  execDean:"Prof Jennifer Smith",adAcademic:"A/Prof Karen Lee",headOfSchool:"Dr Michael Nguyen",
+  courseDirector:"Dr Tracey Brown",dltContact:"Sarah Davis",additionalContacts:"Dr R. Patel (WIL Coordinator)",
+  ccrStart:"2025-03-01",ccrEnd:"2026-06-30",
+  ccrNote:"CCR is currently underway with expected completion June 2026. The CCR timeline overlaps significantly with the MEA transition. Course team has been advised to align CCR recommendations with the Combined model requirements to avoid duplication of effort.",
+  govFlags:{
+    ccr:{flagged:"Yes",note:"CCR underway — MEA transition to be sequenced after CCR completion where possible.",actions:[{activity:"Schedule joint CCR/MEA planning meeting",subject:"All",responsible:"Course Director",startDate:"2026-02-01",endDate:"2026-02-28"}]},
+    accreditation:{flagged:"Yes",note:"ANMAC accreditation review due 2027. Model change must be assessed for compliance.",actions:[{activity:"Submit model change notification to ANMAC",subject:"BN001",responsible:"Executive Dean",startDate:"2026-04-01",endDate:"2026-06-30"},{activity:"Prepare accreditation impact statement",subject:"BN001",responsible:"Course Director",startDate:"2026-03-01",endDate:"2026-04-30"}]},
+    teachout:{flagged:"Yes",note:"Students enrolled under current In-Person model will require teach-out provisions through 2027.",actions:[{activity:"Develop teach-out plan",subject:"BN001",responsible:"Course Director",startDate:"2026-01-01",endDate:"2026-03-31"}]},
+    cricos:{flagged:"Yes",note:"Change from In-Person to Combined model requires CRICOS variation application.",actions:[{activity:"Lodge CRICOS variation application",subject:"BN001",responsible:"DLT contact",startDate:"2026-05-01",endDate:"2026-08-31"}]},
+    thirdparty:{flagged:"No",note:"",actions:[]},
+    campus:{flagged:"Yes",note:"Reduction in on-campus delivery at Orange and Dubbo. Regional community consultation required.",actions:[{activity:"Consult with regional health partners re campus footprint change",subject:"BN001",responsible:"Executive Dean",startDate:"2026-03-01",endDate:"2026-05-31"}]},
+    cdap:{flagged:"Yes",note:"All subjects require mode reclassification in CDAP.",actions:[{activity:"Update all subject modes in CDAP",subject:"All subjects",responsible:"DLT contact",startDate:"2026-07-01",endDate:"2026-09-30"}]},
+    governance:{flagged:"Yes",note:"Faculty Board endorsement required given professional accreditation implications.",actions:[{activity:"Prepare Faculty Board submission",subject:"BN001",responsible:"Associate Dean Academic",startDate:"2026-06-01",endDate:"2026-07-31"}]},
+  },
+  govApprovals:{schoolBoard:"Yes",facultyBoard:"Yes",aqsc:"No",ucc:"Yes",ibs:"No",senate:"Yes",
+    actions:[{activity:"Lodge UCC submission with supporting documentation",subject:"BN001",responsible:"Course Director",startDate:"2026-08-01",endDate:"2026-09-30"}]},
+  sectionC:{
+    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require full redesign to meet evidence-based design standards. Ed designer audit of 34 subjects underway. Priority subjects identified for Semester 1 2027 intake.",actions:[{activity:"Complete ed design audit of all subjects",subject:"All 34 subjects",responsible:"Ed Designer",startDate:"2026-02-01",endDate:"2026-06-30"}]},
+    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current delivery is predominantly synchronous face-to-face. Transition requires significant shift to asynchronous online delivery for online phases. Staff capability gap identified.",actions:[]},
+    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"On-campus intensives to be scheduled at Bathurst as home campus. Orange and Dubbo students will travel for intensives. Travel support and scheduling to be confirmed.",actions:[{activity:"Confirm intensive schedule and locations",subject:"Clinical subjects",responsible:"Head of School",startDate:"2026-04-01",endDate:"2026-06-30"}]},
+    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Explicit transition support materials required for students moving between online and on-campus phases. Particular concern for first-year students.",actions:[]},
+    "5":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Teaching presence standards for online phases to be embedded in subject redesign. Synchronous online sessions to maintain relational connection during online phases.",actions:[]},
+    "6":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Clinical assessment components must remain on-campus. Online assessment audit required to ensure integrity and diversity of formats across online phases.",actions:[{activity:"Assessment audit — identify items requiring modification",subject:"All subjects",responsible:"Course Director",startDate:"2026-03-01",endDate:"2026-05-31"}]},
+    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Placements are locally based and unaffected by model change. Pre-placement preparation to be delivered online. Debriefs to occur on-campus during intensive phases.",actions:[]},
+    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Student support continuity across phases is a priority. Wraparound support mapping required to ensure students do not lose access to services during online phases.",actions:[]},
+  },
+  ocbChanges:"Yes",printedGuideChanges:"Yes",ugGuideChanges:"No",
+  studentComms:"Dedicated student communication plan required. Current students to be notified of model change and teach-out arrangements. Prospective students to receive updated course information from 2027 intake.",
+  marketingActions:[{activity:"Update OCB course page with Combined model information",subject:"BN001",responsible:"Marketing",startDate:"2026-09-01",endDate:"2026-10-31"},{activity:"Develop student FAQ for model transition",subject:"BN001",responsible:"Student Communications",startDate:"2026-08-01",endDate:"2026-09-30"}],
+  pdRequired:"Yes",facilityConstraints:"Yes",staffingViable:"With conditions",digitalCapability:"Yes",
+  staffingNote:"Significant PD required for academic staff to develop capability in online teaching and facilitation. Facility constraints at Orange and Dubbo limit intensive delivery options. Workload modelling required. Digital capability gap identified among approximately 30% of teaching staff.",
+  staffActions:[{activity:"Deliver online teaching PD program for all academic staff",subject:"All teaching staff",responsible:"DLT Teaching Academy",startDate:"2026-03-01",endDate:"2026-08-31"},{activity:"Workload modelling for Combined mode delivery",subject:"BN001",responsible:"Head of School",startDate:"2026-02-01",endDate:"2026-04-30"}],
+  riskSummary:"The Bachelor of Nursing presents the highest transition risk in the faculty portfolio. Key risks include ANMAC accreditation compliance, teach-out obligations, significant staff capability gap, CRICOS variation requirements, and regional community expectations around maintaining campus presence at Orange and Dubbo.",
+  overallRisk:"High",goLiveGroup:"Group 2 — 2028",
+  additionalComments:"This course should be treated as a priority transition with dedicated DLT and Faculty support. Close monitoring of ANMAC accreditation process is essential.",
+  additionalConditions:"Transition conditional on successful ANMAC accreditation variation approval and completion of staff PD program.",
+});
+
+const s2=normaliseCourse({
+  id:"s2",faculty:"Faculty of Arts & Education",school:"School of Education",
+  courseName:"Master of Teaching (Primary)",courseCode:"MTP001",locations:"Online",
+  currentMode:"Fully Online",nominatedModel:"Fully Online",complexity:"Low",group1candidate:"Yes",
+  execDean:"Prof Andrew Williams",adAcademic:"Dr Priya Chen",headOfSchool:"Dr Rachel Singh",
+  courseDirector:"Dr Louise Taylor",dltContact:"Marcus Harris",additionalContacts:"",
+  ccrStart:"",ccrEnd:"",
+  ccrNote:"No CCR scheduled. Course was comprehensively reviewed in 2023 and is current. MEA transition is straightforward given existing fully online delivery.",
+  govFlags:{
+    ccr:{flagged:"No",note:"",actions:[]},
+    accreditation:{flagged:"Yes",note:"AITSL accreditation applies. Notification to AITSL recommended.",actions:[{activity:"Notify AITSL of formal model designation",subject:"MTP001",responsible:"Course Director",startDate:"2026-03-01",endDate:"2026-04-30"}]},
+    teachout:{flagged:"No",note:"",actions:[]},
+    cricos:{flagged:"No",note:"",actions:[]},
+    thirdparty:{flagged:"No",note:"",actions:[]},
+    campus:{flagged:"No",note:"",actions:[]},
+    cdap:{flagged:"Yes",note:"Minor subject mode updates required in CDAP.",actions:[{activity:"Update subject modes in CDAP",subject:"All subjects",responsible:"DLT contact",startDate:"2026-02-01",endDate:"2026-03-31"}]},
+    governance:{flagged:"No",note:"",actions:[]},
+  },
+  govApprovals:{schoolBoard:"No",facultyBoard:"No",aqsc:"No",ucc:"No",ibs:"No",senate:"No",actions:[]},
+  sectionC:{
+    "1":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"All subjects meet online design standards following 2023 CCR redesign. Minor UDL updates required in two subjects. Ed designer sign-off confirmed.",actions:[]},
+    "2":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"92% async average across PG cohort — meets 90% threshold. Synchronous sessions used for assessment preparation and high-value feedback only.",actions:[]},
+    "3":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Zero mandatory campus attendance. All learning and assessment fully online. Professional experience placements in students' local school contexts as per AITSL requirements.",actions:[]},
+    "4":{edDesignerStatus:"Complete",facultyStatus:"In progress",notes:"Transition support scaffolds in place. Digital literacy modules embedded in Year 1. Self-regulation resources available via Brightspace. Faculty review of first-year transition data underway.",actions:[]},
+    "5":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Strong teaching presence across all subjects. Responsive communication protocols and structured discussion facilitation guides provided to all academic staff.",actions:[]},
+    "6":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Fully online diverse assessment suite — interactive orals, portfolios, case studies, professional experience assessments. Academic integrity measures embedded.",actions:[]},
+    "7":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Locally based placements with fully online preparation, supervision and debrief. AITSL requirements met. Industry engagement via online guest sessions.",actions:[]},
+    "8":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Integrated proactive support model in place. Library, wellbeing and academic skills services introduced at orientation. Proactive outreach at census and mid-session.",actions:[]},
+  },
+  ocbChanges:"No",printedGuideChanges:"No",ugGuideChanges:"No",
+  studentComms:"Brief notice to current students of formal Fully Online model designation — no change to their study experience.",
+  marketingActions:[],
+  pdRequired:"No",facilityConstraints:"No",staffingViable:"Yes",digitalCapability:"No",
+  staffingNote:"No significant concerns. Teaching team experienced in online delivery. Ongoing DLT professional learning community participation is sufficient.",
+  staffActions:[],
+  riskSummary:"Low transition risk. Course already meets Fully Online model standards. Main actions are CDAP reclassification and AITSL notification. Well-positioned for Group 1 go-live in 2027.",
+  overallRisk:"Low",goLiveGroup:"Group 1 — 2027",
+  additionalComments:"Recommended as a showcase course for the Fully Online model. Could serve as a reference example for other courses transitioning to Fully Online.",
+  additionalConditions:"",
+});
+
+const s3=normaliseCourse({
+  id:"s3",faculty:"Faculty of Business, Justice & Behavioural Sciences",school:"School of Business",
+  courseName:"Bachelor of Business",courseCode:"BB001",locations:"Bathurst, Port Macquarie, Online",
+  currentMode:"Combined",nominatedModel:"Combined",complexity:"Medium",mainCampus:"Bathurst",group1candidate:"No",
+  execDean:"Prof David Martin",adAcademic:"A/Prof Fiona Walker",headOfSchool:"Dr Christine White",
+  courseDirector:"Dr Andrew Clark",dltContact:"Belinda Johnson",additionalContacts:"T. Nguyen (Industry Engagement Lead)",
+  ccrStart:"2026-07-01",ccrEnd:"2027-06-30",
+  ccrNote:"CCR scheduled to commence July 2026. MEA transition will run parallel to CCR. Course team to use MEA model standards as a design reference point within the CCR process.",
+  govFlags:{
+    ccr:{flagged:"Yes",note:"CCR and MEA transition to be co-designed where possible. CCR team has been briefed on MEA requirements.",actions:[{activity:"Establish CCR/MEA co-design working group",subject:"BB001",responsible:"Course Director",startDate:"2026-05-01",endDate:"2026-06-30"}]},
+    accreditation:{flagged:"No",note:"",actions:[]},
+    teachout:{flagged:"No",note:"",actions:[]},
+    cricos:{flagged:"Yes",note:"Course is CRICOS registered at Bathurst. Combined model is compatible — compliance check needed.",actions:[{activity:"CRICOS compliance check for Combined model",subject:"BB001",responsible:"DLT contact",startDate:"2026-04-01",endDate:"2026-05-31"}]},
+    thirdparty:{flagged:"Yes",note:"Existing industry partnership with regional business council for WIL. Partnership agreement to be reviewed.",actions:[{activity:"Review WIL partnership agreement",subject:"BB001",responsible:"Industry Engagement Lead",startDate:"2026-03-01",endDate:"2026-04-30"}]},
+    campus:{flagged:"Yes",note:"Port Macquarie students will attend Bathurst for on-campus intensive phases. Travel support to be considered.",actions:[{activity:"Develop student support package for interstate intensive attendance",subject:"BB001",responsible:"Head of School",startDate:"2026-06-01",endDate:"2026-08-31"}]},
+    cdap:{flagged:"Yes",note:"Subject modes to be updated in CDAP to reflect Combined classification.",actions:[{activity:"Update CDAP subject modes",subject:"All subjects",responsible:"DLT contact",startDate:"2026-08-01",endDate:"2026-10-31"}]},
+    governance:{flagged:"No",note:"",actions:[]},
+  },
+  govApprovals:{schoolBoard:"No",facultyBoard:"Yes",aqsc:"No",ucc:"No",ibs:"No",senate:"No",
+    actions:[{activity:"Prepare Faculty Board briefing paper on Combined model transition",subject:"BB001",responsible:"Associate Dean Academic",startDate:"2026-07-01",endDate:"2026-08-31"}]},
+  sectionC:{
+    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require intentional redesign. Current online delivery is largely content delivery with limited interaction. Ed designer working with course team to redesign online phases.",actions:[{activity:"Redesign online phases of 12 priority subjects",subject:"Year 1 and 2 subjects",responsible:"Ed Designer",startDate:"2026-03-01",endDate:"2026-12-31"}]},
+    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current mixed delivery does not clearly delineate async and sync components. Sequencing of asynchronous online preparation followed by synchronous on-campus intensives to be designed explicitly.",actions:[]},
+    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Bathurst confirmed as home campus for intensives. Port Macquarie students to attend two intensive blocks per year. Intensive schedule to be published 12 weeks in advance.",actions:[{activity:"Publish 2028 intensive schedule",subject:"All subjects",responsible:"Course Director",startDate:"2027-06-01",endDate:"2027-08-31"}]},
+    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Students transitioning between online and on-campus phases require explicit preparation. Particular attention to Port Macquarie cohort managing travel logistics alongside study demands.",actions:[]},
+    "5":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Teaching presence continuity across phases needs to be explicitly designed. Academic staff to be supported to maintain consistent presence in both online and on-campus phases.",actions:[]},
+    "6":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Assessment is sequenced across phases — online preparation tasks, on-campus performance assessments, and online consolidation reflections. Assessment schedule aligned to intensive blocks.",actions:[{activity:"Audit and realign assessment schedule to intensive calendar",subject:"All subjects",responsible:"Course Director",startDate:"2026-05-01",endDate:"2026-09-30"}]},
+    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"WIL placements currently occur in Bathurst and Port Macquarie contexts. Online groundwork and on-campus simulation to precede placement. Partnership review underway.",actions:[]},
+    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Support continuity across phases to be mapped. Students should not need to re-register with support services when switching between online and on-campus phases.",actions:[]},
+  },
+  ocbChanges:"Yes",printedGuideChanges:"No",ugGuideChanges:"Yes",
+  studentComms:"Port Macquarie students require specific communication about intensive attendance at Bathurst. Prospective student information to be updated for 2028 intake.",
+  marketingActions:[{activity:"Update OCB with Combined model description and intensive schedule",subject:"BB001",responsible:"Marketing",startDate:"2027-01-01",endDate:"2027-03-31"},{activity:"Develop Port Macquarie student intensive attendance guide",subject:"BB001",responsible:"Student Communications",startDate:"2026-09-01",endDate:"2026-10-31"}],
+  pdRequired:"Yes",facilityConstraints:"No",staffingViable:"Yes",digitalCapability:"No",
+  staffingNote:"PD required for academic staff to develop capability in Combined model delivery — particularly designing coherent phase transitions and maintaining teaching presence across modes.",
+  staffActions:[{activity:"Deliver Combined model teaching PD workshop series",subject:"All teaching staff",responsible:"DLT Teaching Academy",startDate:"2026-06-01",endDate:"2026-10-31"}],
+  riskSummary:"Medium transition risk. The Bachelor of Business partially aligns with the Combined model but lacks intentional phase sequencing. Key risks include the parallel CCR, CRICOS compliance verification, and logistical challenges for Port Macquarie students.",
+  overallRisk:"Medium",goLiveGroup:"Group 2 — 2028",
+  additionalComments:"The parallel CCR presents both a risk and an opportunity — if well-coordinated it can embed MEA requirements and reduce overall workload.",
+  additionalConditions:"",
+});
+
+return [s1,s2,s3];
+};
+
+// ─── STORAGE ─────────────────────────────────────────────────
+const loadCourses=()=>{
+  try{
+    const r=localStorage.getItem(STORAGE_KEY);
+    if(r){const p=JSON.parse(r);if(Array.isArray(p)&&p.length)return p.map(normaliseCourse);}
+  }catch(e){}
+  return null;
+};
+const saveCourses=c=>{try{localStorage.setItem(STORAGE_KEY,JSON.stringify(c));}catch(e){}};
+
+// ─── COMPLETION % ─────────────────────────────────────────────
+const pct=c=>{
+  let f=0,t=0;
+  t+=8;if(c.courseName)f++;if(c.courseCode)f++;if(c.faculty)f++;if(c.school)f++;if(c.nominatedModel)f++;if(c.complexity)f++;if(c.goLiveGroup)f++;if(c.overallRisk)f++;
+  t+=2;if(c.execDean)f++;if(c.courseDirector)f++;
+  t+=1;if(c.ccrNote)f++;
+  t+=1;if(GOV_FIELDS.some(gf=>c.govFlags?.[gf.key]?.flagged&&c.govFlags[gf.key].flagged!=="No"))f++;
+  SECTION_C.forEach(s=>{t+=2;const sc=c.sectionC?.[s.id]||{};if(sc.edDesignerStatus&&sc.edDesignerStatus!=="Not started")f++;if(sc.notes)f++;});
+  t+=1;if(c.ocbChanges&&c.ocbChanges!=="No"||c.studentComms)f++;
+  t+=1;if(c.staffingNote||c.pdRequired==="Yes")f++;
+  t+=1;if(c.riskSummary)f++;
+  t+=1;if(c.goLiveGroup)f++;
+  return Math.round((f/t)*100);
+};
+
+const riskSty=r=>({Critical:{bg:"#fdecea",col:"#9b1c1c",br:"#f87171"},High:{bg:"#fff3e0",col:"#7c2d12",br:"#fb923c"},Medium:{bg:"#fffbeb",col:"#78350f",br:"#fbbf24"},Low:{bg:"#f0fdf4",col:"#14532d",br:"#4ade80"}}[r]||{bg:"#f3f4f6",col:"#6b7280",br:"#d1d5db"});
+const statSty=s=>s==="Complete"?{bg:"#f0fdf4",col:"#14532d",br:"#4ade80"}:s==="In progress"?{bg:"#fffbeb",col:"#78350f",br:"#fbbf24"}:{bg:"#f9fafb",col:"#6b7280",br:"#e5e7eb"};
+
+// ─── CSV IMPORT ───────────────────────────────────────────────
+const parseImportCSV=text=>{
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2)return{courses:[],skipped:0};
+  const parseRow=line=>{
+    const cells=[];let cur="",inQ=false;
+    for(let i=0;i<line.length;i++){
+      const ch=line[i];
+      if(ch==='"'&&!inQ){inQ=true;}
+      else if(ch==='"'&&inQ&&line[i+1]==='"'){cur+='"';i++;}
+      else if(ch==='"'&&inQ){inQ=false;}
+      else if(ch===','&&!inQ){cells.push(cur.trim());cur="";}
+      else{cur+=ch;}
+    }
+    cells.push(cur.trim());return cells;
+  };
+  const headers=parseRow(lines[0]);
+  const clean=h=>h.replace(/[\r\n]+/g," ").replace(/\s+/g," ").replace(/['"]/g,"").toLowerCase().trim();
+  const ch=headers.map(clean);
+  const col=kws=>ch.findIndex(h=>kws.some(k=>h.includes(k.toLowerCase())));
+  const iF=col(["faculty"]),iName=col(["course name"]),iCode=col(["course code"]);
+  const iMode=col(["current course delivery","current mode","delivery method"]);
+  const iModel=col(["nominated model"]),iComp=col(["complexity","confirm course transition"]);
+  const iCampus=col(["campus for in-person","enter campus"]);
+  const iG1=col(["nominate 5","group 1","go live 2027"]);
+  const iCS=col(["ccr start"]),iCE=col(["ccr end"]),iScope=col(["select model"]);
+  const nFac=v=>{const s=v.toLowerCase().replace(" and "," & ").trim();if(s.includes("business")||s.includes("justice")||s.includes("behavioural"))return"Faculty of Business, Justice & Behavioural Sciences";if(s.includes("arts")||s.includes("education"))return"Faculty of Arts & Education";if(s.includes("science")||s.includes("health"))return"Faculty of Science & Health";if(s.includes("agribusiness")||s.includes("commerce"))return"Faculty of Agribusiness & Commerce";return v.trim();};
+  const nModel=v=>{const s=v.toLowerCase().replace(/[\r\n\s]+/g," ").trim();if(s.includes("fully online"))return"Fully Online";if(s.includes("in-person")||s.includes("in person")||s.includes("immersive"))return"In-Person Immersive";if(s.includes("combined"))return"Combined";return"";};
+  const nMode=v=>{const s=v.toLowerCase().replace(/[\r\n\s]+/g," ").trim();if(s.includes("fully online")||s.includes("online"))return"Fully Online";if(s.includes("mixed"))return"Combined";if(s.includes("in-person")||s.includes("in person")||s.includes("face"))return"In-Person Immersive";return"";};
+  const nComp=v=>{const s=v.replace(/[\r\n\s]+/g," ").trim().toUpperCase();if(s==="L"||s.startsWith("LOW"))return"Low";if(s==="M"||s.startsWith("MED"))return"Medium";if(s==="H"||s.startsWith("HIGH"))return"High";return"";};
+  const nDate=v=>{if(!v||!v.trim())return"";const d=new Date(v.trim());return isNaN(d.getTime())?v.trim():d.toISOString().slice(0,10);};
+  const courses=[];let skipped=0;
+  for(let i=1;i<lines.length;i++){
+    const r=parseRow(lines[i]);
+    if(r.every(c=>!c.trim()))continue;
+    const sv=iScope>=0?(r[iScope]||""):"";
+    if(sv.toLowerCase().includes("out of scope")||sv.toLowerCase().includes("discontinued")){skipped++;continue;}
+    const name=iName>=0?r[iName]||"":"",code=iCode>=0?r[iCode]||"":"";
+    if(!name&&!code)continue;
+    const c=emptyCourse();
+    c.id=code||("imp_"+i);
+    if(iF>=0)c.faculty=nFac(r[iF]||"");
+    c.courseName=name;c.courseCode=code;
+    if(iMode>=0)c.currentMode=nMode(r[iMode]||"");
+    if(iModel>=0)c.nominatedModel=nModel(r[iModel]||"");
+    if(iComp>=0)c.complexity=nComp(r[iComp]||"");
+    if(iCampus>=0)c.mainCampus=r[iCampus]||"";
+    if(iG1>=0)c.group1candidate=(r[iG1]||"").trim()?"Yes":"No";
+    if(iCS>=0)c.ccrStart=nDate(r[iCS]||"");
+    if(iCE>=0)c.ccrEnd=nDate(r[iCE]||"");
+    courses.push(c);
+  }
+  return{courses,skipped};
+};
+
+// ─── CSV EXPORT ───────────────────────────────────────────────
+const exportCSV=courses=>{
+  const esc=v=>`"${String(v||"").replace(/"/g,'""')}"`;
+  const rows=[];
+  rows.push(["Course name","Course code","Faculty","School","Locations","Current mode","Nominated model","Complexity","Main campus","Group 1 candidate","Go-live group","Overall risk","Completion %","Executive Dean","Associate Dean Academic","Head of School","Course Director","DLT contact","CCR start","CCR end","CCR note",...GOV_FIELDS.map(f=>`${f.label} — flagged`),...SECTION_C.map(s=>`C${s.id} Ed designer status`),...SECTION_C.map(s=>`C${s.id} Faculty status`),...SECTION_C.map(s=>`C${s.id} Notes`),"OCB changes","Printed guide changes","UG guide changes","Student comms","PD required","Facility constraints","Staffing viable","Digital capability","Staff notes","Risk summary","Additional comments","Additional conditions"].map(esc).join(","));
+  courses.forEach(c=>{rows.push([c.courseName,c.courseCode,c.faculty,c.school,c.locations,c.currentMode,c.nominatedModel,c.complexity,c.mainCampus,c.group1candidate,c.goLiveGroup,c.overallRisk,pct(c),c.execDean,c.adAcademic,c.headOfSchool,c.courseDirector,c.dltContact,c.ccrStart,c.ccrEnd,c.ccrNote,...GOV_FIELDS.map(f=>c.govFlags?.[f.key]?.flagged||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.edDesignerStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.facultyStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.notes||""),c.ocbChanges,c.printedGuideChanges,c.ugGuideChanges,c.studentComms,c.pdRequired,c.facilityConstraints,c.staffingViable,c.digitalCapability,c.staffingNote,c.riskSummary,c.additionalComments,c.additionalConditions].map(esc).join(","));});
+  rows.push([]);rows.push([`"ACTIONS — all courses"`]);
+  rows.push(["Course","Course code","Section","Area","Activity","Subject","Responsible","Start date","End date"].map(esc).join(","));
+  courses.forEach(c=>{
+    GOV_FIELDS.forEach(f=>{(c.govFlags?.[f.key]?.actions||[]).forEach(a=>{rows.push([c.courseName,c.courseCode,"Section B",f.label,a.activity,a.subject,a.responsible,a.startDate,a.endDate].map(esc).join(","));});});
+    (c.govApprovals?.actions||[]).forEach(a=>{rows.push([c.courseName,c.courseCode,"Section B","Governance approvals",a.activity,a.subject,a.responsible,a.startDate,a.endDate].map(esc).join(","));});
+    SECTION_C.forEach(s=>{(c.sectionC?.[s.id]?.actions||[]).forEach(a=>{rows.push([c.courseName,c.courseCode,"Section C",`C${s.id}. ${s.title}`,a.activity,a.subject,a.responsible,a.startDate,a.endDate].map(esc).join(","));});});
+    (c.marketingActions||[]).forEach(a=>{rows.push([c.courseName,c.courseCode,"Section D","Marketing & comms",a.activity,a.subject,a.responsible,a.startDate,a.endDate].map(esc).join(","));});
+    (c.staffActions||[]).forEach(a=>{rows.push([c.courseName,c.courseCode,"Section E","Staff readiness",a.activity,a.subject,a.responsible,a.startDate,a.endDate].map(esc).join(","));});
+  });
+  const blob=new Blob([rows.join("\n")],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download="MEA_Course_Transition_Plan.csv";a.click();URL.revokeObjectURL(url);
+};
+
+// ─── UI HELPERS ───────────────────────────────────────────────
+const Badge=({label,bg,col,br})=>(<span style={{fontSize:11,padding:"3px 8px",borderRadius:4,fontWeight:500,whiteSpace:"nowrap",background:bg,color:col,border:`1px solid ${br}`}}>{label}</span>);
+const Crest=({size=28,col=C.orange})=>(<svg width={size} height={size} viewBox="0 0 40 46" fill="none" style={{flexShrink:0}}><path d="M20 2L4 8V22C4 32 12 40 20 44C28 40 36 32 36 22V8L20 2Z" fill={col}/><path d="M10 17H30" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M10 21H30" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M10 25H22" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 28V36" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M20 28V36" stroke="white" strokeWidth="1.5" strokeLinecap="round"/><path d="M26 28V36" stroke="white" strokeWidth="1.5" strokeLinecap="round"/></svg>);
+const Inp=({value,onChange,placeholder,type="text"})=>(<input type={type} value={value||""} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""}/>);
+const Sel=({value,onChange,options,placeholder})=>(<select value={value||""} onChange={e=>onChange(e.target.value)}><option value="">{placeholder||"Select..."}</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select>);
+const Txt=({value,onChange,placeholder,rows=3})=>(<textarea value={value||""} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""} rows={rows}/>);
+const Fld=({label,children,half})=>(<div style={{marginBottom:14,flex:half?"1 1 calc(50% - 6px)":"1 1 100%",minWidth:half?180:0}}><label style={{display:"block",fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em"}}>{label}</label>{children}</div>);
+const SecHdr=({children})=>(<div style={{fontWeight:500,fontSize:12,color:C.white,background:C.darkGreen,padding:"8px 12px",borderRadius:4,marginBottom:14,marginTop:24,letterSpacing:"0.02em"}}>{children}</div>);
+
+const ActTable=({rows,onChange,label})=>{
+  const safeRows=rows||[];
+  const upd=(i,k,v)=>onChange(safeRows.map((x,j)=>j===i?{...x,[k]:v}:x));
+  const [w,setW]=useState(window.innerWidth);
+  useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);
+  return(
+    <div style={{marginTop:12}}>
+      <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,textTransform:"uppercase",letterSpacing:"0.04em",marginBottom:8}}>{label||"Actions required"}</div>
+      {safeRows.length>0&&(w<641?(
+        <div>{safeRows.map((r,i)=>(<div key={i} style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"10px 12px",marginBottom:8,background:C.white}}>{[["Activity","activity"],["Subject","subject"],["Responsible","responsible"],["Start date","startDate"],["End date","endDate"]].map(([l,k])=>(<div key={k} style={{marginBottom:8}}><div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:3,textTransform:"uppercase",letterSpacing:"0.04em"}}>{l}</div><input value={r[k]||""} onChange={e=>upd(i,k,e.target.value)} type={k.includes("Date")?"date":"text"} style={{width:"100%",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"8px 10px",fontSize:15,fontFamily:"Arial,sans-serif",color:C.charcoal,background:"#fafaf9"}}/></div>))}<button onClick={()=>onChange(safeRows.filter((_,j)=>j!==i))} style={{fontSize:12,padding:"6px 12px",background:"transparent",border:"1px solid #ef4444",borderRadius:4,color:"#ef4444",width:"100%"}}>Remove row</button></div>))}</div>
+      ):(
+        <div style={{overflowX:"auto",border:`1px solid ${C.lightBrown}`,borderRadius:4}}><table style={{width:"100%",fontSize:13,minWidth:500}}><thead><tr style={{background:C.pink}}>{["Activity","Subject","Responsible","Start","End",""].map((h,i)=>(<th key={i} style={{padding:"6px 8px",textAlign:"left",fontWeight:500,color:C.darkBrown,borderBottom:`1px solid ${C.lightBrown}`,width:i===5?36:"auto"}}>{h}</th>))}</tr></thead><tbody>{safeRows.map((r,i)=>(<tr key={i} style={{borderBottom:`1px solid ${C.pink}`}}>{["activity","subject","responsible","startDate","endDate"].map(k=>(<td key={k} style={{padding:"2px 4px"}}><input value={r[k]||""} onChange={e=>upd(i,k,e.target.value)} style={{width:"100%",border:"none",background:"transparent",fontSize:13,fontFamily:"Arial,sans-serif",padding:"5px 4px",outline:"none",color:C.charcoal}} type={k.includes("Date")?"date":"text"}/></td>))}<td style={{textAlign:"center",padding:"0 4px"}}><button onClick={()=>onChange(safeRows.filter((_,j)=>j!==i))} style={{background:"none",border:"none",color:C.darkBrown,fontSize:18,padding:"4px 6px",lineHeight:1}}>×</button></td></tr>))}</tbody></table></div>
+      ))}
+      <button onClick={()=>onChange([...safeRows,emptyAR()])} style={{marginTop:8,fontSize:13,padding:"8px 14px",background:"transparent",border:`1px solid ${C.orange}`,borderRadius:4,color:C.orange,fontWeight:500,minHeight:40}}>+ Add row</button>
+    </div>
+  );
+};
+
+// ─── FORM SECTIONS ────────────────────────────────────────────
+function SecA({c,u}){return(<div><SecHdr>Section A — Course details</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}><Fld label="Faculty" half><Sel value={c.faculty} onChange={v=>u("faculty",v)} options={FACULTIES}/></Fld><Fld label="School" half><Inp value={c.school} onChange={v=>u("school",v)} placeholder="School name"/></Fld><Fld label="Course name" half><Inp value={c.courseName} onChange={v=>u("courseName",v)} placeholder="Full course name"/></Fld><Fld label="Course code" half><Inp value={c.courseCode} onChange={v=>u("courseCode",v)} placeholder="e.g. BN001"/></Fld><Fld label="Locations currently offered"><Inp value={c.locations} onChange={v=>u("locations",v)} placeholder="e.g. Bathurst, Online"/></Fld><Fld label="Current mode of engagement" half><Sel value={c.currentMode} onChange={v=>u("currentMode",v)} options={MODELS}/></Fld><Fld label="Nominated model" half><Sel value={c.nominatedModel} onChange={v=>u("nominatedModel",v)} options={MODELS}/></Fld><Fld label="Transition complexity" half><Sel value={c.complexity} onChange={v=>u("complexity",v)} options={COMPLEXITY}/></Fld><Fld label="Nominated main campus" half><Inp value={c.mainCampus} onChange={v=>u("mainCampus",v)} placeholder="e.g. Bathurst"/></Fld><Fld label="Candidate for Group 1?" half><Sel value={c.group1candidate} onChange={v=>u("group1candidate",v)} options={["Yes","No"]}/></Fld></div><SecHdr>Key contacts</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["execDean","Executive Dean"],["adAcademic","Associate Dean Academic"],["headOfSchool","Head of School"],["courseDirector","Course Director"],["dltContact","DLT contact"]].map(([k,l])=>(<Fld key={k} label={l} half><Inp value={c[k]} onChange={v=>u(k,v)} placeholder={l}/></Fld>))}<Fld label="Additional contacts"><Txt value={c.additionalContacts} onChange={v=>u("additionalContacts",v)} placeholder="Names and roles" rows={2}/></Fld></div></div>);}
+
+function SecB({c,u,ug}){return(<div><SecHdr>Section B — Governance and approvals</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:16}}><Fld label="CCR start date" half><Inp type="date" value={c.ccrStart} onChange={v=>u("ccrStart",v)}/></Fld><Fld label="CCR end date" half><Inp type="date" value={c.ccrEnd} onChange={v=>u("ccrEnd",v)}/></Fld><Fld label="Note on interaction with MEA transition"><Txt value={c.ccrNote} onChange={v=>u("ccrNote",v)} placeholder="How does the CCR timeline interact with MEA transition?"/></Fld></div>{GOV_FIELDS.map(f=>(<div key={f.key} style={{border:`1px solid ${C.lightBrown}`,borderLeft:`3px solid ${C.orange}`,borderRadius:4,padding:"12px",marginBottom:10}}><div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:8,flexWrap:"wrap"}}><span style={{fontWeight:500,fontSize:14,flex:1}}>{f.label}</span><div style={{width:130,flexShrink:0}}><Sel value={c.govFlags?.[f.key]?.flagged||"No"} onChange={v=>ug(f.key,"flagged",v)} options={["Yes","No","TBC"]}/></div></div>{c.govFlags?.[f.key]?.flagged!=="No"&&(<><Txt value={c.govFlags?.[f.key]?.note||""} onChange={v=>ug(f.key,"note",v)} placeholder="Notes" rows={2}/><ActTable rows={c.govFlags?.[f.key]?.actions||[]} onChange={v=>ug(f.key,"actions",v)}/></>)}</div>))}<SecHdr>Governance approvals</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:12}}>{[["schoolBoard","School Board"],["facultyBoard","Faculty Board"],["aqsc","AQSC"],["ucc","University Courses Committee"],["ibs","Indigenous Board of Studies"],["senate","Academic Senate"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c.govApprovals?.[k]||"No"} onChange={v=>u("govApprovals",{...c.govApprovals,[k]:v})} options={["Yes","No","TBC"]}/></Fld>))}</div><ActTable rows={c.govApprovals?.actions||[]} onChange={v=>u("govApprovals",{...(c.govApprovals||{}),actions:v})} label="Governance approval actions"/></div>);}
+
+function SecC({c,uc}){
+  const [exp,setExp]=useState("all");
+  const isOpen=id=>exp==="all"||exp===id;
+  return(<div><SecHdr>Section C — Model gap analysis</SecHdr><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><p style={{fontSize:14,color:C.darkBrown}}>Nominated model: <strong style={{color:C.charcoal}}>{c.nominatedModel||"Not yet selected — set in Section A"}</strong></p><div style={{display:"flex",gap:6}}><button onClick={()=>setExp("all")} style={{fontSize:11,padding:"4px 10px",background:exp==="all"?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp==="all"?C.white:C.darkGreen,borderRadius:4}}>Expand all</button><button onClick={()=>setExp(null)} style={{fontSize:11,padding:"4px 10px",background:exp===null?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp===null?C.white:C.darkGreen,borderRadius:4}}>Collapse all</button></div></div>
+  {SECTION_C.map(s=>{const sc=c.sectionC?.[s.id]||{};const open=isOpen(s.id);const ss=statSty(sc.edDesignerStatus||"Not started");return(<div key={s.id} style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,marginBottom:8,overflow:"hidden"}}><div onClick={()=>setExp(open&&exp!=="all"?null:s.id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",borderLeft:`3px solid ${C.darkGreen}`,gap:8}}><span style={{fontSize:14,fontWeight:500,flex:1}}>C{s.id}. {s.title}</span><div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}><Badge label={sc.edDesignerStatus||"Not started"} bg={ss.bg} col={ss.col} br={ss.br}/><span style={{fontSize:12,color:C.darkBrown}}>{open?"▲":"▼"}</span></div></div>{open&&(<div style={{padding:"14px",borderTop:`1px solid ${C.lightBrown}`}}><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:12}}><Fld label="Ed designer review status" half><Sel value={sc.edDesignerStatus||"Not started"} onChange={v=>uc(s.id,"edDesignerStatus",v)} options={STATUS}/></Fld><Fld label="Faculty review status" half><Sel value={sc.facultyStatus||"Not started"} onChange={v=>uc(s.id,"facultyStatus",v)} options={STATUS}/></Fld></div><Fld label="Notes"><Txt value={sc.notes||""} onChange={v=>uc(s.id,"notes",v)} placeholder="Notes on gap analysis for this standard"/></Fld><ActTable rows={sc.actions||[]} onChange={v=>uc(s.id,"actions",v)}/></div>)}</div>);})}
+  </div>);}
+
+function SecD({c,u}){return(<div><SecHdr>Section D — Marketing and student communications</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["ocbChanges","Changes required in the OCB?"],["printedGuideChanges","Changes required in printed course guide?"],["ugGuideChanges","Changes required in UG Guide?"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c[k]||"No"} onChange={v=>u(k,v)} options={["Yes","No","TBC"]}/></Fld>))}<Fld label="Additional student communications required"><Txt value={c.studentComms} onChange={v=>u("studentComms",v)} placeholder="Describe any additional student communication needs"/></Fld></div><ActTable rows={c.marketingActions||[]} onChange={v=>u("marketingActions",v)} label="Marketing and communications actions"/></div>);}
+
+function SecE({c,u}){return(<div><SecHdr>Section E — Staff experience and readiness</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["pdRequired","Additional PD required?"],["facilityConstraints","Facility or infrastructure constraints?"],["digitalCapability","Digital capability constraints identified?"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c[k]||"No"} onChange={v=>u(k,v)} options={["Yes","No","TBC"]}/></Fld>))}<Fld label="Staffing viable in new mode?" half><Sel value={c.staffingViable||"Yes"} onChange={v=>u("staffingViable",v)} options={["Yes","No","With conditions"]}/></Fld><Fld label="Notes"><Txt value={c.staffingNote} onChange={v=>u("staffingNote",v)} placeholder="Notes on staff readiness" rows={4}/></Fld></div><ActTable rows={c.staffActions||[]} onChange={v=>u("staffActions",v)} label="Staff readiness actions"/></div>);}
+
+function SecF({c,u}){return(<div><SecHdr>Section F — Risks</SecHdr><Fld label="Concise synthesis of significant implementation risks"><Txt value={c.riskSummary} onChange={v=>u("riskSummary",v)} placeholder="Summarise the most significant implementation risks and any support or decisions required" rows={5}/></Fld><Fld label="Overall implementation risk level"><Sel value={c.overallRisk||""} onChange={v=>u("overallRisk",v)} options={RISK}/></Fld></div>);}
+
+function SecG({c,u}){return(<div><SecHdr>Section G — Final details</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}><Fld label="Go live group"><Sel value={c.goLiveGroup||""} onChange={v=>u("goLiveGroup",v)} options={GO_LIVE}/></Fld><Fld label="Additional comments"><Txt value={c.additionalComments} onChange={v=>u("additionalComments",v)} placeholder="Any additional comments"/></Fld><Fld label="Additional conditions"><Txt value={c.additionalConditions} onChange={v=>u("additionalConditions",v)} placeholder="Any conditions attached to approval or transition"/></Fld></div><div style={{marginTop:16,padding:"14px 16px",background:"#f0fdf4",border:"1px solid #4ade80",borderLeft:`4px solid ${C.lightGreen}`,borderRadius:4,fontSize:14,color:"#14532d",fontWeight:500}}>This form is now complete and ready for submission.</div></div>);}
+
+// ─── SCOPE VIEW ───────────────────────────────────────────────
+const SRow=({label,value})=>value?(<div style={{display:"flex",flexWrap:"wrap",gap:8,padding:"8px 0",borderBottom:`1px solid ${C.pink}`,fontSize:13}}><span style={{color:C.darkBrown,minWidth:180,flexShrink:0,fontWeight:500}}>{label}</span><span style={{color:C.charcoal,flex:1}}>{value}</span></div>):null;
+const ScopeSec=({title,children})=>(<div style={{marginBottom:20}}><div style={{background:C.darkGreen,color:C.white,fontWeight:500,fontSize:12,padding:"6px 10px",borderRadius:3,marginBottom:8}}>{title}</div>{children}</div>);
+
+const ConsolidatedActions=({course:c,sections,sectionLabel})=>{
+  const [w,setW]=useState(window.innerWidth);
+  useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);
+  const all=sections.flatMap(s=>(s.getActions(c)||[]).filter(a=>a&&(a.activity||a.responsible)).map(a=>({...a,area:s.label})));
+  if(!all.length)return null;
+  return(<ScopeSec title={`${sectionLabel} — Consolidated actions`}>{w<641?(all.map((a,i)=>(<div key={i} style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"10px 12px",marginBottom:8,background:C.white}}><div style={{fontSize:11,color:C.orange,fontWeight:500,marginBottom:4,textTransform:"uppercase"}}>{a.area}</div>{a.activity&&<div style={{fontSize:13,fontWeight:500,marginBottom:4}}>{a.activity}</div>}{a.subject&&<div style={{fontSize:12,color:C.darkBrown}}>Subject: {a.subject}</div>}{a.responsible&&<div style={{fontSize:12,color:C.darkBrown}}>Responsible: {a.responsible}</div>}{(a.startDate||a.endDate)&&<div style={{fontSize:12,color:C.darkBrown}}>Dates: {a.startDate}{a.startDate&&a.endDate?" — ":""}{a.endDate}</div>}</div>))):(
+    <div style={{overflowX:"auto"}}><table style={{width:"100%",fontSize:12,borderCollapse:"collapse",minWidth:400}}><thead><tr style={{background:C.pink}}>{["Area","Activity","Subject","Responsible","Start","End"].map(h=>(<th key={h} style={{padding:"6px 10px",textAlign:"left",fontWeight:500,color:C.darkBrown,borderBottom:`1px solid ${C.lightBrown}`,whiteSpace:"nowrap"}}>{h}</th>))}</tr></thead><tbody>{all.map((a,i)=>(<tr key={i} style={{borderBottom:`1px solid ${C.pink}`,background:i%2===0?C.white:"#fdfcfb"}}><td style={{padding:"6px 10px",color:C.darkBrown,fontWeight:500,fontSize:11}}>{a.area}</td><td style={{padding:"6px 10px"}}>{a.activity}</td><td style={{padding:"6px 10px"}}>{a.subject}</td><td style={{padding:"6px 10px"}}>{a.responsible}</td><td style={{padding:"6px 10px",whiteSpace:"nowrap"}}>{a.startDate}</td><td style={{padding:"6px 10px",whiteSpace:"nowrap"}}>{a.endDate}</td></tr>))}</tbody></table></div>
+    )}</ScopeSec>);
+};
+
+function ScopeView({course:c,onBack,onEdit}){
+  const exportPDF=()=>{const name=[c.courseName,c.courseCode].filter(Boolean).join(" — ");document.title=name||"MEA Course Transition Plan";window.print();setTimeout(()=>{document.title="MEA Course Transition Plan — Charles Sturt University";},1000);};
+  return(<div><div className="no-print" style={{background:C.charcoal,padding:"0 1rem"}}><div style={{maxWidth:860,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,gap:8}}><div style={{display:"flex",alignItems:"center",gap:8}}><Crest size={28}/><button onClick={onBack} style={{background:"transparent",border:"1px solid rgba(255,255,255,0.3)",color:C.white,padding:"7px 12px",borderRadius:4,fontSize:13,minHeight:38}}>← Back</button><button onClick={onEdit} style={{background:"transparent",border:"1px solid rgba(255,255,255,0.3)",color:C.white,padding:"7px 12px",borderRadius:4,fontSize:13,minHeight:38}}>Edit</button></div><button onClick={exportPDF} style={{background:C.darkGreen,border:"none",color:C.white,padding:"7px 14px",borderRadius:4,fontSize:13,fontWeight:500,minHeight:38}}>Export PDF</button></div></div>
+  <div style={{maxWidth:860,margin:"0 auto",padding:"1rem"}}><div style={{background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,overflow:"hidden"}}>
+    <div style={{background:C.charcoal,padding:"16px 20px",display:"flex",alignItems:"center",gap:14}}><Crest size={40}/><div><div style={{color:C.white,fontSize:16,fontWeight:400}}>Course Transition Plan</div><div style={{color:C.lightBrown,fontSize:11}}>Models of Engagement and Assessment — Charles Sturt University</div></div></div>
+    <div style={{background:C.orange,padding:"8px 20px"}}><span style={{color:C.white,fontWeight:500,fontSize:15}}>{c.courseName||"Unnamed course"}</span>{c.courseCode&&<span style={{color:"rgba(255,255,255,0.85)",fontSize:13,marginLeft:10}}>{c.courseCode}</span>}</div>
+    <div style={{padding:"16px 20px"}}>
+      <ScopeSec title="Section A — Course details">{[["Faculty",c.faculty],["School",c.school],["Course name",c.courseName],["Course code",c.courseCode],["Locations",c.locations],["Current mode",c.currentMode],["Nominated model",c.nominatedModel],["Transition complexity",c.complexity],["Main campus",c.mainCampus],["Group 1 candidate",c.group1candidate]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
+      <ScopeSec title="Key contacts">{[["Executive Dean",c.execDean],["Associate Dean Academic",c.adAcademic],["Head of School",c.headOfSchool],["Course Director",c.courseDirector],["DLT contact",c.dltContact],["Additional contacts",c.additionalContacts]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
+      <ScopeSec title="Section B — Governance and approvals"><SRow label="CCR start date" value={c.ccrStart}/><SRow label="CCR end date" value={c.ccrEnd}/><SRow label="CCR interaction note" value={c.ccrNote}/>{GOV_FIELDS.map(f=>{const fl=c.govFlags?.[f.key];return fl&&fl.flagged!=="No"?(<div key={f.key} style={{padding:"7px 0",borderBottom:`1px solid ${C.pink}`}}><div style={{display:"flex",flexWrap:"wrap",gap:8,fontSize:13,alignItems:"center"}}><span style={{color:C.darkBrown,minWidth:180,fontWeight:500}}>{f.label}</span><Badge label={fl.flagged} bg={C.pink} col={C.darkBrown} br={C.lightBrown}/></div>{fl.note&&<div style={{fontSize:12,color:C.darkBrown,marginTop:4,paddingLeft:8}}>{fl.note}</div>}</div>):null;})}</ScopeSec>
+      <ConsolidatedActions course={c} sectionLabel="Section B" sections={[...GOV_FIELDS.map(f=>({label:f.label,getActions:x=>x.govFlags?.[f.key]?.actions||[]})),{label:"Governance approvals",getActions:x=>x.govApprovals?.actions||[]}]}/>
+      <ScopeSec title="Section C — Model gap analysis">{SECTION_C.map(s=>{const sc=c.sectionC?.[s.id]||{};const es=statSty(sc.edDesignerStatus||"Not started");const fs=statSty(sc.facultyStatus||"Not started");return(<div key={s.id} style={{padding:"8px 0",borderBottom:`1px solid ${C.pink}`}}><div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,fontSize:13}}><span style={{fontWeight:500}}>C{s.id}. {s.title}</span><div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Badge label={`Ed: ${sc.edDesignerStatus||"Not started"}`} bg={es.bg} col={es.col} br={es.br}/><Badge label={`Faculty: ${sc.facultyStatus||"Not started"}`} bg={fs.bg} col={fs.col} br={fs.br}/></div></div>{sc.notes&&<div style={{fontSize:12,color:C.darkBrown,marginTop:4}}>{sc.notes}</div>}</div>);})}</ScopeSec>
+      <ConsolidatedActions course={c} sectionLabel="Section C" sections={SECTION_C.map(s=>({label:`C${s.id}. ${s.title}`,getActions:x=>x.sectionC?.[s.id]?.actions||[]}))}/>
+      <ScopeSec title="Section D — Marketing and communications">{[["OCB changes?",c.ocbChanges],["Printed guide changes?",c.printedGuideChanges],["UG guide changes?",c.ugGuideChanges],["Student comms required",c.studentComms]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
+      <ConsolidatedActions course={c} sectionLabel="Section D" sections={[{label:"Marketing & communications",getActions:x=>x.marketingActions||[]}]}/>
+      <ScopeSec title="Section E — Staff readiness">{[["Additional PD required?",c.pdRequired],["Facility constraints?",c.facilityConstraints],["Staffing viable?",c.staffingViable],["Digital capability constraints?",c.digitalCapability],["Notes",c.staffingNote]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
+      <ConsolidatedActions course={c} sectionLabel="Section E" sections={[{label:"Staff readiness",getActions:x=>x.staffActions||[]}]}/>
+      <ScopeSec title="Section F — Risks"><SRow label="Risk summary" value={c.riskSummary}/><SRow label="Overall risk level" value={c.overallRisk}/></ScopeSec>
+      <ScopeSec title="Section G — Final details"><SRow label="Go live group" value={c.goLiveGroup}/><SRow label="Additional comments" value={c.additionalComments}/><SRow label="Additional conditions" value={c.additionalConditions}/></ScopeSec>
+    </div>
+    <div style={{background:C.charcoal,padding:"10px 20px",fontSize:10,color:C.lightBrown}}>© 2025 Charles Sturt University — TEQSA Provider Identification: PRV12018 (Australian University). CRICOS Provider: 00005F.</div>
+  </div></div></div>);
+}
+
+// ─── IMPORT MODAL ─────────────────────────────────────────────
+function ImportModal({onImport,onClose}){
+  const [status,setStatus]=useState("idle");
+  const [preview,setPreview]=useState(null);
+  const [dragOver,setDragOver]=useState(false);
+  const processFile=file=>{const reader=new FileReader();reader.onload=e=>{const {courses,skipped}=parseImportCSV(e.target.result);setPreview({courses,skipped,fileName:file.name});setStatus("preview");};reader.readAsText(file);};
+  const handleDrop=e=>{e.preventDefault();setDragOver(false);const f=e.dataTransfer.files[0];if(f)processFile(f);};
+  const handleFile=e=>{const f=e.target.files[0];if(f)processFile(f);};
+  const confirmImport=()=>{onImport(preview.courses);setStatus("done");};
+  return(<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:100,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}><div style={{background:C.white,borderRadius:8,padding:"24px",maxWidth:520,width:"100%",maxHeight:"90vh",overflowY:"auto"}}>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}><div><div style={{fontWeight:500,fontSize:16,color:C.charcoal}}>Import from spreadsheet</div><div style={{fontSize:12,color:C.darkBrown,marginTop:2}}>Upload your Faculty Model Decision Worksheet CSV</div></div><button onClick={onClose} style={{background:"none",border:"none",fontSize:22,color:C.darkBrown,padding:"0 4px",lineHeight:1}}>×</button></div>
+    {status==="idle"&&(<div><div onDrop={handleDrop} onDragOver={e=>{e.preventDefault();setDragOver(true);}} onDragLeave={()=>setDragOver(false)} style={{border:`2px dashed ${dragOver?C.orange:C.lightBrown}`,borderRadius:6,padding:"32px",textAlign:"center",background:dragOver?"#fff8f6":"#fafaf9",marginBottom:16}}><div style={{fontSize:32,marginBottom:8}}>📄</div><div style={{fontSize:14,fontWeight:500,color:C.charcoal,marginBottom:4}}>Drag and drop your CSV file here</div><div style={{fontSize:12,color:C.darkBrown,marginBottom:16}}>or click to browse</div><label style={{display:"inline-block",padding:"9px 20px",background:C.orange,color:C.white,borderRadius:4,fontSize:13,fontWeight:500,cursor:"pointer"}}>Choose file<input type="file" accept=".csv" onChange={handleFile} style={{display:"none"}}/></label></div><div style={{fontSize:12,color:C.darkBrown,background:C.pink,borderRadius:4,padding:"10px 12px"}}><strong>What gets imported:</strong> Course name, code, faculty, current mode, nominated model, complexity, main campus, Group 1 candidacy, CCR dates. Out of scope / discontinued courses are automatically excluded.</div></div>)}
+    {status==="preview"&&preview&&(<div><div style={{background:"#f0fdf4",border:"1px solid #4ade80",borderRadius:4,padding:"12px 14px",marginBottom:16,fontSize:13}}><div style={{fontWeight:500,color:"#14532d",marginBottom:4}}>Ready to import from {preview.fileName}</div><div style={{color:"#166534"}}><span style={{marginRight:16}}>✓ {preview.courses.length} courses found</span>{preview.skipped>0&&<span style={{color:"#78350f"}}>⊘ {preview.skipped} out-of-scope excluded</span>}</div></div><div style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,overflow:"hidden",marginBottom:16,maxHeight:240,overflowY:"auto"}}><table style={{width:"100%",fontSize:12,borderCollapse:"collapse"}}><thead style={{position:"sticky",top:0}}><tr style={{background:C.pink}}>{["Course name","Code","Faculty","Model","Complexity"].map(h=>(<th key={h} style={{padding:"6px 10px",textAlign:"left",fontWeight:500,color:C.darkBrown,borderBottom:`1px solid ${C.lightBrown}`}}>{h}</th>))}</tr></thead><tbody>{preview.courses.map((c,i)=>(<tr key={i} style={{borderBottom:`1px solid ${C.pink}`,background:i%2===0?C.white:"#fdfcfb"}}><td style={{padding:"5px 10px"}}>{c.courseName}</td><td style={{padding:"5px 10px",color:C.darkBrown}}>{c.courseCode}</td><td style={{padding:"5px 10px",fontSize:11}}>{c.faculty?.split(" ").slice(-1)[0]||"—"}</td><td style={{padding:"5px 10px"}}>{c.nominatedModel||<span style={{color:C.lightBrown}}>—</span>}</td><td style={{padding:"5px 10px"}}>{c.complexity||<span style={{color:C.lightBrown}}>—</span>}</td></tr>))}</tbody></table></div><div style={{background:"#fffbeb",border:"1px solid #fbbf24",borderRadius:4,padding:"10px 12px",marginBottom:16,fontSize:12,color:"#78350f"}}>Courses already in the register (matched by course code) will be updated. New courses will be added. Manually entered data is preserved.</div><div style={{display:"flex",gap:8,justifyContent:"flex-end"}}><button onClick={()=>setStatus("idle")} style={{padding:"9px 18px",background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,fontSize:13,color:C.charcoal}}>Back</button><button onClick={confirmImport} style={{padding:"9px 18px",background:C.orange,border:"none",borderRadius:4,fontSize:13,fontWeight:500,color:C.white}}>Import {preview.courses.length} courses</button></div></div>)}
+    {status==="done"&&(<div style={{textAlign:"center",padding:"16px 0"}}><div style={{fontSize:40,marginBottom:12}}>✓</div><div style={{fontWeight:500,fontSize:16,color:C.darkGreen,marginBottom:6}}>Import complete</div><div style={{fontSize:13,color:C.darkBrown,marginBottom:20}}>{preview.courses.length} courses imported successfully.</div><button onClick={onClose} style={{padding:"10px 24px",background:C.orange,border:"none",borderRadius:4,fontSize:13,fontWeight:500,color:C.white}}>Done</button></div>)}
+  </div></div>);
+}
+
+// ─── FORM VIEW ────────────────────────────────────────────────
+const TABS=["A — Course details","B — Governance","C — Model gap","D — Marketing","E — Staff","F — Risks","G — Final"];
+function FormView({course,upd,updGov,updC,activeTab,setActiveTab,onSave,onCancel,onDelete,onScope,saved}){
+  return(<div><div style={{background:C.charcoal,padding:"0 1rem",position:"sticky",top:0,zIndex:10}}><div style={{maxWidth:900,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,gap:8}}><div style={{display:"flex",alignItems:"center",gap:8,minWidth:0}}><Crest size={26}/><button onClick={onCancel} style={{background:"transparent",border:"1px solid rgba(255,255,255,0.3)",color:C.white,padding:"6px 10px",borderRadius:4,fontSize:12,whiteSpace:"nowrap",minHeight:36}}>← Back</button><span style={{color:C.white,fontSize:13,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}} className="hide-mobile">{course.courseName||"New course"}</span></div><div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>{saved&&<span style={{color:C.lightGreen,fontSize:12,fontWeight:500,whiteSpace:"nowrap"}}>✓ Saved</span>}<button onClick={onScope} style={{background:"transparent",border:"1px solid rgba(255,255,255,0.3)",color:C.white,padding:"6px 10px",borderRadius:4,fontSize:12,whiteSpace:"nowrap",minHeight:36}} className="hide-mobile">Scope doc</button><button onClick={onDelete} style={{background:"transparent",border:"1px solid #ef4444",color:"#ef4444",padding:"6px 10px",borderRadius:4,fontSize:12,minHeight:36}} className="hide-mobile">Delete</button><button onClick={onSave} style={{background:C.orange,border:"none",color:C.white,padding:"6px 14px",borderRadius:4,fontSize:13,fontWeight:500,minHeight:36}}>Save</button></div></div></div>
+  <div style={{background:C.orange,padding:"8px 1rem"}}><div style={{maxWidth:900,margin:"0 auto"}}><p style={{color:"rgba(255,255,255,0.9)",fontSize:12}}>{course.courseName||"New course"} — Course Transition Plan</p></div></div>
+  <div style={{maxWidth:900,margin:"0 auto",padding:"1rem"}}><div style={{overflowX:"auto",marginBottom:16,borderBottom:`2px solid ${C.orange}`}}><div style={{display:"flex",gap:0,whiteSpace:"nowrap"}}>{TABS.map((t,i)=>(<button key={i} onClick={()=>setActiveTab(i)} style={{background:activeTab===i?C.orange:"transparent",border:"none",borderRadius:"4px 4px 0 0",padding:"10px 12px",fontSize:12,cursor:"pointer",color:activeTab===i?C.white:C.darkBrown,fontWeight:activeTab===i?500:400,minHeight:40}}>{t}</button>))}</div></div>
+  <div style={{background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"1rem"}}>{activeTab===0&&<SecA c={course} u={upd}/>}{activeTab===1&&<SecB c={course} u={upd} ug={updGov}/>}{activeTab===2&&<SecC c={course} uc={updC}/>}{activeTab===3&&<SecD c={course} u={upd}/>}{activeTab===4&&<SecE c={course} u={upd}/>}{activeTab===5&&<SecF c={course} u={upd}/>}{activeTab===6&&<SecG c={course} u={upd}/>}</div>
+  <div style={{display:"flex",justifyContent:"space-between",gap:8,marginTop:16,flexWrap:"wrap"}}><button onClick={onDelete} style={{padding:"10px 16px",background:"transparent",border:"1px solid #ef4444",borderRadius:4,fontSize:13,color:"#ef4444",minHeight:44}} className="hide-mobile">Delete course</button><div style={{display:"flex",gap:8,marginLeft:"auto"}}><button onClick={onCancel} style={{padding:"10px 18px",background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,fontSize:13,color:C.charcoal,minHeight:44}}>Cancel</button><button onClick={onSave} style={{padding:"10px 20px",background:C.orange,border:"none",borderRadius:4,fontSize:13,fontWeight:500,color:C.white,minHeight:44}}>Save course</button></div></div></div></div>);
+}
+
+// ─── COURSE CARD (mobile) ─────────────────────────────────────
+function CourseCard({c,onEdit,onScope}){
+  const p=pct(c),rs=riskSty(c.overallRisk);
+  return(<div style={{background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:6,padding:"14px 16px",marginBottom:10}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8,gap:8}}><div style={{minWidth:0}}><div style={{fontWeight:500,fontSize:15,marginBottom:2}}>{c.courseName||<span style={{color:C.lightBrown}}>Unnamed course</span>}</div><div style={{fontSize:12,color:C.darkBrown}}>{c.courseCode}{c.courseCode&&c.faculty?" · ":""}{c.faculty?.split(" ").slice(-1)[0]||""}</div></div>{c.overallRisk&&<Badge label={c.overallRisk} bg={rs.bg} col={rs.col} br={rs.br}/>}</div><div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:10,fontSize:12,color:C.darkBrown}}>{c.nominatedModel&&<span style={{background:C.pink,padding:"2px 8px",borderRadius:3}}>{c.nominatedModel}</span>}{c.goLiveGroup&&<span style={{background:C.pink,padding:"2px 8px",borderRadius:3}}>{c.goLiveGroup.replace(" — "," ")}</span>}{c.complexity&&<span style={{background:C.pink,padding:"2px 8px",borderRadius:3}}>{c.complexity} complexity</span>}</div><div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}><div style={{flex:1,height:6,background:C.pink,borderRadius:3}}><div style={{width:`${p}%`,height:"100%",background:p>=80?C.lightGreen:p>=40?C.orange:C.lightBrown,borderRadius:3}}/></div><span style={{fontSize:11,color:C.darkBrown,minWidth:32}}>{p}% complete</span></div><div style={{display:"flex",gap:8}}><button onClick={onEdit} style={{flex:1,padding:"9px",background:C.white,border:`1px solid ${C.orange}`,color:C.orange,borderRadius:4,fontSize:13,fontWeight:500,minHeight:40}}>Edit</button><button onClick={onScope} style={{flex:1,padding:"9px",background:C.white,border:`1px solid ${C.darkGreen}`,color:C.darkGreen,borderRadius:4,fontSize:13,fontWeight:500,minHeight:40}}>Scope doc</button></div></div>);
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────
+function App(){
+  const [courses,setCourses]=useState(()=>loadCourses()||makeSample());
+  const [view,setView]=useState("dashboard");
+  const [active,setActive]=useState(null);
+  const [tab,setTab]=useState(0);
+  const [saved,setSaved]=useState(false);
+  const [showImport,setShowImport]=useState(false);
+  const [activeFilter,setActiveFilter]=useState(null);
+  const [w,setW]=useState(window.innerWidth);
+
+  useEffect(()=>{const h=()=>setW(window.innerWidth);window.addEventListener("resize",h);return()=>window.removeEventListener("resize",h);},[]);
+  useEffect(()=>{saveCourses(courses);},[courses]);
+
+  const mobile=w<641;
+  const FILTERS={
+    all:{label:"All courses",fn:()=>true},
+    g1:{label:"Group 1 — 2027",fn:c=>c.goLiveGroup?.includes("2027")},
+    g2:{label:"Group 2 — 2028",fn:c=>c.goLiveGroup?.includes("2028")},
+    g3:{label:"Group 3 — 2029",fn:c=>c.goLiveGroup?.includes("2029")},
+    risk:{label:"High / critical risk",fn:c=>c.overallRisk==="High"||c.overallRisk==="Critical"},
+  };
+  const cf=activeFilter||"all";
+  const filtered=courses.filter(FILTERS[cf].fn);
+  const metrics=[
+    {key:"all",label:"Total courses",value:courses.length,accent:C.darkGreen},
+    {key:"g1",label:"Group 1 (2027)",value:courses.filter(FILTERS.g1.fn).length,accent:C.lightGreen},
+    {key:"g2",label:"Group 2 (2028)",value:courses.filter(FILTERS.g2.fn).length,accent:C.lightBlue},
+    {key:"g3",label:"Group 3 (2029)",value:courses.filter(FILTERS.g3.fn).length,accent:C.darkBlue},
+    {key:"risk",label:"High/critical risk",value:courses.filter(FILTERS.risk.fn).length,accent:C.orange},
+  ];
+
+  const handleImport=imported=>{
+    setCourses(existing=>{
+      const merged=[...existing];
+      imported.forEach(ic=>{const idx=merged.findIndex(e=>e.courseCode&&e.courseCode===ic.courseCode);if(idx>=0){merged[idx]={...merged[idx],faculty:ic.faculty||merged[idx].faculty,courseName:ic.courseName||merged[idx].courseName,courseCode:ic.courseCode||merged[idx].courseCode,currentMode:ic.currentMode||merged[idx].currentMode,nominatedModel:ic.nominatedModel||merged[idx].nominatedModel,complexity:ic.complexity||merged[idx].complexity,mainCampus:ic.mainCampus||merged[idx].mainCampus,group1candidate:ic.group1candidate||merged[idx].group1candidate,ccrStart:ic.ccrStart||merged[idx].ccrStart,ccrEnd:ic.ccrEnd||merged[idx].ccrEnd};}else{merged.push(ic);}});
+      return merged;
+    });
+    setSaved(true);setTimeout(()=>setSaved(false),2500);
+  };
+
+  const openForm=c=>{setActive({...c});setView("form");setTab(0);};
+  const openScope=c=>{setActive({...c});setView("scope");};
+  const newCourse=()=>{const c=emptyCourse();setActive(c);setView("form");setTab(0);};
+  const save=()=>{setCourses(p=>{const idx=p.findIndex(c=>c.id===active.id);return idx>=0?p.map(c=>c.id===active.id?active:c):[...p,active];});setSaved(true);setTimeout(()=>setSaved(false),2500);setView("dashboard");};
+  const del=id=>{setCourses(p=>p.filter(c=>c.id!==id));setView("dashboard");};
+  const upd=(k,v)=>setActive(p=>({...p,[k]:v}));
+  const updGov=(k,sk,v)=>setActive(p=>({...p,govFlags:{...p.govFlags,[k]:{...(p.govFlags?.[k]||{}),[sk]:v}}}));
+  const updC=(id,k,v)=>setActive(p=>({...p,sectionC:{...p.sectionC,[id]:{...(p.sectionC?.[id]||{}),[k]:v}}}));
+
+  if(view==="form"&&active)return <FormView course={active} upd={upd} updGov={updGov} updC={updC} activeTab={tab} setActiveTab={setTab} onSave={save} onCancel={()=>setView("dashboard")} onDelete={()=>del(active.id)} onScope={()=>openScope(active)} saved={saved}/>;
+  if(view==="scope"&&active)return <ScopeView course={active} onBack={()=>setView("dashboard")} onEdit={()=>openForm(active)}/>;
+
+  return(<div>
+    {showImport&&<ImportModal onImport={handleImport} onClose={()=>setShowImport(false)}/>}
+    <div style={{background:C.charcoal,padding:"0 1rem",position:"sticky",top:0,zIndex:10}}><div style={{maxWidth:1100,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,gap:8}}>
+      <div style={{display:"flex",alignItems:"center",gap:10}}><Crest size={30}/><div className="hide-mobile"><div style={{color:C.white,fontWeight:500,fontSize:14,lineHeight:1.2}}>Charles Sturt University</div><div style={{color:C.lightBrown,fontSize:11}}>Division of Learning and Teaching</div></div></div>
+      <div style={{display:"flex",gap:8,alignItems:"center"}}>
+        {saved&&<span style={{color:C.lightGreen,fontSize:12,fontWeight:500,whiteSpace:"nowrap"}}>✓ Saved</span>}
+        <button onClick={()=>setShowImport(true)} style={{background:"transparent",border:`1px solid ${C.lightBlue}`,color:C.lightBlue,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Import</button>
+        <button onClick={()=>exportCSV(courses)} style={{background:"transparent",border:`1px solid ${C.lightGreen}`,color:C.lightGreen,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Export CSV</button>
+        <button onClick={()=>{if(window.confirm("Reset to sample data? This will clear all current data.")){localStorage.removeItem(STORAGE_KEY);setCourses(makeSample());}}} style={{background:"transparent",border:`1px solid ${C.lightBrown}`,color:C.lightBrown,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Reset</button>
+        <button onClick={newCourse} style={{background:C.orange,border:"none",color:C.white,padding:"7px 14px",borderRadius:4,fontSize:13,fontWeight:500,minHeight:38}}>+ New course</button>
+      </div>
+    </div></div>
+
+    <div style={{background:C.orange,padding:"12px 1rem"}}><div style={{maxWidth:1100,margin:"0 auto"}}><h1 style={{color:C.white,fontSize:mobile?17:20,fontWeight:400,margin:0}}>MEA Course Transition Plan</h1><p style={{color:"rgba(255,255,255,0.85)",fontSize:12,margin:"2px 0 0"}}>Models of Engagement and Assessment — 2026–2029</p></div></div>
+
+    <div style={{maxWidth:1100,margin:"0 auto",padding:"1rem"}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(100px,1fr))",gap:8,marginBottom:16}}>
+        {metrics.map(m=>{const isA=cf===m.key;return(<button key={m.key} onClick={()=>setActiveFilter(isA?null:m.key)} style={{background:isA?m.accent:C.white,border:`1px solid ${isA?m.accent:C.lightBrown}`,borderTop:`3px solid ${m.accent}`,borderRadius:4,padding:"10px 12px",textAlign:"left",cursor:"pointer",transition:"all 0.15s",boxShadow:isA?"0 2px 8px rgba(0,0,0,0.15)":"none"}}><div style={{fontSize:10,color:isA?"rgba(255,255,255,0.85)":C.darkBrown,marginBottom:4,textTransform:"uppercase",letterSpacing:"0.04em",fontWeight:500,lineHeight:1.3}}>{m.label}</div><div style={{fontSize:22,fontWeight:500,color:isA?C.white:C.charcoal}}>{m.value}</div></button>);})}
+      </div>
+
+      {cf!=="all"&&(<div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:C.pink,borderRadius:4,padding:"8px 14px",marginBottom:12,fontSize:13}}><span style={{color:C.darkBrown}}>Showing: <strong>{FILTERS[cf].label}</strong> — {filtered.length} course{filtered.length!==1?"s":""}</span><button onClick={()=>setActiveFilter(null)} style={{background:"none",border:`1px solid ${C.darkBrown}`,borderRadius:4,padding:"4px 10px",fontSize:12,color:C.darkBrown,cursor:"pointer"}}>Clear ×</button></div>)}
+
+      {mobile?(
+        <div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+            <span style={{fontWeight:500,fontSize:14,color:C.charcoal}}>{cf==="all"?`Courses (${courses.length})`:`${FILTERS[cf].label} (${filtered.length})`}</span>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>setShowImport(true)} style={{background:"transparent",border:`1px solid ${C.lightBlue}`,color:C.lightBlue,padding:"7px 10px",borderRadius:4,fontSize:12,fontWeight:500}}>Import</button>
+              <button onClick={()=>exportCSV(courses)} style={{background:"transparent",border:`1px solid ${C.lightGreen}`,color:C.lightGreen,padding:"7px 10px",borderRadius:4,fontSize:12,fontWeight:500}}>Export</button>
+            </div>
+          </div>
+          {filtered.length===0?(<div style={{padding:"32px",textAlign:"center",color:C.darkBrown,fontSize:14,background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4}}>{courses.length===0?"No courses yet. Tap \"+ New course\" to get started.":"No courses match this filter."}</div>):filtered.map(c=>(<CourseCard key={c.id} c={c} onEdit={()=>openForm(c)} onScope={()=>openScope(c)}/>))}
+        </div>
+      ):(
+        <div style={{background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,overflow:"hidden",marginBottom:20}}>
+          <div style={{background:C.darkGreen,padding:"10px 16px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{color:C.white,fontWeight:500,fontSize:13}}>{cf==="all"?"Course register":FILTERS[cf].label}</span>
+            {cf!=="all"&&<span style={{color:"rgba(255,255,255,0.7)",fontSize:12}}>{filtered.length} of {courses.length} courses</span>}
+          </div>
+          <div style={{overflowX:"auto"}}><table style={{width:"100%",fontSize:13,minWidth:700}}>
+            <thead><tr style={{background:C.pink,borderBottom:`1px solid ${C.lightBrown}`}}>{["Course","Faculty / School","Model","Complexity","Go-live","Risk","Completion","Actions"].map(h=>(<th key={h} style={{padding:"8px 12px",textAlign:"left",fontWeight:500,color:C.darkBrown,whiteSpace:"nowrap",fontSize:11,textTransform:"uppercase",letterSpacing:"0.04em"}}>{h}</th>))}</tr></thead>
+            <tbody>{filtered.length===0?(<tr><td colSpan={8} style={{padding:"32px",textAlign:"center",color:C.darkBrown,fontSize:13}}>{courses.length===0?"No courses yet. Click \"+ New course\" to get started.":"No courses match this filter."}</td></tr>):filtered.map((c,idx)=>{
+              const p=pct(c),rs=riskSty(c.overallRisk);
+              return(<tr key={c.id} style={{borderBottom:`1px solid ${C.pink}`,background:idx%2===0?C.white:"#fdfcfb"}}>
+                <td style={{padding:"10px 12px"}}><div style={{fontWeight:500}}>{c.courseName||<span style={{color:C.lightBrown}}>Unnamed</span>}</div><div style={{fontSize:11,color:C.darkBrown}}>{c.courseCode}</div></td>
+                <td style={{padding:"10px 12px"}}><div style={{fontSize:12}}>{c.faculty?.split(" ").slice(-1)[0]||"—"}</div><div style={{fontSize:11,color:C.darkBrown}}>{c.school?.replace("School of ","")?.slice(0,28)||"—"}</div></td>
+                <td style={{padding:"10px 12px",fontSize:12}}>{c.nominatedModel||"—"}</td>
+                <td style={{padding:"10px 12px",fontSize:12}}>{c.complexity||"—"}</td>
+                <td style={{padding:"10px 12px",fontSize:12,whiteSpace:"nowrap"}}>{c.goLiveGroup?.replace(" — "," ")||"—"}</td>
+                <td style={{padding:"10px 12px"}}>{c.overallRisk?<Badge label={c.overallRisk} bg={rs.bg} col={rs.col} br={rs.br}/>:<span style={{color:C.lightBrown}}>—</span>}</td>
+                <td style={{padding:"10px 12px"}}><div style={{display:"flex",alignItems:"center",gap:8}}><div style={{flex:1,height:6,background:C.pink,borderRadius:3,minWidth:50}}><div style={{width:`${p}%`,height:"100%",background:p>=80?C.lightGreen:p>=40?C.orange:C.lightBrown,borderRadius:3}}/></div><span style={{fontSize:11,color:C.darkBrown,minWidth:28}}>{p}%</span></div></td>
+                <td style={{padding:"10px 12px"}}><div style={{display:"flex",gap:6}}><button onClick={()=>openForm(c)} style={{fontSize:12,padding:"6px 10px",background:C.white,border:`1px solid ${C.orange}`,color:C.orange,borderRadius:4,fontWeight:500,minHeight:34}}>Edit</button><button onClick={()=>openScope(c)} style={{fontSize:12,padding:"6px 10px",background:C.white,border:`1px solid ${C.darkGreen}`,color:C.darkGreen,borderRadius:4,fontWeight:500,minHeight:34}}>Scope doc</button></div></td>
+              </tr>);
+            })}</tbody>
+          </table></div>
+        </div>
+      )}
+
+      <div style={{paddingTop:12,borderTop:`1px solid ${C.pink}`,fontSize:10,color:C.darkBrown}}>© 2025 Charles Sturt University — TEQSA Provider Identification: PRV12018 (Australian University). CRICOS Provider: 00005F.</div>
+    </div>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
