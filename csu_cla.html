@@ -35,10 +35,7 @@ h1{font-size:26px;font-weight:500;color:#2e2e2e;line-height:1.2}
 .panel-dark .lead{font-size:16px;color:rgba(255,255,255,0.95);line-height:1.75;margin:0 0 12px;font-weight:500}
 .panel-dark p{font-size:14px;color:rgba(255,255,255,0.8);line-height:1.75;margin:0}
 .panel-dark p.italic{font-style:italic;color:rgba(255,255,255,0.9);margin-top:10px}
-.role-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem;padding:0.875rem 1rem;background:#fff;border-radius:8px;border:1px solid rgba(34,34,34,0.1)}
-.role-label{font-size:12px;color:#777;font-weight:500;margin-right:4px;align-self:center;white-space:nowrap}
-.role-btn{font-size:12px;padding:5px 12px;border-radius:20px;border:1.5px solid rgba(34,34,34,0.12);background:#f7f4f0;cursor:pointer;color:#555;font-family:Arial,sans-serif;font-weight:400;transition:all 0.15s;white-space:nowrap}
-.role-btn.active{background:#f0572a;border-color:#f0572a;color:#fff;font-weight:500}
+
 .blind-spot{background:#f7f4f0;border-radius:8px;padding:1.25rem;margin-bottom:1.5rem;border:1px solid rgba(34,34,34,0.1)}
 .blind-spot-label{font-size:12px;font-weight:500;color:#f0572a;letter-spacing:0.04em;margin-bottom:12px}
 .blind-spot-row{display:grid;grid-template-columns:1fr 40px 1fr 40px 80px;gap:4px;align-items:center;margin-bottom:8px}
@@ -211,7 +208,7 @@ tr:nth-child(even) td{background:#f7f4f0}
 .diag-modal-card{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;overflow:hidden}
 @media(max-width:700px){.diag-modal-body{grid-template-columns:1fr}}
 @media print{
-  .nav,.progress-bar,.nav-next,.print-btn,.header-actions,.role-filter{display:none!important}
+  .nav,.progress-bar,.nav-next,.print-btn,.header-actions{display:none!important}
   .section{display:block!important}
   body{background:#fff}
   .wrap{max-width:100%;padding:1rem}
@@ -287,7 +284,6 @@ var roleCards={
   aada:[1,2,3,4,5],
   cd:[1,3,4,5]
 };
-var activeRole="all";
 
 var gaps=[
   {title:"Credit accumulation is not capability confirmation",icon:"&ne;",iconBg:"#f0572a",roles:["all","dvc","dean","aada","cd"],body:"Subject completion confirms that a student has passed and accumulated credit. It does not confirm that they have developed the whole-of-course capabilities their degree is meant to assure. These are different things and currently only one is formally verified.",detail:"A student can pass every subject in Years 1 and 2 without the institution having formally confirmed whether their Course Learning Outcomes are developing as expected. Credit is awarded. Capability is assumed. The assumption is the gap."},
@@ -401,30 +397,14 @@ function diagramLegend(){return '<div class="diag-legend"><div class="diag-legen
 // Render functions
 function renderCase(){
   var el=document.getElementById("section-case");
-  var roleFilterHTML='<div class="role-filter"><span class="role-label">Show what matters most to:</span><button class="role-btn active" id="role-all" onclick="setRole(\'all\')">All</button><button class="role-btn" id="role-dvc" onclick="setRole(\'dvc\')">DVC / Executive</button><button class="role-btn" id="role-dean" onclick="setRole(\'dean\')">Dean</button><button class="role-btn" id="role-aada" onclick="setRole(\'aada\')">Associate Dean (Academic)</button><button class="role-btn" id="role-cd" onclick="setRole(\'cd\')">Course Director</button></div>';
   var gapItems=gaps.map(function(g,i){return '<div class="gap-item" id="gap-'+i+'" onclick="toggleGap('+i+')"><div class="gap-inner"><div class="gap-icon" style="background:'+g.iconBg+'">'+g.icon+'</div><div style="flex:1"><div class="gap-title">'+g.title+'</div><div class="gap-body">'+g.body+'</div><div class="gap-detail">'+g.detail+'</div></div><div class="gap-toggle">&darr;</div></div></div>';}).join("");
   el.innerHTML='<div class="panel-dark"><div class="panel-label">THE INSTITUTIONAL CASE</div><p class="lead">Charles Sturt University already has strong foundations for assurance of learning. The next step is to make that assurance explicit.</p><p>Currently, subject completion confirms credit accumulation. It does not formally confirm staged attainment of Course Learning Outcomes at defined points across the degree. In a sector where TEQSA expects coherent, longitudinal evidence of learning and where generative AI has increased pressure on assessment credibility, making that confirmation visible, structured, and defensible is the logical and necessary next step.</p><p class="italic">This is not a redesign. It is a formalisation of what CSU already does well.</p></div>'
-  +roleFilterHTML
   +'<div class="blind-spot"><div class="blind-spot-label">THE ASSURANCE BLIND SPOT</div><div class="blind-spot-row"><div class="bs-cell" style="background:#c8bfa8"><div style="font-size:11px;font-weight:500;color:#3d2b1f;margin-bottom:4px">YEAR 1</div><div style="font-size:12px;color:#3d2b1f">8 subjects passed</div><div style="font-size:11px;color:#6b5a4e;margin-top:2px">Credit confirmed</div></div><div class="bs-arrow">&rarr;</div><div class="bs-cell" style="background:#7a6e5f"><div style="font-size:11px;font-weight:500;color:#f7f4f0;margin-bottom:4px">YEAR 2</div><div style="font-size:12px;color:#f7f4f0">8 subjects passed</div><div style="font-size:11px;color:rgba(247,244,240,0.7);margin-top:2px">Credit confirmed</div></div><div class="bs-arrow">&rarr;</div><div class="bs-warn"><div style="font-size:16px;margin-bottom:2px">&#9888;</div><div style="font-size:10px;font-weight:700;color:#3d2b00">ASSURANCE BLIND SPOT</div></div></div><div style="margin-top:4px"><div class="bs-year3"><div style="flex:1"><div style="font-size:11px;font-weight:500;color:rgba(255,255,255,0.6);margin-bottom:2px">YEAR 3 &mdash; CAPSTONE</div><div style="font-size:12px;color:#fff">First formal confirmation of capability &mdash; but by now, remediation options are limited</div></div><div class="too-late">Too late</div></div></div></div>'
   +'<div class="gap-label" id="gap-label">Four reasons the current model is no longer sufficient</div>'+gapItems
   +'<div style="margin-top:1.5rem"><div class="gap-label">Assessment architecture vs assurance architecture</div><div class="arch-grid"><div class="arch-card" style="border-color:rgba(34,34,34,0.1)"><div class="arch-head" style="background:#f7f4f0;border-bottom-color:rgba(34,34,34,0.1)"><div style="font-size:13px;font-weight:500;color:#2e2e2e">Assessment architecture</div><div style="font-size:11px;color:#666;margin-top:2px">How students are assessed</div></div><div class="arch-body"><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Subject assessments and grading</div></div><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Academic integrity checks</div></div><div class="arch-item"><div class="arch-dot" style="background:#2e2e2e"></div><div class="arch-item-text">Subject pass / fail decisions</div></div></div><div class="arch-foot" style="background:rgba(34,34,34,0.06)"><div style="font-size:11px;font-weight:500;color:#2e2e2e">Outcome: Credit accumulation</div></div></div><div class="arch-card" style="border-color:#1a4a2e"><div class="arch-head" style="background:#e8f5ee;border-bottom-color:#1a4a2e"><div style="font-size:13px;font-weight:500;color:#1a4a2e">Assurance architecture</div><div style="font-size:11px;color:#2d7a4f;margin-top:2px">How the university confirms capability</div></div><div class="arch-body"><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Course Learning Outcomes across the degree</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Longitudinal evidence of capability</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Staged confirmation of developmental CLOs</div></div><div class="arch-item"><div class="arch-dot" style="background:#1a4a2e"></div><div class="arch-item-text">Capstone confirmation of mastery</div></div></div><div class="arch-foot" style="background:#1a4a2e"><div style="font-size:11px;font-weight:500;color:#fff">Outcome: Capability assurance</div></div></div></div></div>'
   +'<div style="background:#7a6455;border-radius:8px;padding:0.875rem 1.25rem;margin-top:1rem"><p style="font-size:14px;color:rgba(255,255,255,0.92);line-height:1.7;margin:0">CSU has a strong assessment architecture. The present work is about strengthening the assurance architecture &mdash; building the structural and governance layer that formally confirms capability has been demonstrated across the degree, not just at its end.</p></div>';
 }
 
-function setRole(role){
-  activeRole=role;
-  document.querySelectorAll(".role-btn").forEach(function(b){b.classList.remove("active");});
-  document.getElementById("role-"+role).classList.add("active");
-  gaps.forEach(function(g,i){
-    var el=document.getElementById("gap-"+i);
-    if(el) el.classList.toggle("hidden", g.roles.indexOf(role)<0);
-  });
-  var lbl=document.getElementById("gap-label");
-  if(lbl){
-    var visible=gaps.filter(function(g){return g.roles.indexOf(role)>=0;}).length;
-    lbl.textContent=role==="all"?"Four reasons the current model is no longer sufficient":visible+" reasons most relevant to your role";
-  }
-}
 
 function toggleGap(i){var el=document.getElementById("gap-"+i);var tog=el.querySelector(".gap-toggle");var open=el.classList.toggle("open");tog.innerHTML=open?"&uarr;":"&darr;";}
 
