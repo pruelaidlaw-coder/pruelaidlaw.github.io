@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Passing Occupation – Prue Laidlaw</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1c2b4a;
+    --navy-mid: #2e4270;
+    --navy-light: #e8ecf4;
+    --sage: #7a9e8e;
+    --sage-light: #edf3f0;
+    --sage-mid: #c4d9d1;
+    --rose: #b07080;
+    --sand: #f7f4ef;
+    --text: #1c1c1e;
+    --muted: #6b6b70;
+    --border: #e0ddd8;
+    --bg: #ffffff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--text); background: var(--bg); line-height: 1.75; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 7rem 2.5rem 6rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 420px; height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(122,158,142,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .hero-eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 0.16em; color: var(--sage-mid);
+    text-transform: uppercase; margin-bottom: 1.6rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--sage); }
+  .hero h1 {
+    font-size: clamp(2.6rem, 5.5vw, 4rem); font-weight: 400;
+    color: #fff; line-height: 1.1; margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 em { font-style: italic; color: var(--sage-mid); }
+  .hero-sub {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1rem; color: rgba(255,255,255,0.65);
+    max-width: 580px; margin-bottom: 2.5rem; line-height: 1.7;
+  }
+  .hero-creds { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .cred {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; color: var(--sage-mid);
+    border: 1px solid rgba(122,158,142,0.45);
+    border-radius: 2px; padding: 5px 12px; letter-spacing: 0.06em;
+  }
+
+  /* ── STATS ── */
+  .stats-strip {
+    background: var(--sand);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+  }
+  .stats-inner {
+    max-width: 820px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.5rem;
+  }
+  .stat { text-align: center; }
+  .stat-number {
+    font-family: Georgia, serif; font-size: 2.4rem;
+    font-weight: 400; color: var(--navy); line-height: 1; margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--muted); line-height: 1.4;
+  }
+
+  /* ── SHARED LAYOUT ── */
+  .section-wrap { max-width: 820px; margin: 0 auto; padding: 5rem 2.5rem; }
+  .divider { border: none; border-top: 1px solid var(--border); max-width: 820px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--sage); }
+
+  h2 { font-size: 1.9rem; font-weight: 400; color: var(--navy); margin-bottom: 0.35rem; letter-spacing: -0.01em; }
+  .section-dek { font-family: Georgia, serif; font-style: italic; font-size: 0.9rem; color: var(--muted); margin-bottom: 2.5rem; }
+
+  p { font-size: 1rem; margin-bottom: 1.1rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── OVERVIEW ── */
+  .overview-grid {
+    display: grid; grid-template-columns: 3fr 2fr;
+    gap: 3.5rem; align-items: start;
+  }
+  .callout {
+    background: var(--sage-light);
+    border-left: 3px solid var(--sage);
+    padding: 1rem 1.25rem;
+    border-radius: 0 6px 6px 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.875rem; color: #2e4a3e; line-height: 1.6;
+    margin: 1.5rem 0 0;
+  }
+  .overview-aside {}
+  .aside-box {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .aside-box blockquote {
+    font-style: italic; font-size: 0.975rem;
+    color: rgba(255,255,255,0.85); line-height: 1.65;
+    margin-bottom: 1rem;
+  }
+  .aside-box cite {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-style: normal; font-size: 11px;
+    letter-spacing: 0.07em; color: var(--sage-mid);
+  }
+  .thesis-meta-box {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+  }
+  .meta-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;
+  }
+  .meta-row {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; color: var(--muted);
+    margin-bottom: 0.45rem; line-height: 1.5;
+  }
+  .meta-row span { color: var(--text); }
+
+  /* ── THEMES ── */
+  .themes-bg { background: var(--sand); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .theme-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+  .theme-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    border-top: 3px solid var(--sage);
+  }
+  .theme-card:nth-child(2) { border-top-color: var(--navy); }
+  .theme-card:nth-child(3) { border-top-color: var(--rose); }
+  .theme-card:nth-child(4) { border-top-color: #8a7a5a; }
+  .theme-card:nth-child(5) { border-top-color: var(--sage); }
+  .theme-card:nth-child(6) { border-top-color: var(--navy-mid); }
+  .theme-card:hover { border-color: var(--sage); box-shadow: 0 4px 20px rgba(122,158,142,0.12); }
+  .theme-num {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.6rem;
+  }
+  .theme-card h3 { font-size: 0.975rem; font-weight: 400; color: var(--navy); margin-bottom: 0.5rem; line-height: 1.4; }
+  .theme-card p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+  /* ── CASE STUDIES ── */
+  .case-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem; margin-top: 0;
+  }
+  .case-card {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 1.5rem; background: var(--bg);
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .case-card:hover { border-color: var(--sage); box-shadow: 0 4px 20px rgba(122,158,142,0.1); }
+  .case-region {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 0.5rem;
+  }
+  .case-card h3 { font-size: 1.05rem; font-weight: 400; color: var(--navy); margin-bottom: 0.4rem; }
+  .case-card p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+  /* ── CONTRIBUTIONS ── */
+  .contrib-list { list-style: none; }
+  .contrib-item {
+    display: grid; grid-template-columns: 2rem 1fr;
+    gap: 1.25rem; padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .contrib-item:first-child { border-top: 1px solid var(--border); }
+  .contrib-n {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--sage);
+    padding-top: 3px;
+  }
+  .contrib-item p { font-size: 1rem; color: var(--text); margin: 0; }
+
+  /* ── THESIS CTA ── */
+  .thesis-cta-bg { background: var(--navy); }
+  .thesis-cta-inner { max-width: 820px; margin: 0 auto; padding: 5rem 2.5rem; }
+  .thesis-cta-inner .section-label { color: var(--sage-mid); }
+  .thesis-cta-inner .section-label::before { background: var(--sage); }
+  .thesis-cta-inner h2 { color: #fff; margin-bottom: 0.35rem; }
+  .thesis-cta-inner .section-dek { color: rgba(255,255,255,0.5); }
+  .thesis-cta-grid { display: grid; grid-template-columns: 1fr auto; gap: 3rem; align-items: center; margin-top: 2rem; }
+  .thesis-cta-text p { font-size: 1rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+  .thesis-cta-text .t-detail {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; color: rgba(255,255,255,0.4);
+    margin-bottom: 0.3rem; line-height: 1.5;
+  }
+  .thesis-cta-text .t-detail span { color: rgba(255,255,255,0.7); }
+  .cta-btns { display: flex; flex-direction: column; gap: 0.75rem; }
+  .btn-primary {
+    display: inline-block; background: var(--sage);
+    color: #fff; text-decoration: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.03em;
+    padding: 12px 24px; border-radius: 4px; text-align: center;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: #6a8e7e; }
+  .btn-secondary {
+    display: inline-block; background: transparent;
+    color: rgba(255,255,255,0.55); text-decoration: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px; padding: 11px 24px;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+    text-align: center; white-space: nowrap;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.85); }
+
+  footer {
+    background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 1.5rem 2.5rem; text-align: center;
+  }
+  footer p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: rgba(255,255,255,0.25); }
+
+  @media (max-width: 660px) {
+    .overview-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .thesis-cta-grid { grid-template-columns: 1fr; }
+    .cta-btns { flex-direction: row; flex-wrap: wrap; }
+    .hero { padding: 4rem 1.5rem 3.5rem; }
+    .section-wrap { padding: 3.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">PhD Research · Charles Sturt University · 2009</p>
+    <h1><em>A Passing Occupation</em></h1>
+    <p class="hero-sub">An exploration of the history and heritage of itinerant workers in rural New South Wales, 1850–1914</p>
+    <div class="hero-creds">
+      <span class="cred">Doctor of Philosophy</span>
+      <span class="cred">History &amp; Heritage</span>
+      <span class="cred">Cultural Heritage Management</span>
+      <span class="cred">Rural New South Wales</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-number">60+</div><div class="stat-label">Itinerant occupations identified</div></div>
+    <div class="stat"><div class="stat-number">5</div><div class="stat-label">Regional case studies</div></div>
+    <div class="stat"><div class="stat-number">64</div><div class="stat-label">Years of history explored</div></div>
+    <div class="stat"><div class="stat-number">4</div><div class="stat-label">Mobility pattern types</div></div>
+    <div class="stat"><div class="stat-number">1st</div><div class="stat-label">Systematic study of its kind in NSW</div></div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="section-wrap">
+  <p class="section-label">Overview</p>
+  <h2>The movers, not the settlers</h2>
+  <p class="section-dek">Recovering a hidden history of colonial working life.</p>
+  <div class="overview-grid">
+    <div>
+      <p>During the late nineteenth and early twentieth centuries, many thousands of people moved throughout rural Australia. Geographical mobility was a key driving force behind occupations spanning pastoral, commercial, entertainment and transport industries — yet itinerant workers have remained largely absent from mainstream Australian histories.</p>
+      <p>This thesis explores the history and tangible heritage of itinerant workers in rural New South Wales between 1850 and 1914. Drawing on a wide variety of sources including regional histories, personal memoirs, photographs, diaries, newspapers and institutional records, it demonstrates that itinerancy was a regular and essential component of economic and social life in rural communities.</p>
+      <p>The research argues that itinerancy is a fruitful lens through which to understand people across ethnic and social divides — and that affirmative action is needed to ensure the rightful place of itinerant workers' legacy in the heritage of New South Wales.</p>
+      <div class="callout">Itinerant workers occupied a niche role in a specific phase of colonial development — but as a group, they have remained hidden from mainstream histories. This thesis begins to change that.</div>
+    </div>
+    <div class="overview-aside">
+      <div class="aside-box">
+        <blockquote>"Those who continue to lead a wandering and unsettled life … are restless and dissatisfied — locomotion, like some poisonous ingredient instilled in their veins, infects their whole constitution of mind and body."</blockquote>
+        <cite>— Clergyman, <em>Australia as it is</em> (1876)</cite>
+      </div>
+      <div class="thesis-meta-box">
+        <p class="meta-label">Thesis details</p>
+        <p class="meta-row">Author: <span>Prue Laidlaw</span></p>
+        <p class="meta-row">Institution: <span>Charles Sturt University</span></p>
+        <p class="meta-row">School: <span>School of Environmental Sciences</span></p>
+        <p class="meta-row">Supervisors: <span>A/Prof Dirk Spennemann &amp; Prof Catherine Allan</span></p>
+        <p class="meta-row">Awarded: <span>March 2009</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- THEMES -->
+<div class="themes-bg">
+  <div class="section-wrap">
+    <p class="section-label">Key themes</p>
+    <h2>What the research found</h2>
+    <p class="section-dek">Six interconnected themes across history, culture, heritage and identity.</p>
+    <div class="theme-grid">
+      <div class="theme-card">
+        <p class="theme-num">01</p>
+        <h3>Occupational diversity</h3>
+        <p>More than 60 itinerant occupations identified across five groups — carriers, entertainers, labourers, merchants and professionals — from shearers and circus troupes to camel drivers, hawkers and travelling dentists.</p>
+      </div>
+      <div class="theme-card">
+        <p class="theme-num">02</p>
+        <h3>Mobility patterns</h3>
+        <p>A new analytical framework using four mobility types — circuit, seasonal, opportune and linear — to understand how workers moved across the colonial landscape and why occupation shaped movement.</p>
+      </div>
+      <div class="theme-card">
+        <p class="theme-num">03</p>
+        <h3>Ethnicity &amp; identity</h3>
+        <p>Itinerancy transcends ethnic divides. Afghan camel drivers, Chinese land-clearers, Indian hawkers, Lebanese merchants and Anglo-Australian labourers occupied the same niche economy, side by side.</p>
+      </div>
+      <div class="theme-card">
+        <p class="theme-num">04</p>
+        <h3>Heritage &amp; landscape</h3>
+        <p>The tangible heritage of itinerant workers is largely a heritage of <em>process</em> — visible in cleared landscapes, roads, railways and fenced paddocks — rather than in built structures.</p>
+      </div>
+      <div class="theme-card">
+        <p class="theme-num">05</p>
+        <h3>Heritage management</h3>
+        <p>Significant gaps exist in how itinerant workers' heritage is formally identified and protected. Existing local, state and national registers systematically overlook this history.</p>
+      </div>
+      <div class="theme-card">
+        <p class="theme-num">06</p>
+        <h3>Rural development</h3>
+        <p>Itinerant workers were central to colonial growth — clearing land, building infrastructure, transporting produce and providing services to a dispersed population across vast distances.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- CASE STUDIES -->
+<div class="section-wrap">
+  <p class="section-label">Regional case studies</p>
+  <h2>Five locations, five stories</h2>
+  <p class="section-dek">Each case study examines one occupation indicative of its itinerant group in a specific regional context.</p>
+  <div class="case-grid">
+    <div class="case-card">
+      <p class="case-region">Riverina</p>
+      <h3>Narrandera</h3>
+      <p>Chinese land-clearing gangs and the role of the Narrandera camp in supplying contract labour for pastoral expansion.</p>
+    </div>
+    <div class="case-card">
+      <p class="case-region">South Coast</p>
+      <h3>Nowra</h3>
+      <p>Circus companies and the heritage of performance sites across the Shoalhaven, 1855–1914.</p>
+    </div>
+    <div class="case-card">
+      <p class="case-region">Far West</p>
+      <h3>Broken Hill</h3>
+      <p>Afghan camel drivers, the north and west camel camps, and the mosque as enduring heritage.</p>
+    </div>
+    <div class="case-card">
+      <p class="case-region">South West Slopes</p>
+      <h3>Albury</h3>
+      <p>Hawkers of multiple nationalities — Indian, Lebanese, Chinese, Anglo-Australian — and their shared trade networks.</p>
+    </div>
+    <div class="case-card">
+      <p class="case-region">Upper Hunter</p>
+      <h3>Scone</h3>
+      <p>Thirty travelling dentists across 26 years — and the hotels, dispensaries and private rooms where they set up clinic.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- CONTRIBUTIONS -->
+<div class="section-wrap">
+  <p class="section-label">Key contributions</p>
+  <h2>What this research adds</h2>
+  <p class="section-dek">To Australian history, cultural heritage management, and the scholarship of mobility.</p>
+  <ul class="contrib-list">
+    <li class="contrib-item">
+      <span class="contrib-n">01</span>
+      <p>The first systematic exploration of itinerant workers as a unified group in rural New South Wales, moving beyond ethnicity-focused or occupation-specific histories.</p>
+    </li>
+    <li class="contrib-item">
+      <span class="contrib-n">02</span>
+      <p>A replicable analytical framework — using occupational group and mobility pattern — for studying itinerant workers in other Australian states and internationally.</p>
+    </li>
+    <li class="contrib-item">
+      <span class="contrib-n">03</span>
+      <p>Demonstrated that itinerancy was a vehicle for the development of colonial New South Wales, not a marginal footnote to the pioneer legend.</p>
+    </li>
+    <li class="contrib-item">
+      <span class="contrib-n">04</span>
+      <p>Evidence that itinerant workers' heritage is systematically under-identified in existing heritage registers — and a call for affirmative action to address this.</p>
+    </li>
+    <li class="contrib-item">
+      <span class="contrib-n">05</span>
+      <p>Added to scholarship recovering hidden voices in Australian history alongside women, Indigenous Australians and ethnic minorities.</p>
+    </li>
+    <li class="contrib-item">
+      <span class="contrib-n">06</span>
+      <p>Identified more than 30 additional itinerant occupations beyond those known at the outset, demonstrating the extraordinary breadth of this mobile workforce.</p>
+    </li>
+  </ul>
+</div>
+
+<!-- PUBLICATIONS -->
+<div class="section-wrap">
+  <p class="section-label">Publications from this research</p>
+  <h2>Related outputs</h2>
+  <p class="section-dek">Reports, articles and other outputs arising from the thesis.</p>
+  <ul class="pub-list">
+    <li class="pub-item">
+      <div class="pub-type-row"><span class="pub-type">Technical report</span><span class="pub-year">2009</span></div>
+      <p class="pub-title">Itinerant Workers in Nineteenth Century Australia: A Survey of the Literature</p>
+      <p class="pub-meta">Laidlaw, P. · Charles Sturt University · <a class="pub-link" href="https://researchoutput.csu.edu.au/en/publications/itinerant-workers-in-nineteenth-century-australia-a-survey-of-the/" target="_blank">View in repository</a></p>
+    </li>
+  </ul>
+</div>
+
+<hr class="divider">
+
+<!-- THESIS CTA -->
+<div class="thesis-cta-bg">
+  <div class="thesis-cta-inner">
+    <p class="section-label">Access the thesis</p>
+    <h2>Read or download</h2>
+    <p class="section-dek">Available via the Charles Sturt University Research Output portal.</p>
+    <div class="thesis-cta-grid">
+      <div class="thesis-cta-text">
+        <p><em>A Passing Occupation: An Exploration of the History and Heritage of Itinerant Workers in Rural New South Wales, 1850–1914</em></p>
+        <p class="t-detail">Degree: <span>Doctor of Philosophy</span></p>
+        <p class="t-detail">Institution: <span>Charles Sturt University, Faculty of Science</span></p>
+        <p class="t-detail">Supervisors: <span>A/Prof Dirk Spennemann &amp; Prof Catherine Allan</span></p>
+        <p class="t-detail">Awarded: <span>March 2009</span></p>
+      </div>
+      <div class="cta-btns">
+        <a class="btn-primary" href="https://researchoutput.csu.edu.au/en/publications/a-passing-occupation-an-exploration-of-the-history-and-heritage-o-3/" target="_blank" rel="noopener">View in repository</a>
+        <a class="btn-secondary" href="https://researchoutput.csu.edu.au/en/publications/a-passing-occupation-an-exploration-of-the-history-and-heritage-o-3/" target="_blank" rel="noopener">Download thesis</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>A/Prof Prue Laidlaw · Charles Sturt University · PhD, 2009</p>
+</footer>
+
+</body>
+</html>
