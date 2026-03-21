@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fire Management Planning & Cultural Heritage in NSW — Prue Laidlaw</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #1c2b4a;
+    --navy-mid: #2e4270;
+    --navy-light: #e8ecf4;
+    --sage: #7a9e8e;
+    --sage-light: #edf3f0;
+    --sage-mid: #c4d9d1;
+    --rose: #b07080;
+    --sand: #f7f4ef;
+    --text: #1c1c1e;
+    --muted: #6b6b70;
+    --border: #e0ddd8;
+    --bg: #ffffff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: Georgia, 'Times New Roman', serif; color: var(--text); background: var(--bg); line-height: 1.75; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 100%);
+    padding: 7rem 2.5rem 6rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(122,158,142,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 820px; margin: 0 auto; position: relative; }
+  .hero-eyebrow {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 0.16em; color: var(--sage-mid);
+    text-transform: uppercase; margin-bottom: 1.6rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-eyebrow::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--sage); }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 400;
+    color: #fff; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -0.01em;
+  }
+  .hero-sub {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 1rem; color: rgba(255,255,255,0.65);
+    max-width: 580px; margin-bottom: 2.5rem; line-height: 1.7;
+  }
+  .hero-abstract {
+    border-left: 3px solid var(--sage); padding-left: 1.25rem;
+    font-size: 0.975rem; line-height: 1.8;
+    color: rgba(255,255,255,0.78); max-width: 620px; margin-bottom: 2.5rem;
+  }
+  .hero-creds { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .cred {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; color: var(--sage-mid);
+    border: 1px solid rgba(122,158,142,0.45);
+    border-radius: 2px; padding: 5px 12px; letter-spacing: 0.06em;
+  }
+
+  /* ── STATS ── */
+  .stats-strip {
+    background: var(--sand);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    padding: 3rem 2.5rem;
+  }
+  .stats-inner {
+    max-width: 820px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
+  }
+  .stat { text-align: center; }
+  .stat-number {
+    font-family: Georgia, serif; font-size: 2.4rem;
+    font-weight: 400; color: var(--navy); line-height: 1; margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--muted); line-height: 1.4;
+  }
+
+  /* ── STICKY NAV ── */
+  .sticky-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { max-width: 820px; margin: 0 auto; padding: 0 2.5rem; display: flex; overflow-x: auto; }
+  .nav-inner a {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; padding: 16px 18px;
+    border-bottom: 2px solid transparent; transition: color 0.2s, border-color 0.2s; white-space: nowrap;
+  }
+  .nav-inner a:hover { color: var(--sage); border-bottom-color: var(--sage); }
+
+  /* ── SHARED LAYOUT ── */
+  .section-wrap { max-width: 820px; margin: 0 auto; padding: 5rem 2.5rem; }
+  .divider { border: none; border-top: 1px solid var(--border); max-width: 820px; margin: 0 auto; }
+  .section-label {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--sage); margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--sage); }
+  h2 { font-size: 1.9rem; font-weight: 400; color: var(--navy); margin-bottom: 0.35rem; letter-spacing: -0.01em; }
+  .section-dek { font-family: Georgia, serif; font-style: italic; font-size: 0.9rem; color: var(--muted); margin-bottom: 2.5rem; }
+  p { font-size: 1rem; margin-bottom: 1.1rem; color: var(--text); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── METHOD CARDS ── */
+  .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+  .method-card {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.5rem; border-top: 3px solid var(--sage);
+  }
+  .method-card:nth-child(2) { border-top-color: var(--navy); }
+  .method-card:nth-child(3) { border-top-color: var(--rose); }
+  .method-card:nth-child(4) { border-top-color: #8a7a5a; }
+  .stat-pill {
+    display: inline-block; font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--sage); border: 1px solid var(--sage);
+    padding: 3px 10px; border-radius: 2px; margin-bottom: 0.75rem;
+  }
+  .method-card h3 { font-size: 0.975rem; font-weight: 400; color: var(--navy); margin-bottom: 0.5rem; line-height: 1.4; }
+  .method-card p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--muted); line-height: 1.65; margin: 0; }
+
+  /* ── FINDINGS ── */
+  .findings-bg { background: var(--sand); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .finding-block { margin-bottom: 3rem; }
+  .finding-block h3 { font-size: 1.25rem; font-weight: 400; color: var(--navy); margin-bottom: 0.75rem; }
+  .finding-block p { color: var(--muted); font-size: 0.975rem; }
+
+  .chart-container { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.75rem; margin: 1.5rem 0; }
+  .chart-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .bar-row { display: grid; grid-template-columns: 200px 1fr 44px; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .bar-label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--text); text-align: right; line-height: 1.3; }
+  .bar-track { height: 20px; background: var(--sand); border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; }
+  .bar-threatened { background: var(--navy); }
+  .bar-aboriginal  { background: var(--sage); }
+  .bar-historic    { background: var(--rose); }
+  .bar-pct { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--muted); }
+  .chart-note { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--muted); font-style: italic; margin-top: 1rem; }
+
+  .coverage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 1.5rem 0; }
+  .coverage-card { border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; background: var(--bg); border-top: 3px solid var(--rose); }
+  .coverage-card.partial { border-top-color: var(--sage); }
+  .coverage-value { font-family: Georgia, serif; font-size: 2.2rem; font-weight: 400; color: var(--navy); line-height: 1; margin-bottom: 0.4rem; }
+  .coverage-label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .phase-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
+  .phase-table th { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); background: var(--bg); }
+  .phase-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .phase-table tr:last-child td { border-bottom: none; }
+  .phase-table tr:hover td { background: var(--sage-light); }
+
+  .badge { display: inline-block; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.04em; }
+  .badge-absent  { background: rgba(176,112,128,0.12); color: var(--rose); }
+  .badge-partial { background: rgba(122,158,142,0.14); color: #4a8070; }
+  .badge-present { background: rgba(28,43,74,0.08); color: var(--navy); }
+
+  .callout {
+    background: var(--sage-light); border-left: 3px solid var(--sage);
+    padding: 1rem 1.25rem; border-radius: 0 6px 6px 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.875rem; color: #2e4a3e; line-height: 1.6; margin: 1.5rem 0;
+  }
+  .callout strong { color: var(--navy); }
+
+  /* ── RECOMMENDATIONS ── */
+  .rec-list { list-style: none; }
+  .rec-item { display: grid; grid-template-columns: 2rem 1fr; gap: 1.25rem; padding: 1.4rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .rec-item:first-child { border-top: 1px solid var(--border); }
+  .rec-n { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; font-weight: 500; color: var(--sage); padding-top: 3px; }
+  .rec-item p { font-size: 1rem; color: var(--text); margin: 0; }
+  .rec-item strong { display: block; font-size: 0.975rem; color: var(--navy); margin-bottom: 0.3rem; font-weight: 400; font-style: italic; }
+
+  /* ── PUBLICATIONS ── */
+  .pub-list { list-style: none; margin-top: 2rem; }
+  .pub-item { padding: 1.5rem 0; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: start; }
+  .pub-item:first-child { padding-top: 0; }
+  .pub-item:last-child { border-bottom: none; }
+  .pub-year { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--muted); min-width: 36px; padding-top: 2px; }
+  .pub-body cite { font-style: italic; font-size: 1rem; color: var(--navy); display: block; margin-bottom: 0.3rem; line-height: 1.45; }
+  .pub-meta { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--muted); margin-bottom: 0.25rem; }
+  .pub-journal { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--sage); letter-spacing: 0.03em; }
+  .pub-note { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: var(--muted); font-style: italic; margin-top: 0.35rem; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); padding: 1.5rem 2.5rem; text-align: center; }
+  footer p { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: rgba(255,255,255,0.25); margin: 0; }
+
+  @media (max-width: 660px) {
+    .stats-inner { grid-template-columns: 1fr 1fr; }
+    .method-grid { grid-template-columns: 1fr; }
+    .coverage-grid { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 100px 1fr 36px; }
+    .hero { padding: 4rem 1.5rem 3.5rem; }
+    .section-wrap { padding: 3.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Honours Thesis · Charles Sturt University · 2004</p>
+    <h1>Fire Management Planning and Cultural Heritage in NSW</h1>
+    <p class="hero-sub">A survey of current Bush Fire Risk Management Plans developed by the NSW Rural Fire Service</p>
+    <p class="hero-abstract">An investigation into the effectiveness of mandatory Bush Fire Risk Management Plans across New South Wales in protecting Australia's irreplaceable cultural heritage assets — both indigenous and historic — from the ever-present threat of bushfire. Through systematic content analysis of 111 district plans, this research revealed a significant and systematic gap between planning requirements and practice.</p>
+    <div class="hero-creds">
+      <span class="cred">Prue Laidlaw</span>
+      <span class="cred">BEnvSc (Cultural Heritage) Honours</span>
+      <span class="cred">Cultural Heritage Management</span>
+      <span class="cred">Disaster Planning · NSW</span>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-number">111</div><div class="stat-label">Plans analysed — complete NSW corpus</div></div>
+    <div class="stat"><div class="stat-number">19</div><div class="stat-label">Core elements in the Ideal Heritage Disaster Plan</div></div>
+    <div class="stat"><div class="stat-number">0</div><div class="stat-label">Plans with any Response or Recovery content</div></div>
+    <div class="stat"><div class="stat-number">6%</div><div class="stat-label">Average share of text devoted to historic heritage</div></div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav">
+  <div class="nav-inner">
+    <a href="#methodology">Methodology</a>
+    <a href="#findings">Key Findings</a>
+    <a href="#recommendations">Recommendations</a>
+    <a href="#publications">Publications</a>
+  </div>
+</nav>
+
+<!-- METHODOLOGY -->
+<div class="section-wrap" id="methodology">
+  <p class="section-label">Methodology</p>
+  <h2>How the research was conducted</h2>
+  <p class="section-dek">A systematic content analysis of the complete population of NSW plans.</p>
+  <p>The study analysed all available NSW Bush Fire Risk Management Plans (BFRMPs) — the legally mandated planning documents prepared by local Bush Fire Management Committees under the <em>Rural Fires Act 1997</em> (NSW). Plans were subjected to both quantitative content analysis and qualitative assessment against a purpose-built benchmark framework.</p>
+  <div class="method-grid">
+    <div class="method-card">
+      <div class="stat-pill">n = 111 plans</div>
+      <h3>Corpus</h3>
+      <p>All available NSW district Bush Fire Risk Management Plans were obtained and analysed — the complete population of plans in force at the time of study.</p>
+    </div>
+    <div class="method-card">
+      <div class="stat-pill">Presence / Absence</div>
+      <h3>Content Analysis</h3>
+      <p>Each plan was coded for the presence and breadth of three environmental/ecological asset categories: historic heritage, places of Aboriginal significance, and threatened species.</p>
+    </div>
+    <div class="method-card">
+      <div class="stat-pill">Benchmark Framework</div>
+      <h3>Ideal Heritage Disaster Plan</h3>
+      <p>A novel benchmark — the <em>Ideal Heritage Disaster Plan</em> — was constructed from best-practice literature, comprising 19 core elements across three sub-plans: Preparedness, Response, and Recovery.</p>
+    </div>
+    <div class="method-card">
+      <div class="stat-pill">3-point scale</div>
+      <h3>Level of Detail</h3>
+      <p>Where content was present, a threshold measure rated each element as low, medium, or high in detail — calibrated against the full plan population rather than an external ideal.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FINDINGS -->
+<div class="findings-bg" id="findings">
+  <div class="section-wrap">
+    <p class="section-label">Key Findings</p>
+    <h2>What the research found</h2>
+    <p class="section-dek">Four interconnected findings across plan composition, comprehensiveness, detail, and process.</p>
+
+    <!-- Finding 1 -->
+    <div class="finding-block">
+      <h3>Cultural heritage is systematically underrepresented</h3>
+      <p>Across all 111 plans, content within the environmental/ecological assets section was heavily skewed toward threatened species, with cultural heritage receiving a fraction of the attention despite carrying equal legal weight in the Model Plan.</p>
+      <div class="chart-container">
+        <div class="chart-title">Average share of environmental/ecological assets content by category</div>
+        <div class="bar-row">
+          <div class="bar-label">Threatened Species</div>
+          <div class="bar-track"><div class="bar-fill bar-threatened" style="width:76%"></div></div>
+          <div class="bar-pct">76%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Places of Aboriginal Significance</div>
+          <div class="bar-track"><div class="bar-fill bar-aboriginal" style="width:18%"></div></div>
+          <div class="bar-pct">18%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Historic Heritage</div>
+          <div class="bar-track"><div class="bar-fill bar-historic" style="width:6%"></div></div>
+          <div class="bar-pct">6%</div>
+        </div>
+        <p class="chart-note">Ideal ratio: 50% threatened species · 25% Aboriginal significance · 25% historic heritage. Average lines per plan: threatened species 53, Aboriginal significance 12.5, historic heritage 4.5.</p>
+      </div>
+      <div class="callout"><strong>90% of plans</strong> devoted fewer than 10 lines to historic heritage — despite it being a ubiquitous and legally required component. In 8 plans, historic heritage received zero lines.</div>
+    </div>
+
+    <!-- Finding 2 -->
+    <div class="finding-block">
+      <h3>Response and Recovery planning is entirely absent</h3>
+      <p>When measured against the Ideal Heritage Disaster Plan's 19 core elements, the most striking finding was not inadequacy of detail — it was the complete absence of two of the three planning phases.</p>
+      <div class="coverage-grid">
+        <div class="coverage-card">
+          <div class="coverage-value">0/111</div>
+          <div class="coverage-label">Plans containing any Response Plan core elements</div>
+        </div>
+        <div class="coverage-card">
+          <div class="coverage-value">0/111</div>
+          <div class="coverage-label">Plans containing any Recovery Plan core elements</div>
+        </div>
+        <div class="coverage-card partial">
+          <div class="coverage-value">86%</div>
+          <div class="coverage-label">Plans addressing at least one requirement — all within Preparedness only</div>
+        </div>
+      </div>
+      <table class="phase-table">
+        <thead>
+          <tr><th>Planning Phase</th><th>Core Elements Required</th><th>Status in Plans</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Preparedness</strong></td>
+            <td>Location, description, prevention, suppression techniques, risk analysis, prescribed drill, communication procedures (12 elements split by heritage type)</td>
+            <td><span class="badge badge-partial">Partially present</span></td>
+          </tr>
+          <tr>
+            <td><strong>Response</strong></td>
+            <td>Rapid suppression techniques, heritage adviser role, stabilisation procedures, damage inventories</td>
+            <td><span class="badge badge-absent">Entirely absent</span></td>
+          </tr>
+          <tr>
+            <td><strong>Recovery</strong></td>
+            <td>Detailed survey, current conservation plans, ongoing heritage adviser involvement</td>
+            <td><span class="badge badge-absent">Entirely absent</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Finding 3 -->
+    <div class="finding-block">
+      <h3>Even Preparedness plans have critical gaps</h3>
+      <p>Within the preparedness phase, the two most actionable elements for firefighters — prescribed drills and communication procedures — were missing from every single plan examined.</p>
+      <table class="phase-table">
+        <thead>
+          <tr><th>Core Element</th><th>Indigenous Heritage</th><th>Historic Heritage</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Location</td><td><span class="badge badge-present">Present</span></td><td><span class="badge badge-present">Present</span></td></tr>
+          <tr><td>Description</td><td><span class="badge badge-present">Present</span></td><td><span class="badge badge-present">Present</span></td></tr>
+          <tr><td>Risk Analysis</td><td><span class="badge badge-partial">Partial</span></td><td><span class="badge badge-partial">Partial</span></td></tr>
+          <tr><td>Suppression Techniques</td><td><span class="badge badge-partial">Selectively present (56 plans)</span></td><td><span class="badge badge-absent">Rare (4 plans only)</span></td></tr>
+          <tr><td>Prevention</td><td><span class="badge badge-absent">Near-absent</span></td><td><span class="badge badge-absent">Near-absent</span></td></tr>
+          <tr><td>Prescribed Drill</td><td><span class="badge badge-absent">Absent in all 111</span></td><td><span class="badge badge-absent">Absent in all 111</span></td></tr>
+          <tr><td>Communication Procedures</td><td><span class="badge badge-absent">Absent in all 111</span></td><td><span class="badge badge-absent">Absent in all 111</span></td></tr>
+        </tbody>
+      </table>
+      <p>A notable driver of the disparity was the widespread uncritical adoption of a single matrix — <em>Impact of fire types and suppression activities on Aboriginal sites</em> (English, 2000) — present in 56 of 111 plans. No equivalent resource existed for historic heritage assets.</p>
+    </div>
+
+    <!-- Finding 4 -->
+    <div class="finding-block">
+      <h3>'Boilerplating' — why the gaps persist</h3>
+      <p>A parallel analysis examined <em>why</em> plans were so uniformly inadequate. The answer lay in a pervasive practice of copying content — from the Model Plan's own example text, from other plans, and from external sources — without adaptation to local conditions.</p>
+      <div class="chart-container">
+        <div class="chart-title">Scale of copied content across 111 plans</div>
+        <div class="bar-row">
+          <div class="bar-label">Aboriginal significance criteria (NPWS text)</div>
+          <div class="bar-track"><div class="bar-fill bar-aboriginal" style="width:23%"></div></div>
+          <div class="bar-pct">23%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Condensed NPWS version</div>
+          <div class="bar-track"><div class="bar-fill bar-aboriginal" style="width:14%"></div></div>
+          <div class="bar-pct">14%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">English (2000) fire impacts matrix</div>
+          <div class="bar-track"><div class="bar-fill bar-threatened" style="width:51%"></div></div>
+          <div class="bar-pct">51%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Model Plan example text (Bush Fire Risk Desc.)</div>
+          <div class="bar-track"><div class="bar-fill bar-historic" style="width:45%"></div></div>
+          <div class="bar-pct">45%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Model Plan threatened species example text</div>
+          <div class="bar-track"><div class="bar-fill bar-threatened" style="width:54%"></div></div>
+          <div class="bar-pct">54%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Internal Model Plan copy error (double period)</div>
+          <div class="bar-track"><div class="bar-fill bar-historic" style="width:12%"></div></div>
+          <div class="bar-pct">12%</div>
+        </div>
+        <p class="chart-note">Four types of boilerplating identified: text copied from external sources; uncritical use of Model Plan example text; copying from other FMPs; and internal copying within the Model Plan itself.</p>
+      </div>
+      <div class="callout">Boilerplated plans may be <strong>worse than no plans at all</strong> — filling headings with generic content creates a false sense of preparedness while providing firefighters with information that is locally irrelevant, internally contradictory, or simply wrong for their district.</div>
+      <p>The research concluded that disaster planning in NSW remained firmly within a <em>command and control</em> paradigm — privileging expert committees over local participatory knowledge, and discouraging committees from commissioning new data. With no heritage practitioners on any of the 142 Bush Fire Management Committees, locally specific cultural heritage knowledge had no formal pathway into the plans.</p>
+    </div>
+
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- RECOMMENDATIONS -->
+<div class="section-wrap" id="recommendations">
+  <p class="section-label">Recommendations</p>
+  <h2>Where to go from here</h2>
+  <p class="section-dek">Four priority areas for improvement, applicable to NSW and comparable jurisdictions.</p>
+  <ul class="rec-list">
+    <li class="rec-item">
+      <span class="rec-n">01</span>
+      <p><strong>Integrate heritage practitioners into planning committees</strong>No designated heritage practitioners sat on either the Bush Fire Management Committees or the overarching Bush Fire Coordinating Committee. Direct inclusion of cultural heritage expertise in these bodies would address the majority of identified gaps at the source.</p>
+    </li>
+    <li class="rec-item">
+      <span class="rec-n">02</span>
+      <p><strong>Establish a systematic quality review process</strong>Plans must be evaluated for quality, detail, and depth before finalisation — not merely checked for the presence of required headings. A peer-review or expert-audit mechanism is needed to replace the current reliance on self-assessment by volunteer committees.</p>
+    </li>
+    <li class="rec-item">
+      <span class="rec-n">03</span>
+      <p><strong>Mandate Response and Recovery sub-plans</strong>The complete absence of response and recovery planning for cultural heritage must be corrected through model plan revision. The Ideal Heritage Disaster Plan framework developed in this research provides a ready-made template of non-negotiable core elements for each phase.</p>
+    </li>
+    <li class="rec-item">
+      <span class="rec-n">04</span>
+      <p><strong>Embed cultural heritage training in firefighter education</strong>Training programmes should cover identification of both indigenous and historic heritage assets, appropriate suppression techniques for different asset types, and preventative measures. Prescribed drills should be incorporated to test plan provisions before a real event.</p>
+    </li>
+  </ul>
+</div>
+
+<hr class="divider">
+
+<!-- PUBLICATIONS -->
+<div class="section-wrap" id="publications">
+  <p class="section-label">Publications from this research</p>
+  <h2>Related outputs</h2>
+  <p class="section-dek">Peer-reviewed articles and reports arising from the Honours thesis, co-authored with supervisors Dirk H.R. Spennemann and Catherine Allan.</p>
+  <ul class="pub-list">
+
+    <li class="pub-item">
+      <span class="pub-year">2004</span>
+      <div class="pub-body">
+        <cite>Fire management planning and cultural heritage in NSW: a survey of current management plans</cite>
+        <div class="pub-meta">Laidlaw, P. — Honours Thesis</div>
+        <div class="pub-journal">Charles Sturt University, School of Environmental and Information Sciences · Albury, NSW</div>
+      </div>
+    </li>
+
+    <li class="pub-item">
+      <span class="pub-year">2007</span>
+      <div class="pub-body">
+        <cite>No time to de(con)struct: The accessibility of Bush Fire Risk Management Plans in New South Wales, Australia</cite>
+        <div class="pub-meta">Spennemann, D.H.R., Allan, C. &amp; Laidlaw, P.</div>
+        <div class="pub-journal">Australian Journal of Emergency Management · Vol. 22, No. 1, pp. 5–17</div>
+      </div>
+    </li>
+
+    <li class="pub-item">
+      <span class="pub-year">2007</span>
+      <div class="pub-body">
+        <cite>Protecting cultural assets from bushfires: a question of comprehensive planning</cite>
+        <div class="pub-meta">Laidlaw, P., Spennemann, D.H.R. &amp; Allan, C.</div>
+        <div class="pub-journal">Disasters · Blackwell Publishing / Overseas Development Institute</div>
+      </div>
+    </li>
+
+    <li class="pub-item">
+      <span class="pub-year">2020</span>
+      <div class="pub-body">
+        <cite>'Boiler plating' in fire management plans: Is command and control planning failing cultural heritage protection?</cite>
+        <div class="pub-meta">Gonzalez, P., Allan, C. &amp; Spennemann, D.H.R.</div>
+        <div class="pub-journal">Institute for Land, Water and Society Report No. 135 · Charles Sturt University, Albury NSW · ISBN 978-1-86-467369-2</div>
+        <div class="pub-note">Analysis completed 2006, placed on record 2020. Examines the practice of copying generic content across Fire Management Plans and argues for participatory planning approaches as an alternative to the command-and-control paradigm.</div>
+      </div>
+    </li>
+
+  </ul>
+</div>
+
+<footer>
+  <p>Prue Laidlaw · Bachelor of Environmental Science (Management – Cultural Heritage), Honours · Charles Sturt University · 2004</p>
+</footer>
+
+</body>
+</html>
