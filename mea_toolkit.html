@@ -155,7 +155,8 @@ main { min-height: 80vh; }
   background: rgba(81,150,116,0.1);
   pointer-events: none;
 }
-.hero-inner { max-width: 900px; position: relative; z-index: 1; }
+.hero-inner { max-width: 900px; }
+.hero-content-wrap { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
 .hero-eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -377,7 +378,6 @@ main { min-height: 80vh; }
   border-radius: 20px;
   transition: var(--transition);
   cursor: pointer;
-  position: relative;
   user-select: none;
 }
 .pillar-chip:hover {
@@ -437,7 +437,6 @@ main { min-height: 80vh; }
 .pillar-popover-source {
   font-size: 11px;
   color: rgba(255,255,255,0.35);
-  letter-spacing: 0.3px;
 }
 .pillars-label {
   font-size: 11px;
@@ -861,7 +860,7 @@ footer {
 <!-- ── TAB: OVERVIEW ── -->
 <div id="tab-overview" class="tab-panel active">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">Models of Engagement and Assessment</div>
       <h1>Teaching well<br>in <em>every</em> model.</h1>
       <p class="hero-lead">This toolkit brings together the resources you need to design, deliver and lead learning in Charles Sturt University's three MEA models — grounded in the Jisc Beyond Blended six pillars framework and built for our students, our communities and our context.</p>
@@ -881,7 +880,6 @@ footer {
     <span class="pillar-chip" onclick="showPillarPopover('Flex',this)">Flex</span>
     <span class="pillar-chip" onclick="showPillarPopover('Support',this)">Support</span>
   </div>
-
   <div class="pillar-popover" id="pillarPopover">
     <div class="pillar-popover-eyebrow">Jisc Beyond Blended</div>
     <div class="pillar-popover-name" id="pillarPopoverName"></div>
@@ -922,11 +920,11 @@ footer {
         <div class="oc-title">PD program framework</div>
         <p class="oc-desc">A mandatory three-tier professional development program grounded in the six pillars — not tool training, but genuine pedagogical uplift for all academic staff.</p>
       </div>
-      <a href="https://www.jisc.ac.uk/guides/beyond-blended-rethinking-curriculum-and-learning-design" target="_blank" rel="noopener noreferrer" class="overview-card oc-6" style="text-decoration:none;display:block;">
+      <div class="overview-card oc-6">
         <div class="oc-icon">⬡</div>
-        <div class="oc-title">Jisc Beyond Blended ↗</div>
+        <div class="oc-title">Jisc Beyond Blended</div>
         <p class="oc-desc">This toolkit is built on the Jisc Beyond Blended framework — an internationally recognised approach to curriculum design for diverse modes of delivery.</p>
-      </a>
+      </div>
     </div>
 
     <div class="jisc-note">
@@ -938,11 +936,11 @@ footer {
 <!-- ── TAB: MODELS ── -->
 <div id="tab-models" class="tab-panel">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">MEA Model Definitions</div>
       <h1>Three models.<br>Three <em>design logics.</em></h1>
       <p class="hero-lead">The MEA models are not administrative categories — each has a distinctive pedagogical logic that flows through every design decision about place, platform, pace, assessment, and support.</p>
-    </div>
+    </div></div>
   </div>
 
   <div class="page-section">
@@ -1082,11 +1080,11 @@ footer {
 <!-- ── TAB: COURSE DESIGN PROMPTS ── -->
 <div id="tab-course-prompts" class="tab-panel">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">Course Design Prompts</div>
       <h1>Questions that<br><em>sharpen</em> your design.</h1>
       <p class="hero-lead">Six curriculum lenses, each offering prompting questions for course teams designing within their MEA model. Read the column for your model. Use these in design workshops, CCR reviews, and subject redesign sessions.</p>
-    </div>
+    </div></div>
   </div>
 
   <div class="page-section">
@@ -1260,11 +1258,11 @@ footer {
 <!-- ── TAB: STRATEGIC PROMPTS ── -->
 <div id="tab-strategic-prompts" class="tab-panel">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">Strategic Planning Prompts</div>
       <h1>Questions for<br><em>leaders and governance.</em></h1>
       <p class="hero-lead">Six strategic lenses for Faculty leaders, MEA governance, and enabling divisions. These questions address the institutional decisions that make the MEA models possible — space, platforms, workload, equity, and data.</p>
-    </div>
+    </div></div>
   </div>
 
   <div class="page-section">
@@ -1382,11 +1380,11 @@ footer {
 <!-- ── TAB: CSU LENSES ── -->
 <div id="tab-csu-lenses" class="tab-panel">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">CSU-Specific Lenses</div>
       <h1>Built for <em>our</em> students<br>and our context.</h1>
       <p class="hero-lead">Two lenses created using the Jisc blank template and designed specifically for Charles Sturt University. These address what the generic Jisc lenses don't — our regional and First Nations cohort, our compliance obligations, and our course-level assessment requirements.</p>
-    </div>
+    </div></div>
   </div>
 
   <div class="page-section">
@@ -1456,11 +1454,11 @@ footer {
 <!-- ── TAB: PD PROGRAM ── -->
 <div id="tab-pd-program" class="tab-panel">
   <div class="hero">
-    <div class="hero-inner">
+    <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">MEA Teaching and Learning PD Program</div>
-      <h1>Designed to build genuine teaching capability.</h1>
+      <h1>Not tool training.<br><em>Real</em> pedagogical uplift.</h1>
       <p class="hero-lead">A mandatory three-tier professional development program for all academic staff, grounded in the Jisc six pillars. Required before teaching in an MEA model course. Designed to develop genuine capability — not just compliance — and to anticipate the revised Teaching Capabilities Framework.</p>
-    </div>
+    </div></div>
   </div>
 
   <div class="page-section">
@@ -1643,51 +1641,31 @@ const PILLAR_DATA = {
   Flex:     'Learners and educators expect choice and flexibility in mode(s) of learning. Flexibility is not just a convenience — it is an equity issue, especially for regional, First Nations, and working students.',
   Support:  'Learners and educators need support to engage in diverse modes. Effective support is designed into the curriculum — not bolted on — and addresses digital, academic, and belonging needs.'
 };
-
 let _activeChip = null;
-
 function showPillarPopover(name, chipEl) {
   const popover = document.getElementById('pillarPopover');
-
-  // Toggle off if same chip clicked again
-  if (_activeChip === chipEl) {
-    closePillarPopover();
-    return;
-  }
-
-  // Deactivate previous chip
+  if (_activeChip === chipEl) { closePillarPopover(); return; }
   if (_activeChip) _activeChip.classList.remove('active');
   _activeChip = chipEl;
   chipEl.classList.add('active');
-
-  // Populate content
   document.getElementById('pillarPopoverName').textContent = name;
   document.getElementById('pillarPopoverDef').textContent = PILLAR_DATA[name];
-
-  // Position below the chip, within viewport
   const rect = chipEl.getBoundingClientRect();
   const pw = 280;
   let left = rect.left;
   let top  = rect.bottom + 10;
-
   if (left + pw > window.innerWidth - 16) left = window.innerWidth - pw - 16;
   if (left < 16) left = 16;
-
   popover.style.left = left + 'px';
   popover.style.top  = top  + 'px';
-
-  // Animate in
   popover.classList.remove('visible');
-  void popover.offsetWidth; // force reflow
+  void popover.offsetWidth;
   popover.classList.add('visible');
 }
-
 function closePillarPopover() {
   document.getElementById('pillarPopover').classList.remove('visible');
   if (_activeChip) { _activeChip.classList.remove('active'); _activeChip = null; }
 }
-
-// Close on outside click or Escape
 document.addEventListener('click', function(e) {
   if (!e.target.classList.contains('pillar-chip')) closePillarPopover();
 });
