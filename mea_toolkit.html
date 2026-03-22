@@ -363,6 +363,10 @@ main { min-height: 80vh; }
 .pillars-strip {
   background: var(--dark-green);
   padding: 28px 40px;
+}
+.pillars-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -380,64 +384,23 @@ main { min-height: 80vh; }
   cursor: pointer;
   user-select: none;
 }
-.pillar-chip:hover {
-  background: rgba(255,255,255,0.16);
-  border-color: rgba(255,255,255,0.3);
-  color: white;
-}
-.pillar-chip.active {
-  background: var(--dark-orange);
-  border-color: var(--dark-orange);
-  color: white;
-}
-/* ── PILLAR POPOVER ── */
+.pillar-chip:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.3); color: white; }
+.pillar-chip.active { background: var(--dark-orange); border-color: var(--dark-orange); color: white; }
 .pillar-popover {
-  display: none;
-  position: fixed;
-  z-index: 500;
-  width: 280px;
-  background: #0e2e27;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 12px;
-  padding: 20px 22px 16px;
+  display: none; position: fixed; z-index: 500; width: 280px;
+  background: #0e2e27; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px; padding: 20px 22px 16px;
   box-shadow: 0 12px 48px rgba(0,0,0,0.45);
 }
-.pillar-popover.visible {
-  display: block;
-  animation: popIn 0.17s cubic-bezier(0.4,0,0.2,1);
-}
+.pillar-popover.visible { display: block; animation: popIn 0.17s cubic-bezier(0.4,0,0.2,1); }
 @keyframes popIn {
   from { opacity: 0; transform: translateY(8px) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
-.pillar-popover-eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--light-green);
-  margin-bottom: 6px;
-}
-.pillar-popover-name {
-  font-family: var(--font-display);
-  font-size: 24px;
-  color: #fff;
-  line-height: 1.1;
-  margin-bottom: 12px;
-}
-.pillar-popover-def {
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: rgba(255,255,255,0.78);
-  font-weight: 300;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding-top: 12px;
-  margin-bottom: 12px;
-}
-.pillar-popover-source {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-}
+.pillar-popover-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--light-green); margin-bottom: 6px; }
+.pillar-popover-name { font-family: var(--font-display); font-size: 24px; color: #fff; line-height: 1.1; margin-bottom: 12px; }
+.pillar-popover-def { font-size: 13.5px; line-height: 1.65; color: rgba(255,255,255,0.78); font-weight: 300; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; margin-bottom: 12px; }
+.pillar-popover-source { font-size: 11px; color: rgba(255,255,255,0.35); }
 .pillars-label {
   font-size: 11px;
   font-weight: 700;
@@ -831,7 +794,8 @@ footer {
   .tab-nav { padding: 0 20px; }
   .hero { padding: 48px 20px 40px; }
   .page-section { padding: 36px 20px; }
-  .pillars-strip { padding: 20px; }
+  .pillars-strip { padding: 16px 20px; }
+  .pillars-strip-inner { gap: 8px; }
   footer { padding: 28px 20px; }
 }
 </style>
@@ -867,18 +831,20 @@ footer {
       <div class="hero-actions">
         <button class="btn-primary" onclick="showTab('course-prompts', document.querySelectorAll('.tab-btn')[2])">Course design prompts</button>
         <button class="btn-ghost" onclick="showTab('pd-program', document.querySelectorAll('.tab-btn')[5])">PD program framework</button>
-      </div>
+      </div></div>
     </div>
   </div>
 
   <div class="pillars-strip">
-    <span class="pillars-label">Six pillars</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Place',this)">Place</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Platform',this)">Platform</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Pace',this)">Pace</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Blend',this)">Blend</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Flex',this)">Flex</span>
-    <span class="pillar-chip" onclick="showPillarPopover('Support',this)">Support</span>
+    <div class="pillars-strip-inner">
+      <span class="pillars-label">Six pillars</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Place',this)">Place</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Platform',this)">Platform</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Pace',this)">Pace</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Blend',this)">Blend</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Flex',this)">Flex</span>
+      <span class="pillar-chip" onclick="showPillarPopover('Support',this)">Support</span>
+    </div>
   </div>
   <div class="pillar-popover" id="pillarPopover">
     <div class="pillar-popover-eyebrow">Jisc Beyond Blended</div>
@@ -941,7 +907,7 @@ footer {
       <h1>Three models.<br>Three <em>design logics.</em></h1>
       <p class="hero-lead">The MEA models are not administrative categories — each has a distinctive pedagogical logic that flows through every design decision about place, platform, pace, assessment, and support.</p>
     </div></div>
-  </div>
+    </div>
 
   <div class="page-section">
     <div class="section-header">
@@ -1085,7 +1051,7 @@ footer {
       <h1>Questions that<br><em>sharpen</em> your design.</h1>
       <p class="hero-lead">Six curriculum lenses, each offering prompting questions for course teams designing within their MEA model. Read the column for your model. Use these in design workshops, CCR reviews, and subject redesign sessions.</p>
     </div></div>
-  </div>
+    </div>
 
   <div class="page-section">
     <div class="jisc-note">
@@ -1263,7 +1229,7 @@ footer {
       <h1>Questions for<br><em>leaders and governance.</em></h1>
       <p class="hero-lead">Six strategic lenses for Faculty leaders, MEA governance, and enabling divisions. These questions address the institutional decisions that make the MEA models possible — space, platforms, workload, equity, and data.</p>
     </div></div>
-  </div>
+    </div>
 
   <div class="page-section">
     <div class="jisc-note">
@@ -1385,7 +1351,7 @@ footer {
       <h1>Built for <em>our</em> students<br>and our context.</h1>
       <p class="hero-lead">Two lenses created using the Jisc blank template and designed specifically for Charles Sturt University. These address what the generic Jisc lenses don't — our regional and First Nations cohort, our compliance obligations, and our course-level assessment requirements.</p>
     </div></div>
-  </div>
+    </div>
 
   <div class="page-section">
     <div class="jisc-note">
@@ -1456,10 +1422,10 @@ footer {
   <div class="hero">
     <div class="hero-content-wrap"><div class="hero-inner">
       <div class="hero-eyebrow">MEA Teaching and Learning PD Program</div>
-      <h1>Not tool training.<br><em>Real</em> pedagogical uplift.</h1>
+      <h1>Designed to build genuine teaching capability.</h1>
       <p class="hero-lead">A mandatory three-tier professional development program for all academic staff, grounded in the Jisc six pillars. Required before teaching in an MEA model course. Designed to develop genuine capability — not just compliance — and to anticipate the revised Teaching Capabilities Framework.</p>
     </div></div>
-  </div>
+    </div>
 
   <div class="page-section">
     <div class="mandatory-banner">
@@ -1651,13 +1617,11 @@ function showPillarPopover(name, chipEl) {
   document.getElementById('pillarPopoverName').textContent = name;
   document.getElementById('pillarPopoverDef').textContent = PILLAR_DATA[name];
   const rect = chipEl.getBoundingClientRect();
-  const pw = 280;
-  let left = rect.left;
-  let top  = rect.bottom + 10;
-  if (left + pw > window.innerWidth - 16) left = window.innerWidth - pw - 16;
+  let left = rect.left, top = rect.bottom + 10;
+  if (left + 280 > window.innerWidth - 16) left = window.innerWidth - 296;
   if (left < 16) left = 16;
   popover.style.left = left + 'px';
-  popover.style.top  = top  + 'px';
+  popover.style.top = top + 'px';
   popover.classList.remove('visible');
   void popover.offsetWidth;
   popover.classList.add('visible');
@@ -1666,12 +1630,8 @@ function closePillarPopover() {
   document.getElementById('pillarPopover').classList.remove('visible');
   if (_activeChip) { _activeChip.classList.remove('active'); _activeChip = null; }
 }
-document.addEventListener('click', function(e) {
-  if (!e.target.classList.contains('pillar-chip')) closePillarPopover();
-});
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closePillarPopover();
-});
+document.addEventListener('click', function(e) { if (!e.target.classList.contains('pillar-chip')) closePillarPopover(); });
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closePillarPopover(); });
 </script>
 </body>
 </html>
