@@ -1615,7 +1615,7 @@ function showTab(tabId, btn) {
 
 function showLens(group, lensId, btn) {
   const prefix = group + '-';
-  document.querySelectorAll('[id^="' + prefix + '"]').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.lens-panel[id^="' + prefix + '"]').forEach(p => p.classList.remove('active'));
   const tabContainer = group === 'course' ? 'courseLensTabs' : 'strategicLensTabs';
   document.getElementById(tabContainer).querySelectorAll('.lens-tab').forEach(b => b.classList.remove('active'));
   const panel = document.getElementById(prefix + lensId);
