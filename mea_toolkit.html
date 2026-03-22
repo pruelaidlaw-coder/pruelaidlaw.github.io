@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond Blended at Charles Sturt — MEA Curriculum Design Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark-green: #0e3a32;
+  --dark-orange: #da3d0f;
+  --light-orange: #f0572a;
+  --dark-blue: #222944;
+  --light-green: #519674;
+  --light-brown: #c7b8a0;
+  --pink: #e9ceca;
+  --dark-brown: #736858;
+  --light-blue: #567dc3;
+  --white: #ffffff;
+  --black: #222222;
+
+  --fo-color: #185FA5;
+  --fo-light: #E6F1FB;
+  --co-color: #993C1D;
+  --co-light: #FAECE7;
+  --ip-color: #0F6E56;
+  --ip-light: #E1F5EE;
+
+  --radius: 6px;
+  --radius-lg: 12px;
+  --shadow: 0 2px 16px rgba(14,58,50,0.10);
+  --shadow-md: 0 4px 32px rgba(14,58,50,0.14);
+  --transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--black);
+  background: #f5f3ef;
+}
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--dark-green);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.logo-area {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--white);
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+}
+.logo-sub {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--light-green);
+}
+.header-badge {
+  background: var(--dark-orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+/* ── TAB NAV ── */
+.tab-nav {
+  display: flex;
+  padding: 0 40px;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 12px 18px;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.tab-btn:hover { color: rgba(255,255,255,0.9); }
+.tab-btn.active {
+  color: var(--white);
+  border-bottom-color: var(--dark-orange);
+}
+
+/* ── MAIN ── */
+main { min-height: 80vh; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── HERO SECTION ── */
+.hero {
+  background: var(--dark-green);
+  padding: 80px 40px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 380px; height: 380px;
+  border-radius: 50%;
+  background: rgba(218,61,15,0.12);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 30%;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: rgba(81,150,116,0.1);
+  pointer-events: none;
+}
+.hero-inner { max-width: 900px; position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--light-green);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.08;
+  color: var(--white);
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: #f0c4b4;
+}
+.hero-lead {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.8);
+  max-width: 680px;
+  margin-bottom: 36px;
+  font-weight: 300;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.btn-primary {
+  background: var(--dark-orange);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: 0.3px;
+}
+.btn-primary:hover { background: var(--light-orange); transform: translateY(-1px); }
+.btn-ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  padding: 13px 26px;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-ghost:hover { border-color: white; color: white; }
+
+/* ── PAGE SECTION ── */
+.page-section {
+  padding: 56px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-header {
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--light-brown);
+}
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--dark-orange);
+  margin-bottom: 10px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3vw, 40px);
+  color: var(--dark-green);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.section-lead {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #4a4a4a;
+  max-width: 760px;
+  font-weight: 300;
+}
+
+/* ── CARDS ── */
+.card-grid { display: grid; gap: 24px; }
+.card-grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.card-grid-2 { grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(199,184,160,0.3);
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+.card-accent {
+  width: 40px; height: 4px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--dark-green);
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+.card-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #555;
+}
+.card-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-bottom: 12px;
+}
+
+/* ── MODEL CARDS ── */
+.model-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.model-card-header {
+  padding: 28px 28px 24px;
+}
+.model-card-body {
+  padding: 28px;
+  background: var(--white);
+}
+.model-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--white);
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+.model-tagline {
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+  font-style: italic;
+  font-weight: 300;
+}
+.model-logic {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.model-standards { list-style: none; }
+.model-standards li {
+  font-size: 13.5px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0ece5;
+  color: #444;
+  padding-left: 18px;
+  position: relative;
+}
+.model-standards li:last-child { border-bottom: none; }
+.model-standards li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+
+.model-fo .model-card-header { background: var(--fo-color); }
+.model-fo .model-logic { color: var(--fo-color); }
+.model-fo .model-standards li::before { background: var(--fo-color); }
+.model-fo .card-accent { background: var(--fo-color); }
+
+.model-co .model-card-header { background: var(--co-color); }
+.model-co .model-logic { color: var(--co-color); }
+.model-co .model-standards li::before { background: var(--co-color); }
+.model-co .card-accent { background: var(--co-color); }
+
+.model-ip .model-card-header { background: var(--ip-color); }
+.model-ip .model-logic { color: var(--ip-color); }
+.model-ip .model-standards li::before { background: var(--ip-color); }
+.model-ip .card-accent { background: var(--ip-color); }
+
+/* ── PILLAR CHIPS ── */
+.pillars-strip {
+  background: var(--dark-green);
+  padding: 28px 40px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.pillar-chip {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: var(--transition);
+  cursor: default;
+}
+.pillar-chip:hover {
+  background: var(--dark-orange);
+  border-color: var(--dark-orange);
+  color: white;
+}
+.pillars-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--light-green);
+  margin-right: 4px;
+}
+
+/* ── LENS ACCORDION ── */
+.lens-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.lens-tab {
+  background: var(--white);
+  border: 1.5px solid var(--light-brown);
+  color: #666;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.lens-tab:hover { border-color: var(--dark-green); color: var(--dark-green); }
+.lens-tab.active {
+  background: var(--dark-green);
+  border-color: var(--dark-green);
+  color: white;
+}
+
+.lens-panel { display: none; }
+.lens-panel.active { display: block; animation: fadeIn 0.25s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── LENS TABLE ── */
+.lens-table-wrap { overflow-x: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+.lens-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: white;
+  min-width: 800px;
+}
+.lens-table th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: white;
+}
+.lens-table th.pillar-col { background: var(--dark-green); width: 160px; }
+.lens-table th.fo-col { background: var(--fo-color); }
+.lens-table th.co-col { background: var(--co-color); }
+.lens-table th.ip-col { background: var(--ip-color); }
+
+.lens-table td {
+  padding: 14px 18px;
+  vertical-align: top;
+  border-bottom: 1px solid #f0ece5;
+  line-height: 1.65;
+  color: #3a3a3a;
+}
+.lens-table tr:last-child td { border-bottom: none; }
+.lens-table td.pillar-col {
+  background: #f9f7f4;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: var(--dark-green);
+  border-right: 2px solid var(--light-brown);
+}
+.lens-table td.fo-col { background: #f8fbff; }
+.lens-table td.co-col { background: #fdf9f8; }
+.lens-table td.ip-col { background: #f8fdf9; }
+.lens-table tr:hover td { filter: brightness(0.975); }
+
+.lens-qs { list-style: none; }
+.lens-qs li {
+  padding: 5px 0 5px 16px;
+  position: relative;
+  border-bottom: 1px dashed #e8e4dd;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.lens-qs li:last-child { border-bottom: none; }
+.lens-qs li::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 14px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--dark-orange);
+  opacity: 0.6;
+}
+
+/* ── PD PROGRAM ── */
+.tier-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 32px;
+}
+.tier-header {
+  padding: 24px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.tier-num {
+  font-family: var(--font-display);
+  font-size: 52px;
+  line-height: 1;
+  opacity: 0.25;
+  color: white;
+  flex-shrink: 0;
+  margin-top: -4px;
+}
+.tier-meta { flex: 1; }
+.tier-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: white;
+  margin-bottom: 4px;
+}
+.tier-detail { font-size: 13px; color: rgba(255,255,255,0.75); }
+.tier-body { padding: 28px; background: white; }
+
+.tier-1 .tier-header { background: #534AB7; }
+.tier-2 .tier-header { background: var(--dark-green); }
+.tier-3 .tier-header { background: var(--dark-blue); }
+
+.module-list { list-style: none; display: grid; gap: 12px; }
+.module-item {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  border-left: 4px solid;
+  background: #fafaf8;
+  font-size: 13.5px;
+}
+.module-item strong { display: block; font-size: 14px; margin-bottom: 4px; }
+.tier-1 .module-item { border-color: #534AB7; }
+.tier-2 .module-item { border-color: var(--dark-green); }
+.tier-3-fo .module-item { border-color: var(--fo-color); }
+.tier-3-co .module-item { border-color: var(--co-color); }
+.tier-3-ip .module-item { border-color: var(--ip-color); }
+
+.pillar-modules { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.pillar-module {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: #f9f7f4;
+  border: 1px solid rgba(199,184,160,0.4);
+}
+.pillar-module-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--dark-green);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pillar-module-name::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--dark-orange);
+  flex-shrink: 0;
+}
+.pillar-module p { font-size: 12.5px; color: #555; line-height: 1.55; }
+
+/* ── MANDATORY BANNER ── */
+.mandatory-banner {
+  background: var(--dark-orange);
+  color: white;
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+.mandatory-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.mandatory-text strong { display: block; font-size: 15px; margin-bottom: 2px; }
+.mandatory-text span { font-size: 13px; opacity: 0.9; }
+
+/* ── CONNECTIONS BOX ── */
+.connections-box {
+  background: var(--ip-light);
+  border: 1.5px solid var(--ip-color);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+.connections-box h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ip-color);
+  margin-bottom: 10px;
+}
+.connections-box p { font-size: 13px; line-height: 1.65; color: #3a3a3a; }
+
+/* ── CSU LENS CARDS ── */
+.csu-lens-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.csu-lens-header {
+  padding: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.csu-lens-letter {
+  font-family: var(--font-display);
+  font-size: 56px;
+  line-height: 1;
+  color: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+  margin-top: -6px;
+}
+.csu-lens-meta {}
+.csu-lens-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: white;
+  margin-bottom: 6px;
+}
+.csu-lens-desc { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5; }
+.csu-lens-use {
+  padding: 10px 16px;
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--radius);
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  margin-top: 12px;
+  display: inline-block;
+}
+.lens-a .csu-lens-header { background: #7D5A00; }
+.lens-b .csu-lens-header { background: #1B4F2A; }
+.csu-lens-body { padding: 28px; background: white; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark-green);
+  padding: 40px;
+  color: rgba(255,255,255,0.7);
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: white;
+  margin-bottom: 6px;
+}
+.footer-meta { font-size: 12px; line-height: 1.7; }
+.footer-links { display: flex; flex-direction: column; gap: 6px; }
+.footer-links a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 13px;
+  transition: var(--transition);
+}
+.footer-links a:hover { color: white; }
+.footer-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  margin: 24px 0 16px;
+}
+
+/* ── OVERVIEW CARDS ── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 48px;
+}
+.overview-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.overview-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--light-brown);
+}
+.oc-1::before { background: var(--dark-orange); }
+.oc-2::before { background: var(--fo-color); }
+.oc-3::before { background: var(--co-color); }
+.oc-4::before { background: var(--ip-color); }
+.oc-5::before { background: #7D5A00; }
+.oc-6::before { background: #534AB7; }
+
+.oc-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+.oc-1 .oc-icon { background: #fef2ec; }
+.oc-2 .oc-icon { background: var(--fo-light); }
+.oc-3 .oc-icon { background: var(--co-light); }
+.oc-4 .oc-icon { background: var(--ip-light); }
+.oc-5 .oc-icon { background: #fdf8e1; }
+.oc-6 .oc-icon { background: #eeedfe; }
+
+.oc-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--dark-green);
+  margin-bottom: 6px;
+}
+.oc-desc { font-size: 13px; color: #666; line-height: 1.6; }
+
+/* ── JISC ATTRIBUTION ── */
+.jisc-note {
+  background: #f9f7f4;
+  border: 1px solid var(--light-brown);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  font-size: 12.5px;
+  color: #666;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.jisc-note strong { color: var(--dark-green); }
+
+/* ── INLINE TABS FOR TIER 3 ── */
+.inner-tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+.inner-tab {
+  background: white;
+  border: 1.5px solid var(--light-brown);
+  color: #666;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.inner-tab.active-fo { background: var(--fo-color); border-color: var(--fo-color); color: white; }
+.inner-tab.active-co { background: var(--co-color); border-color: var(--co-color); color: white; }
+.inner-tab.active-ip { background: var(--ip-color); border-color: var(--ip-color); color: white; }
+.inner-panel { display: none; }
+.inner-panel.active { display: block; animation: fadeIn 0.2s ease; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .header-top { padding: 14px 20px; }
+  .tab-nav { padding: 0 20px; }
+  .hero { padding: 48px 20px 40px; }
+  .page-section { padding: 36px 20px; }
+  .pillars-strip { padding: 20px; }
+  footer { padding: 28px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-wordmark">Charles Sturt University</div>
+      <div class="logo-sub">Division of Learning and Teaching</div>
+    </div>
+    <div class="header-badge">MEA Toolkit</div>
+  </div>
+  <nav class="tab-nav" role="navigation" aria-label="Main sections">
+    <button class="tab-btn active" onclick="showTab('overview', this)">Overview</button>
+    <button class="tab-btn" onclick="showTab('models', this)">The three models</button>
+    <button class="tab-btn" onclick="showTab('course-prompts', this)">Course design prompts</button>
+    <button class="tab-btn" onclick="showTab('strategic-prompts', this)">Strategic planning prompts</button>
+    <button class="tab-btn" onclick="showTab('csu-lenses', this)">CSU lenses</button>
+    <button class="tab-btn" onclick="showTab('pd-program', this)">PD program</button>
+  </nav>
+</header>
+
+<!-- ── TAB: OVERVIEW ── -->
+<div id="tab-overview" class="tab-panel active">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Models of Engagement and Assessment</div>
+      <h1>Teaching well<br>in <em>every</em> model.</h1>
+      <p class="hero-lead">This toolkit brings together the resources you need to design, deliver and lead learning in Charles Sturt University's three MEA models — grounded in the Jisc Beyond Blended six pillars framework and built for our students, our communities and our context.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showTab('course-prompts', document.querySelector('[onclick*=course-prompts]'))">Course design prompts</button>
+        <button class="btn-ghost" onclick="showTab('pd-program', document.querySelector('[onclick*=pd-program]'))">PD program framework</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pillars-strip">
+    <span class="pillars-label">Six pillars</span>
+    <span class="pillar-chip">Place</span>
+    <span class="pillar-chip">Platform</span>
+    <span class="pillar-chip">Pace</span>
+    <span class="pillar-chip">Blend</span>
+    <span class="pillar-chip">Flex</span>
+    <span class="pillar-chip">Support</span>
+  </div>
+
+  <div class="page-section">
+    <div class="section-header">
+      <div class="section-eyebrow">What's in this toolkit</div>
+      <h2 class="section-title">Everything in one place</h2>
+      <p class="section-lead">Six sections covering the design logic of each model, practical prompting tools for course teams and leaders, two CSU-specific lenses, and a framework for mandatory professional development.</p>
+    </div>
+
+    <div class="overview-grid">
+      <div class="overview-card oc-1" onclick="showTab('models', document.querySelector('[onclick*=models]'))">
+        <div class="oc-icon">⬡</div>
+        <div class="oc-title">The three models</div>
+        <p class="oc-desc">Understand the distinctive design logic of Fully Online, Combined, and In-Person Immersive — not just the rules, but the reasoning.</p>
+      </div>
+      <div class="overview-card oc-2" onclick="showTab('course-prompts', document.querySelector('[onclick*=course-prompts]'))">
+        <div class="oc-icon">✦</div>
+        <div class="oc-title">Course design prompts</div>
+        <p class="oc-desc">Six curriculum lenses adapted from Jisc — curriculum design, assessment, digital capabilities, learner engagement, large cohorts, employability — with questions differentiated by model.</p>
+      </div>
+      <div class="overview-card oc-3" onclick="showTab('strategic-prompts', document.querySelector('[onclick*=strategic-prompts]'))">
+        <div class="oc-icon">◈</div>
+        <div class="oc-title">Strategic planning prompts</div>
+        <p class="oc-desc">Six strategic lenses for Faculty leaders and MEA governance — space design, platform, workload, equity, and data — differentiated by audience.</p>
+      </div>
+      <div class="overview-card oc-4" onclick="showTab('csu-lenses', document.querySelector('[onclick*=csu-lenses]'))">
+        <div class="oc-icon">◉</div>
+        <div class="oc-title">CSU lenses</div>
+        <p class="oc-desc">Two lenses built specifically for our context: our regional and First Nations student cohort, and our assessment integrity and compliance obligations.</p>
+      </div>
+      <div class="overview-card oc-5" onclick="showTab('pd-program', document.querySelector('[onclick*=pd-program]'))">
+        <div class="oc-icon">▲</div>
+        <div class="oc-title">PD program framework</div>
+        <p class="oc-desc">A mandatory three-tier professional development program grounded in the six pillars — not tool training, but genuine pedagogical uplift for all academic staff.</p>
+      </div>
+      <div class="overview-card oc-6">
+        <div class="oc-icon">⬡</div>
+        <div class="oc-title">Jisc Beyond Blended</div>
+        <p class="oc-desc">This toolkit is built on the Jisc Beyond Blended framework — an internationally recognised approach to curriculum design for diverse modes of delivery.</p>
+      </div>
+    </div>
+
+    <div class="jisc-note">
+      <strong>About this toolkit.</strong> The prompts and lenses in this toolkit are adapted from the Jisc <em>Beyond Blended</em> curriculum and strategic lenses framework (CC BY NC SA), contextualised for Charles Sturt University's MEA initiative and student cohort. The terminology has been updated throughout: ePortfolio replaces PebblePad, casual staff replaces sessional staff, and course-level assessment replaces programmatic assessment.
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: MODELS ── -->
+<div id="tab-models" class="tab-panel">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">MEA Model Definitions</div>
+      <h1>Three models.<br>Three <em>design logics.</em></h1>
+      <p class="hero-lead">The MEA models are not administrative categories — each has a distinctive pedagogical logic that flows through every design decision about place, platform, pace, assessment, and support.</p>
+    </div>
+  </div>
+
+  <div class="page-section">
+    <div class="section-header">
+      <div class="section-eyebrow">Model overview</div>
+      <h2 class="section-title">What makes each model distinctive</h2>
+      <p class="section-lead">Each model has a core design commitment. Understanding that commitment — not just the compliance standards — is what enables teachers to make good design decisions within it.</p>
+    </div>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:48px">
+      <div class="model-card model-fo">
+        <div class="model-card-header">
+          <div class="model-title">Fully Online</div>
+          <div class="model-tagline">Online study that meets you where you are and supports where you're going.</div>
+        </div>
+        <div class="model-card-body">
+          <div class="card-accent"></div>
+          <div class="model-logic">Design logic: flexibility through asynchronous dominance</div>
+          <p style="font-size:13.5px;color:#444;margin-bottom:16px;line-height:1.65">Everything about this model flows from one commitment: that time and place should never be barriers to learning. The whole course — including assessment — is designed to work without campus attendance, for students studying in regional towns, workplaces, and different time zones.</p>
+          <ul class="model-standards">
+            <li>Intentional online pedagogy (Community of Inquiry)</li>
+            <li>≥85% asynchronous learning activity</li>
+            <li>Zero mandatory campus attendance</li>
+            <li>Mandatory online orientation before Week 1</li>
+            <li>Active teaching presence every week</li>
+            <li>Assessments completable fully online</li>
+            <li>Local and virtual WIL pathways</li>
+            <li>≥90% query response within 3 business days</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="model-card model-co">
+        <div class="model-card-header">
+          <div class="model-title">Combined</div>
+          <div class="model-tagline">Learning designed around you, in the settings where learning works best.</div>
+        </div>
+        <div class="model-card-body">
+          <div class="card-accent"></div>
+          <div class="model-logic">Design logic: intentional phase sequencing</div>
+          <p style="font-size:13.5px;color:#444;margin-bottom:16px;line-height:1.65">Not a halfway house between the other two — a deliberately engineered alternation where each phase has a distinct pedagogical purpose. Online phases build knowledge and flexibility; on-campus phases validate, apply, and connect. The design challenge is the <em>transition</em> between phases.</p>
+          <ul class="model-standards">
+            <li>Intentional combined pedagogy across phases</li>
+            <li>Structured synchronous and asynchronous learning</li>
+            <li>Purposeful, informed campus attendance</li>
+            <li>Orientation covering both phases and transitions</li>
+            <li>Teaching presence maintained across phases</li>
+            <li>Integrated assessment — online and on-campus</li>
+            <li>Phase-aligned WIL pathways</li>
+            <li>Continuity of support across phases</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="model-card model-ip">
+        <div class="model-card-header">
+          <div class="model-title">In-Person Immersive</div>
+          <div class="model-tagline">A connected learning experience — you have to be there.</div>
+        </div>
+        <div class="model-card-body">
+          <div class="card-accent"></div>
+          <div class="model-logic">Design logic: depth through co-presence</div>
+          <p style="font-size:13.5px;color:#444;margin-bottom:16px;line-height:1.65">This model bets that being in the same place at the same time creates learning that can't be replicated digitally — labs, clinics, spontaneous dialogue, peer culture, belonging. Online components exist only to support what happens on campus, not to be a mode in their own right.</p>
+          <ul class="model-standards">
+            <li>Intentional campus-based pedagogy</li>
+            <li>≥75% campus-based synchronous activity</li>
+            <li>Immersive campus learning experience</li>
+            <li>On-campus orientation (or approved equivalent)</li>
+            <li>Active teaching presence in all sessions</li>
+            <li>Campus-based and supervised assessment</li>
+            <li>In-person WIL preparation and debrief</li>
+            <li>Clearly published campus support services</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:48px">
+      <div class="section-eyebrow">Jisc six pillars</div>
+      <h2 class="section-title">How the pillars work differently in each model</h2>
+      <p class="section-lead">The six Jisc pillars apply to all three models — but the design choices they require are fundamentally different. This is what makes the models genuinely distinct, not just differently labelled.</p>
+    </div>
+
+    <div class="lens-table-wrap">
+      <table class="lens-table">
+        <thead>
+          <tr>
+            <th class="pillar-col">Pillar</th>
+            <th class="fo-col">Fully Online</th>
+            <th class="co-col">Combined</th>
+            <th class="ip-col">In-Person Immersive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pillar-col">Place</td>
+            <td class="fo-col">Students are everywhere — zero campus attendance required. Design for regional towns, night shifts, shared family homes.</td>
+            <td class="co-col">Students alternate between home and campus. Intensive locations and dates published 12+ months in advance.</td>
+            <td class="ip-col">Campus is the primary learning environment. Specialist spaces — labs, clinics, studios — are a core resource.</td>
+          </tr>
+          <tr>
+            <td class="pillar-col">Platform</td>
+            <td class="fo-col">Brightspace must work without instructor guidance. Low-bandwidth alternatives for all core content. ePortfolio for course-level evidence.</td>
+            <td class="co-col">Platform continuity across phases — tools used online must be familiar before the intensive. ePortfolio bridges both phases.</td>
+            <td class="ip-col">Brightspace is for preparation and consolidation only — not a substitute for attendance. Selective, purposeful class capture.</td>
+          </tr>
+          <tr>
+            <td class="pillar-col">Pace</td>
+            <td class="fo-col">≥85% asynchronous. Synchronous sessions optional, recorded, timezone-aware. Assessment distributed across the session.</td>
+            <td class="co-col">The rhythm of online and intensive phases communicated from the start. Assessment avoids clustering around intensive blocks.</td>
+            <td class="ip-col">≥75% synchronous on-campus. Weekly rhythm predictable enough for students managing work and commuting.</td>
+          </tr>
+          <tr>
+            <td class="pillar-col">Blend</td>
+            <td class="fo-col">Community built online through deliberate design — not assumed. Course-level assessment maps CLOs across all subjects.</td>
+            <td class="co-col">Online and on-campus phases have distinct, complementary purposes. Assessment design connects both phases coherently.</td>
+            <td class="ip-col">Online resources support campus learning; they do not replace it. Course-level assessment anchored to campus competency.</td>
+          </tr>
+          <tr>
+            <td class="pillar-col">Flex</td>
+            <td class="fo-col">Genuine flexibility for students with irregular schedules. Local and virtual WIL. Multiple entry points where possible.</td>
+            <td class="co-col">Equivalent pathways for students who cannot attend an intensive — documented in the subject outline, not ad hoc.</td>
+            <td class="ip-col">Up to 25% of enrolments may be online electives. Reasonable adjustments built in for campus-based assessment.</td>
+          </tr>
+          <tr>
+            <td class="pillar-col">Support</td>
+            <td class="fo-col">Proactive outreach using Brightspace analytics. Mandatory orientation before Week 1. Response SLA ≥90% within 3 business days.</td>
+            <td class="co-col">Support continuity across phases. Students know who to contact during intensives and between them.</td>
+            <td class="ip-col">Campus support contacts visible and current in all subject sites. Early low-stakes tasks in Weeks 1–3.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: COURSE DESIGN PROMPTS ── -->
+<div id="tab-course-prompts" class="tab-panel">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Course Design Prompts</div>
+      <h1>Questions that<br><em>sharpen</em> your design.</h1>
+      <p class="hero-lead">Six curriculum lenses, each offering prompting questions for course teams designing within their MEA model. Read the column for your model. Use these in design workshops, CCR reviews, and subject redesign sessions.</p>
+    </div>
+  </div>
+
+  <div class="page-section">
+    <div class="jisc-note">
+      <strong>How to use these prompts.</strong> Select the lens most relevant to your current focus. Read the questions in your model's column. These are prompts for thinking and conversation — not a compliance checklist. Adapt or add questions to suit your discipline. <strong>Connection to the PD program:</strong> these prompts are the working scaffold for Tier 3 (Model Application) of the MEA Teaching and Learning PD Program.
+    </div>
+
+    <div class="lens-tabs" id="courseLensTabs">
+      <button class="lens-tab active" onclick="showLens('course', 'cd', this)">Curriculum design</button>
+      <button class="lens-tab" onclick="showLens('course', 'af', this)">Assessment and feedback</button>
+      <button class="lens-tab" onclick="showLens('course', 'dc', this)">Digital capabilities</button>
+      <button class="lens-tab" onclick="showLens('course', 'le', this)">Learner engagement</button>
+      <button class="lens-tab" onclick="showLens('course', 'lc', this)">Large cohorts</button>
+      <button class="lens-tab" onclick="showLens('course', 'em', this)">Employability</button>
+    </div>
+
+    <!-- Curriculum Design -->
+    <div id="course-cd" class="lens-panel active">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="pillar-col">Place</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Where are our students physically when they study? Does the course design account for diverse locations?</li><li>Do all learning and assessment activities work without campus attendance?</li><li>What optional access points could enrich the course without becoming compulsory?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Which subjects genuinely require on-campus attendance — and why? Is this purpose clear to students?</li><li>Are intensive dates, locations and travel requirements published at least 12 months in advance?</li><li>Have we designed equivalent pathways for students who cannot attend a scheduled intensive?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>How does the course make purposeful use of campus — specialist labs, studios, clinics, regional fieldwork?</li><li>Are attendance expectations and any hurdle requirements clearly stated in every subject outline?</li><li>Does the timetable allow students to manage study alongside part-time work and commuting?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Platform</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Is the Brightspace site structured so students can navigate independently without real-time instructor guidance?</li><li>Are all tools institutionally supported, accessible, and available with low-bandwidth alternatives?</li><li>Where does ePortfolio feature in the course? Are students clear on how to build their program-level evidence?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Do subject sites clearly signal which phase students are in and what is expected in each?</li><li>Are digital tools used in online phases familiar before the on-campus intensive begins?</li><li>How does ePortfolio bridge the phases — capturing evidence from both online and on-campus learning?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are Brightspace sites used to prepare students for on-campus learning and consolidate it afterwards?</li><li>What discipline-specific digital tools are students expected to use on campus? Are these introduced in orientation?</li><li>Is class capture used selectively and purposefully — uploaded with captions for accessibility?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Pace</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Does the course achieve at least 85% asynchronous learning activity?</li><li>Are synchronous sessions timezone-aware, recorded, and never the only pathway to essential content?</li><li>Is assessment load distributed across the session to avoid clustering?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Is the rhythm of online and on-campus phases clearly communicated from the start?</li><li>Do online phases prepare students for the intensity of on-campus blocks?</li><li>Have we avoided clustering assessment due dates around intensive periods?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Does the timetable achieve at least 75% scheduled on-campus synchronous activity per subject?</li><li>Is the weekly rhythm predictable enough for students managing part-time work and commuting?</li><li>Is independent study time explicitly scaffolded — not assumed?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Blend</td>
+              <td class="fo-col"><ul class="lens-qs"><li>How does every subject explain the purpose of asynchronous learning and what is expected of students?</li><li>Are synchronous sessions used for activities that genuinely benefit from live interaction?</li><li>How does the course build community across subjects, given students may never meet in person?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Does each subject clearly articulate the different purposes of its online and on-campus phases?</li><li>Do activities bridge the phases — tasks started online that are applied on campus, or reflections that feed back into Brightspace?</li><li>How is teaching presence maintained across both phases so students don't feel dropped between intensives?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are online resources used to prepare students for campus sessions — not as a substitute for them?</li><li>How do classes leverage the fact that students are physically together?</li><li>Is the relationship between on-campus and online activity clearly explained in orientation?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Flex</td>
+              <td class="fo-col"><ul class="lens-qs"><li>What genuine flexibility does this course offer students — submission timing, pathway, or entry points?</li><li>Where flexibility is offered, is it designed in rather than ad hoc?</li><li>Do WIL subjects offer local placement and virtual WIL pathways that are genuinely equivalent?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Where attendance at an intensive is not possible, what is the equivalent pathway — documented in the subject outline?</li><li>Does the course accommodate students who may need to delay an intensive without derailing their progression?</li><li>Are there multiple entry points for students who cannot always start at the beginning of a standard session?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>For students who cannot attend a required on-campus session, is there a clear documented equivalent pathway?</li><li>Are electives available online (up to the 25% threshold) to help students manage overall workload?</li><li>How does the course accommodate students with disabilities, caring responsibilities or distance from campus?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Support</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Have staff teaching online subjects completed the Fully Online model-aligned professional development?</li><li>Is there a mandatory orientation for commencing online students covering Brightspace, ePortfolio, assessment expectations, and academic integrity?</li><li>Are early low-stakes tasks with rapid feedback built into the first 6 weeks across every first-year subject?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Is orientation designed for the Combined model specifically — covering phase structures, travel planning, and tech requirements?</li><li>Do students know who to contact for support during both online phases and intensive periods?</li><li>Have staff completed the Combined model professional development — including maintaining teaching presence across phases?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Is there a campus-based orientation covering safety, facilities, support services, academic expectations, and timetable navigation?</li><li>Are early low-stakes tasks with rapid feedback built into Weeks 1–3 of every first-year subject?</li><li>Do all subject sites include clear, current on-campus support contacts updated each session?</li></ul></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Assessment and Feedback -->
+    <div id="course-af" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="pillar-col">Place</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Can every assessment task — including supervised assessment — be completed without campus attendance?</li><li>Where supervised assessment is required, are bookable synchronous online slots offered across time zones?</li><li>For WIL assessments, are supervisor attestations, ePortfolio evidence and remote observation used?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Are supervised, practical and competency assessments scheduled within on-campus intensive phases?</li><li>Where a student cannot attend an intensive, is there a documented equivalent assessment pathway?</li><li>Are pre-intensive preparation tasks and post-intensive reflection tasks built into ePortfolio?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are all supervised, high-stakes and competency assessments conducted on campus under direct staff observation?</li><li>Do assessment venues account for students with accessibility needs?</li><li>Does online assessment account for no more than 20% of total summative weighting in a core subject?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Platform</td>
+              <td class="fo-col"><ul class="lens-qs"><li>What authenticated online assessment methods are used — and do students have a practice opportunity first?</li><li>How are digital artefacts used to assess capabilities authentically in online professional contexts?</li><li>Is ePortfolio used to build longitudinal evidence mapped to CLOs — not just as a submission tool?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Are online phase assessments using authenticated digital methods consistent with on-campus experience?</li><li>Does ePortfolio capture evidence from both phases in an integrated way?</li><li>Are digital assessment tools introduced and practised before they are used for summative purposes?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are digital tools used in campus assessment introduced in orientation and practised first?</li><li>How are class-based demonstrations and practical outputs captured in ePortfolio for course-level assurance?</li><li>Are students given equitable access to devices and software on campus for digitally-mediated assessment?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Pace</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Are there early low-stakes tasks with rapid feedback in Weeks 1–6 of every subject?</li><li>How does feedback feed forward into the next assessment task — and is this made explicit to students?</li><li>Are submission windows used genuinely flexibly while maintaining clear outer deadlines?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Are assessment due dates in online phases scheduled to avoid clashes with intensive travel and attendance?</li><li>Are supervised assessments in on-campus phases timetabled within the intensive schedule?</li><li>Does ePortfolio capture developmental evidence across phases for course-level checkpoints?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are assessment dates timetabled and published well in advance, avoiding clustering at end of session?</li><li>Are early low-stakes tasks with rapid feedback built into Weeks 1–3?</li><li>Are invigilated assessments scheduled to allow adequate preparation time?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Blend</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Does the course have a course-level assessment map showing how tasks build toward the CLOs?</li><li>Is there a capstone subject in which students demonstrate achievement of CLOs?</li><li>Do at least two subjects per session include supervised assessment with a minimum 30% weighting?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Does the assessment map show how online and on-campus assessments work together — not in parallel silos?</li><li>Are practical competency assessments anchored to on-campus phases, and theory assessments online?</li><li>Is the capstone designed to draw on evidence from both phases across the lifecycle of the course?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Does the course-level assessment map show progressive development from Year 1 through to the capstone?</li><li>Do at least two subjects per session include supervised assessment with a minimum 30% weighting?</li><li>Are supervised and practical assessments on campus used as the primary evidence for competency?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Flex</td>
+              <td class="fo-col"><ul class="lens-qs"><li>For students with accessibility needs, are reasonable adjustments available for all assessment types?</li><li>Are alternative submission formats available to support diverse learners?</li><li>Where synchronous assessment is required, are time-zone-aware scheduling and booking systems in place?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Where a student cannot attend a supervised on-campus assessment, what is the approved equivalent pathway?</li><li>Are assessment adjustments for disability and neurodiversity available across both online and on-campus phases?</li><li>Do bursary and travel support pathways reduce financial barriers to attending assessed intensives?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are reasonable adjustments available for all campus-based assessments including practicals?</li><li>Is the process for requesting an adjustment clearly documented in every subject outline?</li><li>Where a student cannot attend a required campus assessment, is there a formal alternative pathway?</li></ul></td>
+            </tr>
+            <tr>
+              <td class="pillar-col">Support</td>
+              <td class="fo-col"><ul class="lens-qs"><li>Are feedback turnaround times published in subject outlines and consistently met?</li><li>Is feedback delivered in accessible, multimodal formats appropriate for an online context?</li><li>Are staff supported to give feed forward — not just feedback — connecting to the next task?</li></ul></td>
+              <td class="co-col"><ul class="lens-qs"><li>Is feedback during online phases consistent with what students receive on campus?</li><li>Does the handover between online and on-campus teaching teams include student feedback history?</li><li>Are casual staff in intensive settings briefed on the course-level assessment map and CLO alignment?</li></ul></td>
+              <td class="ip-col"><ul class="lens-qs"><li>Are in-class feedback practices captured in ePortfolio for course-level assurance?</li><li>Are feedback turnaround times published and met — including for large practical cohorts?</li><li>Are students supported to engage with and act on feedback through tutorials and office hours?</li></ul></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Digital Capabilities -->
+    <div id="course-dc" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>What digital capabilities do students develop because they are learning entirely online — self-direction, async communication, digital file management?</li><li>How does the course model professional digital practice in its own design?</li><li>Do students have access to low-bandwidth alternatives and device loan information?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>What digital capabilities are best developed online and which are best developed on campus?</li><li>Are students briefed on what devices and software to bring to campus before each intensive?</li><li>How does the course build digital skills progressively across online and on-campus phases?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What digital capabilities do students develop through access to specialist on-campus equipment?</li><li>How do campus-based digital experiences connect to the professional environments graduates will work in?</li><li>Are students supported to carry campus-based digital skills into independent online study?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>How does the course help students develop critical awareness of generative AI — including responsible use and academic integrity?</li><li>Are students introduced to the norms of professional digital communication in online spaces?</li><li>Are students equipped to engage productively with Brightspace, ePortfolio, Zoom and other CSU platforms?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are the digital platforms used in online phases the same ones used on campus?</li><li>How does the course develop critical digital skills for both online and on-campus professional environments?</li><li>Is responsible use of AI explicitly addressed in subject outlines, assessment design, and teaching?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What discipline-specific digital platforms do students use on campus — and how are these introduced?</li><li>How does the course develop critical awareness of AI in students' professional context?</li><li>Is responsible use of AI in assessments clearly communicated in subject outlines and in direct teaching?</li></ul></td></tr>
+            <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>How does the course develop students' time and task management skills for self-directed asynchronous study?</li><li>Are students supported to engage productively in live online sessions?</li><li>How does the course scaffold independent study so students know what to do and when?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does the course help students transition between the digital demands of online phases and on-campus phases?</li><li>Are students supported to manage the pace shift from flexible online learning to timetabled intensive attendance?</li><li>How does ePortfolio support students to maintain a continuous record across both phases?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the timetable support students to manage their digital learning between classes?</li><li>Are students supported to participate fully in synchronous sessions including in-class digital tools?</li><li>How does the course develop students' ability to manage extended professional working time?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>Have teaching staff completed professional development including online facilitation, Brightspace design, and pedagogies of care at distance?</li><li>What ongoing support is available for staff to develop confidence with new tools including AI applications?</li><li>How do staff model responsible AI use and digital professionalism for online students?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Have staff completed professional development including how to design for phase transitions and maintain teaching presence?</li><li>Are casual staff who deliver intensive blocks briefed on the digital tools and platforms students have been using online?</li><li>What support is available for staff designing assessments that work across online and on-campus phases?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Have staff completed professional development including effective use of campus technology and digitally-augmented classroom practices?</li><li>What support is available for staff to develop confidence with specialist campus equipment?</li><li>How do staff share good practice in digital capability development across the teaching team?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Learner Engagement -->
+    <div id="course-le" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>What aspects of this discipline are most engaging online — and how are these prioritised in course design?</li><li>How does the course build a sense of community among students who may never meet in person?</li><li>How does course design account for students studying around shift work, caring, and commuting?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>What aspects of the curriculum are most engaging in person — and are these placed in on-campus intensive phases?</li><li>How do on-campus intensives create moments of connection that sustain engagement through online phases?</li><li>How do we explain the value of attending on-campus phases to students who may treat them as optional?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the course make full use of the physical campus environment as a resource for engagement?</li><li>What features of the campus do students find motivating — and how do we build these into the design?</li><li>How does the course connect students to the regional community as a distinctive feature of studying at Charles Sturt?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>How are discussion forums, collaborative tools, and peer activities designed to be purposeful — not just boxes to tick?</li><li>How does teacher presence manifest in Brightspace in a way that feels personal, not automated?</li><li>What aspects of the course are genuinely more engaging in an online environment?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are the online platforms used in this course engaging in their own right — or holding patterns between intensives?</li><li>How does the course use Brightspace and ePortfolio to maintain student connection between on-campus phases?</li><li>How does the design ensure students are genuinely prepared and motivated for intensives?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the Brightspace site support student preparation for and reflection after campus sessions?</li><li>Are students given access to supplementary online resources that extend rather than replace what happens in class?</li><li>How does the course use digital tools to extend class-based engagement?</li></ul></td></tr>
+            <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>How does the course keep students actively engaged in asynchronous study?</li><li>Are synchronous sessions designed for activities that benefit from live interaction — not just lectures?</li><li>How are students supported to maintain momentum and motivation across a self-directed course?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How do we keep students engaged and progressing during online phases — without the rhythm of weekly campus attendance?</li><li>Are on-campus intensives designed to be genuinely energising — not just information delivery in person?</li><li>How does the course sustain engagement in the weeks immediately after an intensive?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Does the timetable support regular, predictable rhythms of engagement for students managing other commitments?</li><li>Are classes designed to make active use of being physically together?</li><li>How does the course support students to engage during independent study time?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>How does course induction build a sense of belonging from Week 1?</li><li>What early intervention mechanisms identify and support students at risk of disengaging?</li><li>How are student voices and perspectives built into ongoing course improvement?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does orientation prepare students for the Combined experience — setting expectations about phases and transitions?</li><li>What support is available to students between intensives?</li><li>How are student reference groups used to shape the course and intensives?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does campus-based orientation build belonging — covering social connection, support services, and timetable navigation?</li><li>What early intervention mechanisms support students at risk?</li><li>How are student voices used to improve the campus learning experience?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Large Cohorts -->
+    <div id="course-lc" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>How does the course maintain community and connection at scale when students are distributed across locations?</li><li>Are small-group collaboration activities designed in so large cohort size doesn't mean anonymous learning?</li><li>How does the course manage staffing for large online cohorts?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are intensive venues large enough and appropriately equipped for the full cohort?</li><li>How is the on-campus experience maintained at scale — are class sizes small enough for hands-on learning?</li><li>If the cohort is large, how does the course avoid the on-campus phase feeling like a mass lecture?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are teaching spaces booked to suit the pedagogy — not just the headcount?</li><li>How does the timetable manage large cohorts without creating impersonal, lecture-heavy sessions?</li><li>How does the course maintain a sense of belonging and peer community in large on-campus cohorts?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>Is the Brightspace site scalable — can it handle large cohorts without forums becoming unmanageable?</li><li>How are discussion activities structured for large cohorts — small groups, moderated threads, peer review?</li><li>How is teaching team coordination managed across large online subjects?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are digital tools used in online phases scalable for the full cohort including supervised assessment booking?</li><li>How is the teaching team coordinated across both online and on-campus phases?</li><li>How does ePortfolio manage the volume of evidence at course level efficiently?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are AV, Wi-Fi, and digital systems in teaching spaces reliable and sufficient for large cohorts?</li><li>How are digital collaboration tools used in large classes to enable participation?</li><li>How is the teaching team coordinated across large subjects — shared rubrics, moderation processes?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>What is the staffing model for large online subjects — and are the ratios realistic?</li><li>How are casual staff supported to deliver consistently in large online subjects?</li><li>How are learning analytics used to identify at-risk students at scale?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How are casual staff who deliver intensives supported — briefed on the course, calibrated on marking?</li><li>How are learning analytics used across both phases to monitor engagement?</li><li>How is workload planning aligned to cohort size — so intensive staffing is not under-resourced?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What is the staffing model for large practical and lab cohorts — are ratios safe and sustainable?</li><li>How are casual staff supported to deliver consistently in large campus-based subjects?</li><li>How are learning analytics and attendance data used to identify and support at-risk students?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Employability -->
+    <div id="course-em" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>What aspects of this profession continue to require in-person presence — and how does the course prepare students for those environments?</li><li>How does WIL connect online students to real professional contexts through local placements or virtual internships?</li><li>How does the course reflect the reality that most graduates will work in digitally-mediated environments?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How do on-campus intensive phases connect students to the physical environments of their future profession?</li><li>How does WIL integrate with the phase structure — online for preparation and reflection, on-campus for hands-on readiness?</li><li>How does the course use the regional campus context as an employability resource?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the campus environment reflect and prepare students for the physical environments they will work in?</li><li>How does WIL preparation on campus connect to the actual conditions of professional practice?</li><li>How does the course connect students to regional industry and community partners as a distinctive employability advantage?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>What digital platforms are students expected to use in their future profession — and are these reflected in the course?</li><li>How does ePortfolio function as a professional portfolio — building artefacts students can show to employers?</li><li>How does the course develop critical awareness of AI in professional practice?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Is ePortfolio used as a genuine professional portfolio — capturing evidence from both phases?</li><li>How does the course develop ethical and critical digital capabilities across both online and on-campus contexts?</li><li>What discipline-specific digital systems do students use on campus — and are these used in professional practice?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What discipline-specific digital systems and tools do students use on campus — are these the same ones they'll encounter professionally?</li><li>Is ePortfolio used as a genuine professional portfolio with industry-relevant artefacts?</li><li>How does the course develop students' ability to work in digital-physical hybrid professional environments?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>How does the course connect students to careers services, industry networks, and alumni community in ways accessible online?</li><li>How are industry partners, alumni, and community members involved in the curriculum as guest speakers, mentors, or project clients?</li><li>How do students identify and pursue their own professional development needs?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How are industry partners and alumni engaged across both phases — online mentoring and on-campus networking?</li><li>How does careers support reach Combined mode students — particularly during intensive blocks?</li><li>How are students supported to build a professional portfolio in ePortfolio that is genuinely useful beyond graduation?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the course connect students to regional employers and community organisations as a career advantage?</li><li>How are alumni involved in the campus-based curriculum as mentors, guest speakers, or placement supervisors?</li><li>How does the course support students to build professional networks on campus and maintain them after graduation?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: STRATEGIC PROMPTS ── -->
+<div id="tab-strategic-prompts" class="tab-panel">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Strategic Planning Prompts</div>
+      <h1>Questions for<br><em>leaders and governance.</em></h1>
+      <p class="hero-lead">Six strategic lenses for Faculty leaders, MEA governance, and enabling divisions. These questions address the institutional decisions that make the MEA models possible — space, platforms, workload, equity, and data.</p>
+    </div>
+  </div>
+
+  <div class="page-section">
+    <div class="jisc-note">
+      <strong>How to use these prompts.</strong> Select the lens relevant to your current planning focus. Read the column for your role — Faculty Leaders, MEA Governance, or Enabling Divisions. Use these in Faculty Board meetings, Steering Committee discussions, and planning workshops. Questions reference MEA-specific roles, systems, and governance structures.
+    </div>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:40px">
+      <div class="card">
+        <div class="card-accent" style="background:var(--dark-blue)"></div>
+        <div class="card-tag" style="background:#eef0f7;color:var(--dark-blue)">Faculty Leaders</div>
+        <div class="card-title">ADAs, Heads of School, Course Directors</div>
+        <p class="card-body">Questions for those managing course teams, workload, and Faculty-level transition planning. Focus on practical enabling of the models within your Faculty.</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:#534AB7"></div>
+        <div class="card-tag" style="background:#eeedfe;color:#534AB7">MEA Governance</div>
+        <div class="card-title">Steering Committee, PCG, DLT Program Team</div>
+        <p class="card-body">Questions for those overseeing the MEA initiative at an institutional level — strategic coherence, governance, risk management, and benefits realisation.</p>
+      </div>
+      <div class="card">
+        <div class="card-accent" style="background:var(--ip-color)"></div>
+        <div class="card-tag" style="background:var(--ip-light);color:var(--ip-color)">Enabling Divisions</div>
+        <div class="card-title">DLT, DIT, Facilities, Finance, Student Success</div>
+        <p class="card-body">Questions for the enabling functions that make the models operational — technology readiness, space planning, data infrastructure, and student support.</p>
+      </div>
+    </div>
+
+    <div class="lens-tabs" id="strategicLensTabs">
+      <button class="lens-tab active" onclick="showLens('strategic', 'hs', this)">Holistic strategic</button>
+      <button class="lens-tab" onclick="showLens('strategic', 'ls', this)">Learning spaces</button>
+      <button class="lens-tab" onclick="showLens('strategic', 'lp', this)">Learning platforms</button>
+      <button class="lens-tab" onclick="showLens('strategic', 'tw', this)">Teaching and workload</button>
+      <button class="lens-tab" onclick="showLens('strategic', 'ed', this)">Equity and inclusion</button>
+      <button class="lens-tab" onclick="showLens('strategic', 'da', this)">Data and analytics</button>
+    </div>
+
+    <div id="strategic-hs" class="lens-panel active">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>Which courses in our Faculty genuinely require on-campus delivery — and what is the evidence?</li><li>How do we communicate the value of campus-based learning to students in our region?</li><li>How does our course portfolio align with the MEA model decisions?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does MEA's single-campus preference align with CSU's regional mission?</li><li>What is the exception process for courses that need to maintain delivery across multiple campuses?</li><li>How does the MEA campus footprint strategy inform Campus Master Planning?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What data does Facilities Management need from MEA transition plans to plan space reallocation?</li><li>How will changes to on-campus course offerings affect food and beverage, accommodation, and security services?</li><li>How is OPA modelling the EFTSL impact of campus footprint changes?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>Are the digital platforms available to our course teams fit for purpose for the models they are transitioning to?</li><li>How are we ensuring staff have the digital confidence to teach effectively in their assigned model?</li><li>What technology gaps at Faculty level need to be raised through the MEA governance structure?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does MEA's technology enablement roadmap align with the broader DIT enterprise architecture strategy?</li><li>How are decisions about new technology investment made in the context of MEA?</li><li>How is the MEA Technology Committee coordinating the readiness review across major enterprise tools?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What is the current state of readiness for the technology infrastructure required by each MEA model?</li><li>How are DIT and DLT coordinating the delivery of technology changes required by MEA?</li><li>What vendor dependencies and lead times need to be factored into MEA transition planning?</li></ul></td></tr>
+            <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>Is the MEA transition timeline realistic for our Faculty given existing CCR schedules and staff workloads?</li><li>How are we planning workload allocations to ensure academic staff have capacity for course redesign?</li><li>Which courses can be transitioned quickly (Group 1) and which need longer lead times?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Is the phased implementation timeline (2026 planning, 2027–2029 delivery) realistic?</li><li>How is the MEA program monitoring progress against the transition schedule?</li><li>How does the MEA timeline interact with other concurrent strategic initiatives?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What are the marketing lead time requirements for each implementation group?</li><li>How is DLT resourcing being allocated across Faculties and implementation groups?</li><li>What are the timetabling implications of MEA model transitions?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>What support does our Faculty need from DLT, DIT, and the MEA program team that is not currently available?</li><li>How are we supporting academic staff through the change — not just providing PD programs?</li><li>How are Faculty-based Strategic Project Officers being used to support MEA transition planning?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Is the MEA program resourcing adequate for the 2026 planning phase?</li><li>How is the MEA Change Management Strategy being activated?</li><li>How are governance bodies being kept informed of MEA progress at the right level of detail?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What training do Faculty Administration Managers and Course Directors need to use MEA tools effectively?</li><li>How is student-facing support being prepared for MEA transitions?</li><li>How is the MEA communications strategy coordinated across channels?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="strategic-ls" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>Which on-campus spaces are essential for In-Person Immersive and Combined courses — labs, clinics, studios — and are these fit for purpose?</li><li>Are teaching spaces configured to support active, collaborative pedagogy — or predominantly lecture format?</li><li>For Combined intensive blocks, are campus spaces available on the required dates?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does MEA's campus footprint strategy inform decisions about which facilities to invest in, maintain, or decommission?</li><li>How are campus space decisions being made consistently across Faculties?</li><li>What is the process for identifying and resolving space conflicts between MEA transition plans and existing timetabling?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What data on current space utilisation is available to inform MEA transition planning?</li><li>Which campus spaces need upgrading or reconfiguration to support the MEA models?</li><li>How does Facilities Management plan for changes in campus usage patterns as MEA transitions shift student attendance?</li></ul></td></tr>
+            <tr><td class="pillar-col">Flex</td><td class="fo-col"><ul class="lens-qs"><li>Are there flexible, reconfigurable spaces that course teams can book for different session types without long lead times?</li><li>How are students with disabilities accommodated in campus-based learning?</li><li>How do students access specialist spaces — labs, studios, clinical facilities — outside timetabled sessions?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is space flexibility built into Campus Master Planning so spaces can be reconfigured as model distributions change?</li><li>How is Charles Sturt ensuring campus spaces are equitably accessible to students from diverse backgrounds?</li><li>What is the process for Faculties to request space changes in response to MEA model requirements?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How are booking systems for specialist spaces designed to give flexible access without administrative barriers?</li><li>How is accessibility of campus spaces monitored and maintained?</li><li>What student-bookable study and informal learning spaces are available on each campus?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="strategic-lp" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>Are teaching staff confident and capable using platforms required for their MEA model — Brightspace, ePortfolio, Zoom?</li><li>How are we identifying and addressing platform-specific capability gaps?</li><li>How are student feedback and staff experience being used to improve platform use within our Faculty?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is the MEA program monitoring platform capability across the institution?</li><li>How are quarterly technology reviews being coordinated and acted upon?</li><li>How is the enablement matrix being maintained as a living roadmap?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How are enterprise systems in the MEA enablement matrix being governed — with clear ownership and SLAs?</li><li>How is the DLT Educational Technologies team supporting course teams to use platforms effectively?</li><li>How are new platform features introduced to course teams through a repeatable review and adoption cycle?</li></ul></td></tr>
+            <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>Are the platforms required for our Faculty's MEA transitions ready in time — CDAP updates, Brightspace, supervised assessment booking?</li><li>How are course teams being supported to build redesigned Brightspace sites within the transition timeline workload constraints?</li><li>How are we managing the transition period when some courses are in the old model and some in the new?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>What is the critical path for platform and systems readiness relative to the MEA transition schedule?</li><li>How are CDAP updates being scheduled and delivered with appropriate quality assurance?</li><li>How does the MEA platform readiness timeline interact with the SMTP delivery schedule?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What is the timeline for delivering CDAP, handbook, and timetabling system updates required by MEA?</li><li>How is the supervised assessment booking system being piloted and scaled?</li><li>How is the ePortfolio expansion and LMS integration being progressed?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="strategic-tw" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>How is the workload for teaching In-Person Immersive courses being calculated — accounting for preparation, contact hours, marking, and student support?</li><li>How is the workload for delivering Combined intensive blocks calculated — including travel and the intensity of concentrated teaching?</li><li>How are staffing ratios for labs, practicals, and clinics being set to be safe, pedagogically sound, and sustainable?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is the new Academic Workload Model (AWM) being designed to reflect genuine workload of teaching across all three MEA models?</li><li>How does the AWM account for the workload of course and subject redesign during MEA transitions?</li><li>How is the Enterprise Agreement being complied with throughout the MEA transition?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How is DPC supporting Faculties to plan workforce transitions as MEA shifts the skill profile of academic roles?</li><li>How is the AWM being operationalised in timetabling?</li><li>How is Division of Finance tracking teaching cost efficiency as MEA transitions reduce duplicate offerings?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>How does the AWM account for the time required to design and maintain high-quality Brightspace sites?</li><li>How does the AWM reflect the ongoing workload of online facilitation — forum moderation, asynchronous feedback, student communication?</li><li>How are staff being supported to collaborate with DLT Educational Designers with workload protected for this activity?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does the AWM differentiate between the workload profiles of Fully Online, Combined, and In-Person Immersive teaching?</li><li>How is the workload for developing MEA professional development programs being resourced?</li><li>How is the AWM being reviewed in 2026 to align with MEA requirements?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How is DLT's Educational Design support reducing workload on academic staff during MEA transitions?</li><li>How is the time required for staff to complete MEA professional development programs being accommodated in workload planning?</li><li>How are learning analytics being used to give Heads of School visibility of teaching workload distribution?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="strategic-ed" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>How does the model assignment reflect the geographic distribution of our student cohort — particularly for First Nations and remote students?</li><li>For courses transitioning to In-Person Immersive, how are we supporting students who cannot easily access the campus — bursaries, accommodation, equivalent pathways?</li><li>Have intensive dates been checked against peak agricultural seasons, school holidays, and cultural events?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is MEA's equity impact being monitored — tracking changes in enrolment, attrition, and completion by student equity group?</li><li>How does MEA's campus footprint strategy account for First Nations students, low SES students, and regional and remote communities?</li><li>How is the Indigenous Board of Studies engaged in MEA model decisions for courses with significant First Nations enrolment?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How is DSS planning to maintain equitable access to support services as EFTSL shifts between campuses and modes?</li><li>How is the travel and accommodation bursary system being resourced and communicated?</li><li>How is student accommodation at intensive locations being planned for availability, accessibility, and affordability?</li></ul></td></tr>
+            <tr><td class="pillar-col">Blend</td><td class="fo-col"><ul class="lens-qs"><li>How does our course design comply with Universal Design for Learning (UDL) principles across all subjects?</li><li>How are First Nations knowledges, cultural perspectives, and community connections embedded in the curriculum — appropriately for the model and in consultation with the IBS?</li><li>How are we designing culturally safe learning environments in both online and on-campus contexts?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is MEA ensuring that model transitions create opportunities to improve First Nations content through the curriculum review process?</li><li>How is the MEA program coordinating with the First Nations Strategy?</li><li>How does MEA's approach to UDL and inclusive design align with Charles Sturt's Accessibility and Inclusion policies?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How is the Indigenous Cultural Competency Pedagogical Framework (ICCPF) being used to guide First Nations content in MEA model course redesign?</li><li>How is the IBS approval process for Indigenous Australian content being accommodated within the MEA transition timeline?</li><li>How is Accessibility and Inclusion providing guidance on UDL implementation in MEA model design?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="strategic-da" class="lens-panel">
+      <div class="lens-table-wrap">
+        <table class="lens-table">
+          <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Faculty leaders</th><th class="co-col">MEA governance</th><th class="ip-col">Enabling divisions</th></tr></thead>
+          <tbody>
+            <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>What data do we have on our students' geographic locations and commuting patterns — and how is this informing model decisions?</li><li>How are we monitoring attendance and participation in on-campus sessions?</li><li>How is placement and fieldwork data being captured and used to improve WIL design?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is MEA using campus space utilisation data to inform Campus Master Planning and model decisions?</li><li>How is OPA modelling the EFTSL impact of model transitions against the scenario projections?</li><li>How is regional loading funding being monitored as MEA transitions shift the online/on-campus balance?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What data systems capture campus space usage, attendance, and student location patterns — and are these feeding into MEA dashboards?</li><li>How is Facilities Management using space utilisation data to plan maintenance and service delivery?</li><li>How is placement data from InPlace being used to monitor WIL quality and access across models?</li></ul></td></tr>
+            <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>How are we using Brightspace Insights and learning analytics to monitor student engagement and act before students disengage?</li><li>How is ePortfolio data being used to monitor students' progress toward CLOs at course level?</li><li>How are we using assessment data to monitor subject-level quality and inform course-level improvement?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is the MEA analytics dashboard being designed to give Faculties real-time visibility of transition progress?</li><li>How is the unified learning data strategy being developed to integrate engagement data across tools and modes?</li><li>How is the success intelligence layer being designed to support proactive outreach to at-risk students?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>What data does DIT currently capture about student platform access — devices, times, locations, bandwidth?</li><li>How is Brightspace analytics data being made accessible to course teams in interpretable, actionable dashboards?</li><li>How is ePortfolio portfolio data being used for course-level quality assurance?</li></ul></td></tr>
+            <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>How are course teams being supported to use the MEA analytics dashboard — interpreting data correctly and taking action?</li><li>How are we building a data-informed culture where decisions about course design are routinely grounded in evidence?</li><li>How are we using data from pathfinder and early transition courses to inform subsequent course redesigns?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How is the MEA program managing data governance — ownership, access controls, privacy compliance, and ethical use of learning analytics?</li><li>How is the MEA benefits realisation framework being embedded into BAU reporting?</li><li>How is MEA's use of data aligned with Indigenous Data Sovereignty and Governance (IDSG) principles?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How is DIT supporting course teams to interpret and act on learning analytics?</li><li>How is OPA building the analytical capability required for MEA monitoring including attrition analysis?</li><li>How is the MEA program team using data to manage the initiative itself — tracking delivery against milestones?</li></ul></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: CSU LENSES ── -->
+<div id="tab-csu-lenses" class="tab-panel">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">CSU-Specific Lenses</div>
+      <h1>Built for <em>our</em> students<br>and our context.</h1>
+      <p class="hero-lead">Two lenses created using the Jisc blank template and designed specifically for Charles Sturt University. These address what the generic Jisc lenses don't — our regional and First Nations cohort, our compliance obligations, and our course-level assessment requirements.</p>
+    </div>
+  </div>
+
+  <div class="page-section">
+    <div class="jisc-note">
+      <strong>When to use these lenses.</strong> Use <strong>Lens A</strong> early in course design when asking "does this course genuinely work for our students?" Use <strong>Lens B</strong> when designing assessment, mapping CLOs, planning supervised assessment, or checking ESOS and accreditation compliance. Use both alongside the six standard curriculum lenses.
+    </div>
+
+    <div class="card-grid" style="gap:40px">
+
+      <!-- Lens A -->
+      <div class="csu-lens-card lens-a">
+        <div class="csu-lens-header">
+          <div class="csu-lens-letter">A</div>
+          <div class="csu-lens-meta">
+            <div class="csu-lens-name">Our students and their lives</div>
+            <div class="csu-lens-desc">How does this course actually work for Charles Sturt's regional, First Nations, and diverse student cohort?</div>
+            <div class="csu-lens-use">Use early in course design — when asking whether the course genuinely serves the students who have chosen it</div>
+          </div>
+        </div>
+        <div class="csu-lens-body">
+          <div class="lens-table-wrap">
+            <table class="lens-table">
+              <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+              <tbody>
+                <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>Where are our students physically when they study — regional towns, remote properties, workplaces, shared family homes?</li><li>Do any activities assume access to private quiet study space or reliable high-speed internet?</li><li>How does the course serve students whose place changes regularly — shift workers, seasonal workers, students who travel for work?</li><li>How does the course connect students to their local communities and regions?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are intensive locations accessible to the geographic spread of our cohort — or do they require long-distance travel that disadvantages regional and remote students?</li><li>Have intensive dates been checked against agricultural seasons, school holidays, and major community events?</li><li>Are travel bursaries and accommodation support clearly communicated — visible in the subject site and orientation?</li><li>For First Nations students, have intensive locations been considered for cultural safety?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are our campus locations genuinely accessible to the students who have enrolled?</li><li>How does the campus environment connect to the regional communities our students come from?</li><li>Are timetables designed to work for students who commute significant distances or manage farm and family commitments?</li><li>How does the campus experience support First Nations students to feel culturally safe and connected to Country and community?</li></ul></td></tr>
+                <tr><td class="pillar-col">Platform</td><td class="fo-col"><ul class="lens-qs"><li>Have we specified minimum device and connectivity requirements — and are low-bandwidth alternatives provided?</li><li>Are synchronous sessions scheduled to account for students in different time zones with unreliable internet?</li><li>How does the course support students whose digital literacy is developing without lowering academic expectations?</li><li>Are platforms compatible with assistive technologies for students with disabilities common in our cohort?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Do students know what technology to bring to campus for the intensive — and what will be provided — well before they travel?</li><li>Are digital platforms used in online phases the same ones used on campus?</li><li>How does the course support students in rural and remote areas who may rely primarily on mobile data?</li><li>Have we checked that CSU platforms work effectively on mobile devices?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are campus Wi-Fi, device charging, and computer labs accessible and reliable for students without their own devices?</li><li>How does the course support students arriving with varying levels of digital confidence?</li><li>Are accessibility tools — hearing loops, screen readers, captioned content — available and working in all teaching spaces?</li><li>How does the course communicate technology requirements to commencing students before their first day?</li></ul></td></tr>
+                <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>Does the course design account for students studying in short windows — a nurse between shifts, a farmer in the off-season, a parent after children are in bed?</li><li>Are submission windows genuinely flexible — or flexible in name only with implicit penalties for irregular schedules?</li><li>How does the course maintain momentum for students who may go quiet for a week due to seasonal work, family emergency, or community obligations?</li><li>Are synchronous sessions genuinely optional — or de facto required for assessment performance?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Is the rhythm between online phases and intensive blocks communicated early enough for students to plan leave from work, arrange childcare, or organise farm coverage?</li><li>Have we designed pre-intensive preparation that genuinely reduces cognitive load during the intensive itself?</li><li>How are students supported to transition back to online study after an intensive — particularly those who found the on-campus experience disorienting?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Does the timetable work for students who commute 45–90 minutes each way?</li><li>How does the course account for students who miss sessions due to farm emergencies, family illness, or community obligations?</li><li>Are assessment due dates spread across the session in a way that works for students managing part-time work alongside full study?</li></ul></td></tr>
+                <tr><td class="pillar-col">Blend</td><td class="fo-col"><ul class="lens-qs"><li>How does the course build a genuine sense of community among students who may never meet — and who may feel isolated in regional or remote locations?</li><li>How does the course connect online learning to students' real-world regional contexts — through locally situated tasks and community-based projects?</li><li>How does the course embed First Nations knowledges and perspectives in ways that are authentic, approved by the IBS, and relevant to regional professional contexts?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does the blend of online and on-campus learning reflect the actual working and learning patterns of our student cohort?</li><li>How does the course embed First Nations knowledges across both online and on-campus phases — not concentrating cultural content only in intensives?</li><li>How do industry and community connections feature across both phases?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the campus-based curriculum reflect and connect to the regional communities and industries our students come from?</li><li>How does the course embed First Nations knowledges through community partnerships, place-based activities, and guest educators with appropriate authority?</li><li>How does the course build peer community in ways that work for a cohort with diverse regional backgrounds?</li></ul></td></tr>
+                <tr><td class="pillar-col">Flex</td><td class="fo-col"><ul class="lens-qs"><li>How does the course accommodate First Nations students who may need to step away for cultural obligations, Sorry Business, or community responsibilities?</li><li>Are equivalent pathways designed in from the start — not granted reluctantly case by case — for students with cultural obligations, disabilities, or caring responsibilities?</li><li>How does the course support students entering through VET pathways or RPL who have significant professional experience?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does the course accommodate students who cannot attend one intensive due to Sorry Business, a family emergency, or a farm crisis — with a genuine equivalent pathway?</li><li>Are WIL placements available in students' home communities — so regional students are not required to relocate?</li><li>Is there genuine flexibility in the timing of intensive blocks — with more than one option per year?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does the course accommodate students whose cultural obligations require periodic absence — with processes that are respectful and non-bureaucratic?</li><li>Are WIL placements available in regional contexts where students live and work?</li><li>How does the course support students managing significant financial stress — with bursaries, equipment loan, and flexible assessment options?</li></ul></td></tr>
+                <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>How does the course ensure First Nations students have access to culturally safe support services — including Ngurambaconnect and Indigenous Student Services?</li><li>How does the course identify and proactively reach out to students who go quiet — recognising that disengagement online can be invisible until it is too late?</li><li>How does the course support students with low academic confidence — particularly those entering through VET pathways or returning to study after years away?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>How does the course ensure support services are accessible across both phases — including during intensive blocks when students are away from their usual networks?</li><li>How are First Nations support services available at intensive locations — not just at the student's home campus?</li><li>How does the course use learning analytics across both phases to identify at-risk students?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>How does campus orientation specifically welcome and support First Nations students, students from remote communities, and students who are the first in their family to attend university?</li><li>How does the course connect students to culturally safe support services on campus?</li><li>How does the course support students who are struggling financially with awareness of bursaries, food relief, and emergency accommodation?</li></ul></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lens B -->
+      <div class="csu-lens-card lens-b">
+        <div class="csu-lens-header">
+          <div class="csu-lens-letter">B</div>
+          <div class="csu-lens-meta">
+            <div class="csu-lens-name">Assessment integrity and compliance</div>
+            <div class="csu-lens-desc">How does this course meet Charles Sturt's supervised assessment, course-level assessment, ESOS, and professional accreditation obligations?</div>
+            <div class="csu-lens-use">Use when designing assessment, mapping CLOs, planning supervised assessment, or checking compliance obligations</div>
+          </div>
+        </div>
+        <div class="csu-lens-body">
+          <div class="lens-table-wrap">
+            <table class="lens-table">
+              <thead><tr><th class="pillar-col">Pillar</th><th class="fo-col">Fully Online</th><th class="co-col">Combined</th><th class="ip-col">In-Person Immersive</th></tr></thead>
+              <tbody>
+                <tr><td class="pillar-col">Place</td><td class="fo-col"><ul class="lens-qs"><li>Can every assessment task — including supervised assessment — be completed without campus attendance? Verified for every subject?</li><li>For WIL subjects, are local placements and virtual WIL options available that fully satisfy accreditation requirements?</li><li>This model is not CRICOS-compatible for onshore student visa cohorts. Have we confirmed no subjects require on-campus attendance?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are on-campus intensive phases designed to satisfy CRICOS requirements — with scheduled dates, published locations, and documented attendance?</li><li>For accredited courses, are on-campus phases sufficient to meet professional body requirements for supervised practice and clinical hours?</li><li>How does the course ensure international students on student visas are meeting their ESOS attendance obligations?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are all supervised, high-stakes, and competency assessments conducted on campus under direct staff observation?</li><li>Does the course meet CRICOS requirements — scheduled on-campus delivery, published timetables, documented attendance monitoring?</li><li>How does the course manage ESOS attendance monitoring obligations for international students?</li></ul></td></tr>
+                <tr><td class="pillar-col">Pace</td><td class="fo-col"><ul class="lens-qs"><li>Does the course meet the supervised assessment requirement — at least two subjects per session with supervised assessment at a minimum 30% weighting?</li><li>Are early low-stakes assessment tasks with feedback scheduled in Weeks 1–6 of every subject?</li><li>Are assessment due dates and supervised assessment booking windows published in subject outlines before the session begins?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are supervised assessments in on-campus phases timetabled within the intensive schedule — not left for students to book ad hoc?</li><li>Does the course meet the supervised assessment requirement across both phases?</li><li>Are early low-stakes tasks scheduled in both the first online phase and intensive phase?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Does the course meet the supervised assessment requirement — at least two subjects per session with supervised assessment at minimum 30% weighting?</li><li>Are assessment schedules published and timetabled well in advance?</li><li>Are early low-stakes tasks with rapid feedback scheduled in Weeks 1–3 of every subject?</li></ul></td></tr>
+                <tr><td class="pillar-col">Blend</td><td class="fo-col"><ul class="lens-qs"><li>Does the course have a documented course-level assessment map showing how tasks build progressively toward the CLOs?</li><li>Is there a designated capstone subject in which students demonstrate integrated achievement of CLOs?</li><li>Does the assessment map include both supervised and non-supervised tasks meeting CSU supervised assessment policy?</li><li>How does ePortfolio function as the evidence repository for course-level assessment with consistent use mapped to CLOs?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Does the course-level assessment map show how online and on-campus assessments work together — with supervised and practical assessments anchored to on-campus phases?</li><li>Is the capstone designed to draw on ePortfolio evidence from across both phases?</li><li>How does the assessment map satisfy the requirements of the relevant professional accreditation body?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Does the course-level assessment map demonstrate that all supervised, practical, and competency assessments are conducted on campus?</li><li>Does the assessment map satisfy professional accreditation requirements — with documented evidence of supervised practice hours and clinical competency?</li><li>Are all assessment tasks authored in CDAP and automatically integrated into the Subject Outline Tool?</li></ul></td></tr>
+                <tr><td class="pillar-col">Flex</td><td class="fo-col"><ul class="lens-qs"><li>Where submission windows are offered for flexibility, are there documented outer deadlines consistent with CLO demonstration requirements?</li><li>For students requiring reasonable adjustments, are all online assessment types accessible?</li><li>Are RPL and credit pathways available and clearly communicated — satisfying any relevant professional accreditation standard?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Where equivalent pathways are offered for missed intensives, are these acceptable under the relevant professional accreditation standard?</li><li>For CRICOS-registered offerings, how does the course manage students who miss on-campus sessions in compliance with ESOS National Code Standard 8?</li><li>How does the course manage students who need to switch between online and on-campus delivery mid-enrolment — and what are the implications for their visa or scholarship?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Where hurdle requirements apply — mandatory attendance, clinical hours, supervised practice — are these documented in the subject outline and consistent with professional accreditation?</li><li>For students who miss a mandatory session due to illness, emergency, or cultural obligation, what is the approved process consistent with ESOS requirements?</li><li>How does the course manage students whose visa conditions depend on maintaining on-campus attendance?</li></ul></td></tr>
+                <tr><td class="pillar-col">Support</td><td class="fo-col"><ul class="lens-qs"><li>Are all subject sites audited each session to confirm they meet Fully Online model standards — supervised assessment setup, ePortfolio templates, support contact information?</li><li>How does the course monitor its own compliance with supervised assessment requirements and report gaps to the Annual Course Health Check?</li><li>How does the course team stay current with changes to TEQSA requirements, HESF standards, and CSU policy?</li></ul></td><td class="co-col"><ul class="lens-qs"><li>Are intensive schedules and on-campus assessment records documented in a way that supports TEQSA audit readiness?</li><li>How does the course monitor compliance with CRICOS requirements including attendance records and student visa obligations?</li><li>How does the Annual Course Health Check capture data from both online and on-campus phases with phase-specific quality indicators?</li></ul></td><td class="ip-col"><ul class="lens-qs"><li>Are invigilation records, attendance monitoring data, and assessment integrity documentation maintained for TEQSA audit readiness?</li><li>How does the course monitor compliance with professional accreditation requirements — with documented evidence of supervised practice hours updated each year?</li><li>How does the Annual Course Health Check capture campus-specific quality data including attendance patterns and supervised assessment completion rates?</li></ul></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── TAB: PD PROGRAM ── -->
+<div id="tab-pd-program" class="tab-panel">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">MEA Teaching and Learning PD Program</div>
+      <h1>Not tool training.<br><em>Real</em> pedagogical uplift.</h1>
+      <p class="hero-lead">A mandatory three-tier professional development program for all academic staff, grounded in the Jisc six pillars. Required before teaching in an MEA model course. Designed to develop genuine capability — not just compliance — and to anticipate the revised Teaching Capabilities Framework.</p>
+    </div>
+  </div>
+
+  <div class="page-section">
+    <div class="mandatory-banner">
+      <div class="mandatory-icon">★</div>
+      <div class="mandatory-text">
+        <strong>Mandatory for all academic staff prior to teaching in an MEA model course</strong>
+        <span>Completion provides PPDR capability evidence and is a prerequisite for MEA course go-live. Approximately 27 hours total across three tiers.</span>
+      </div>
+    </div>
+
+    <!-- Tier 1 -->
+    <div class="tier-card tier-1">
+      <div class="tier-header">
+        <div class="tier-num">1</div>
+        <div class="tier-meta">
+          <div class="tier-name">MEA foundations</div>
+          <div class="tier-detail">All academic staff · ~5 hours · Prerequisite: Foundations of Learning and Teaching · Delivered asynchronously online</div>
+        </div>
+      </div>
+      <div class="tier-body">
+        <p style="font-size:14px;color:#555;margin-bottom:20px;line-height:1.7">Establishes shared language across all staff. Not model-specific — everyone does this tier together. The goal is a common understanding of how modes of learning work, why the six pillars matter, and what the three MEA models are actually trying to achieve.</p>
+        <ul class="module-list">
+          <li class="module-item"><strong>1.1 Beyond blended: a new way of thinking about delivery (~1 hr)</strong>Introduction to the Jisc Beyond Blended framework. Why "online vs on-campus" is an inadequate way to think about delivery. The four modes of participation as a more useful lens.</li>
+          <li class="module-item"><strong>1.2 The three MEA models: design logic, not delivery labels (~1.5 hrs)</strong>What makes each model distinctive — the four-modes signature of each. Why the model is a pedagogical commitment, not an administrative category.</li>
+          <li class="module-item"><strong>1.3 The six pillars: from compliance to capability (~1.5 hrs)</strong>Introduction to Place, Platform, Pace, Blend, Flex, and Support as design questions rather than checklist items. Why teaching the pillars comparatively develops judgement rather than just compliance.</li>
+          <li class="module-item"><strong>1.4 My course in its model: an initial mapping (~1 hr)</strong>Guided self-reflection activity: staff map their own course against its assigned model, identify the key pedagogical implications, and surface questions for Tier 2. Submitted as evidence of Tier 1 completion.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="tier-card tier-2">
+      <div class="tier-header">
+        <div class="tier-num">2</div>
+        <div class="tier-meta">
+          <div class="tier-name">Six pillars in practice</div>
+          <div class="tier-detail">All academic staff · ~15 hours · Six modules of ~2.5 hrs each · AI Literacies embedded in Platform · SuES data literacy embedded in Support</div>
+        </div>
+      </div>
+      <div class="tier-body">
+        <p style="font-size:14px;color:#555;margin-bottom:20px;line-height:1.7">The intellectual core of the program. Each module develops capability in one of the six pillars, taught comparatively across all three MEA models. Staff engage with the full landscape — understanding why models make different choices — and then deepen in the pillar requirements of their own model. AI Literacies and SuES data literacy are embedded where they have genuine pedagogical context, not taught in isolation.</p>
+        <div class="pillar-modules">
+          <div class="pillar-module"><div class="pillar-module-name">Place</div><p>Where learning happens. Campus, home, workplace, community. What co-presence enables and what absence requires. Regional students and digital equity.</p></div>
+          <div class="pillar-module"><div class="pillar-module-name">Platform</div><p>Digital environments as learning spaces. Brightspace, ePortfolio, Zoom, AI tools. Accessibility, equity, digital diversity. <em>AI Literacies embedded here.</em></p></div>
+          <div class="pillar-module"><div class="pillar-module-name">Pace</div><p>How time and scheduling work differently across modes. Synchronous vs asynchronous as a design choice. Workload sequencing and assessment timing.</p></div>
+          <div class="pillar-module"><div class="pillar-module-name">Blend</div><p>Combining modes purposefully. Course-level assessment design. Teaching presence as a designed element. ePortfolio for program-level evidence.</p></div>
+          <div class="pillar-module"><div class="pillar-module-name">Flex</div><p>The choices students and educators have. Equivalent pathways, diverse cohorts, First Nations cultural obligations, RPL, and the relationship between flexibility and equity.</p></div>
+          <div class="pillar-module"><div class="pillar-module-name">Support</div><p>What students and educators need to engage across diverse modes. Early intervention, analytics, community-building, staff capability. <em>SuES data literacy embedded here.</em></p></div>
+        </div>
+        <div class="connections-box" style="margin-top:20px">
+          <h4>Each module includes:</h4>
+          <p>Core concept (~45 min) → Fully Online application (~30 min) → Combined application (~30 min) → In-Person Immersive application (~30 min) → Reflection and design activity (~15 min, submitted as completion evidence and carried forward into Tier 3).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="tier-card tier-3">
+      <div class="tier-header">
+        <div class="tier-num">3</div>
+        <div class="tier-meta">
+          <div class="tier-name">Model application</div>
+          <div class="tier-detail">Differentiated by assigned model · ~7 hours · Includes mandatory 2-hour Educational Designer workshop · Absorbs Preparing for your Subject</div>
+        </div>
+      </div>
+      <div class="tier-body">
+        <p style="font-size:14px;color:#555;margin-bottom:20px;line-height:1.7">Where the six-pillar framework is applied to real practice. Staff work through the <strong>MEA Course Design Prompts</strong> tool for their assigned model, then participate in a mandatory workshop with an Educational Designer from DLT. The capstone output is a ready-to-deliver artefact — subject site, phase plan, or timetable-aligned course design. This output also serves as PPDR capability evidence.</p>
+
+        <div class="inner-tabs">
+          <button class="inner-tab active-fo" onclick="showInner('fo', this, 'active-fo')">Fully Online</button>
+          <button class="inner-tab" onclick="showInner('co', this, 'active-co')">Combined</button>
+          <button class="inner-tab" onclick="showInner('ip', this, 'active-ip')">In-Person Immersive</button>
+        </div>
+
+        <div id="inner-fo" class="inner-panel active">
+          <ul class="module-list tier-3-fo">
+            <li class="module-item"><strong>Focus areas</strong>Asynchronous-first design · Community of Inquiry · Teaching presence at scale · Online assessment and supervised assessment · ePortfolio for course-level evidence · Brightspace site design to standard</li>
+            <li class="module-item"><strong>Activities</strong>Review Brightspace site against Fully Online model checklist (Place, Platform, Pace, Blend, Flex, Support) · Design or refine at least two subjects to meet the asynchronous dominance standard · Map course-level assessment against CLOs and confirm supervised assessment subjects · Design orientation sequence for commencing online students · Participate in 2-hour Educational Designer workshop</li>
+            <li class="module-item"><strong>Capstone output</strong>A Brightspace site meeting Fully Online model standards and a course-level assessment map with supervised assessment subjects identified</li>
+          </ul>
+        </div>
+
+        <div id="inner-co" class="inner-panel">
+          <ul class="module-list tier-3-co">
+            <li class="module-item"><strong>Focus areas</strong>Phase sequence design · Online preparation and post-intensive consolidation · Cross-phase assessment design · ePortfolio as a phase bridge · Intensive planning and student communication · Equivalent pathways</li>
+            <li class="module-item"><strong>Activities</strong>Map the course phase structure against the six pillars, identifying the purpose of each phase · Design or review the assessment map to anchor practical and competency assessments to on-campus phases · Develop an intensive plan including published dates, locations, and pre/post-phase activities · Design orientation content addressing both phases · Participate in 2-hour Educational Designer workshop</li>
+            <li class="module-item"><strong>Capstone output</strong>A phase plan covering at least one online and one on-campus phase, with a cross-phase assessment map and published intensive schedule</li>
+          </ul>
+        </div>
+
+        <div id="inner-ip" class="inner-panel">
+          <ul class="module-list tier-3-ip">
+            <li class="module-item"><strong>Focus areas</strong>Active campus pedagogy · Specialist space use · Campus-based assessment design · Timetable and cohort management · Brightspace as preparation and consolidation only · WIL on-campus preparation</li>
+            <li class="module-item"><strong>Activities</strong>Review timetable and session design against the 75%+ synchronous on-campus standard · Audit Brightspace site to ensure online content is preparation/consolidation only · Map course-level assessment, confirming all supervised and competency assessments are on campus · Design orientation sequence for commencing campus students · Participate in 2-hour Educational Designer workshop</li>
+            <li class="module-item"><strong>Capstone output</strong>A timetable-aligned subject site, course-level assessment map with all supervised assessments on campus, and an orientation sequence</li>
+          </ul>
+        </div>
+
+        <div class="connections-box" style="margin-top:20px">
+          <h4>Connection to MEA Course Design Prompts</h4>
+          <p>The MEA Course Design Prompts tool is the working scaffold for Tier 3. Bring your responses to the prompts — even in draft — to the Educational Designer workshop. The two CSU-specific lenses (Lens A: Our students and their lives; Lens B: Assessment integrity and compliance) are particularly important at this stage.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TCF Connection -->
+    <div style="background:white;border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow);margin-top:12px;border:1.5px solid rgba(199,184,160,0.4)">
+      <div class="section-eyebrow" style="margin-bottom:10px">Teaching Capabilities Framework</div>
+      <h3 style="font-family:var(--font-display);font-size:22px;color:var(--dark-green);margin-bottom:12px">Designed to shape the revised TCF</h3>
+      <p style="font-size:14px;line-height:1.7;color:#555;margin-bottom:16px">The Teaching Capabilities Framework is being revised to align with MEA. This program is designed to anticipate that revision — not just respond to the existing TCF. The capability domains developed here represent what the revised TCF will formally require. Completion of the program provides concrete, artefact-based PPDR evidence at all career levels from Level A through Level E.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        <div style="padding:12px;background:#f9f7f4;border-radius:var(--radius);font-size:13px"><strong style="color:var(--dark-green);display:block;margin-bottom:4px">Mode-specific pedagogy</strong>Teaching explicitly for Place, Pace, and Blend in your assigned model — not just generic good practice.</div>
+        <div style="padding:12px;background:#f9f7f4;border-radius:var(--radius);font-size:13px"><strong style="color:var(--dark-green);display:block;margin-bottom:4px">Course-level assessment design</strong>Mapping tasks to CLOs across the whole course, designing supervised assessment appropriate to mode.</div>
+        <div style="padding:12px;background:#f9f7f4;border-radius:var(--radius);font-size:13px"><strong style="color:var(--dark-green);display:block;margin-bottom:4px">Digital capability in the curriculum</strong>AI-integrated pedagogy, ePortfolio as a portfolio tool, designing for digital equity.</div>
+        <div style="padding:12px;background:#f9f7f4;border-radius:var(--radius);font-size:13px"><strong style="color:var(--dark-green);display:block;margin-bottom:4px">Student engagement and belonging</strong>Building community online, supporting phase transitions, designing for diverse student life patterns.</div>
+        <div style="padding:12px;background:#f9f7f4;border-radius:var(--radius);font-size:13px"><strong style="color:var(--dark-green);display:block;margin-bottom:4px">Evidence-informed practice</strong>Using SuES data, learning analytics, and the Annual Course Health Check to improve teaching within each model.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">Charles Sturt University</div>
+      <p class="footer-meta">Division of Learning and Teaching<br>MEA Curriculum Design Toolkit<br>Based on the Jisc Beyond Blended framework (CC BY NC SA)</p>
+    </div>
+    <div class="footer-links">
+      <a href="#" onclick="showTab('overview', document.querySelector('.tab-btn'))">Overview</a>
+      <a href="#" onclick="showTab('models', document.querySelectorAll('.tab-btn')[1])">The three models</a>
+      <a href="#" onclick="showTab('course-prompts', document.querySelectorAll('.tab-btn')[2])">Course design prompts</a>
+      <a href="#" onclick="showTab('strategic-prompts', document.querySelectorAll('.tab-btn')[3])">Strategic planning prompts</a>
+      <a href="#" onclick="showTab('csu-lenses', document.querySelectorAll('.tab-btn')[4])">CSU lenses</a>
+      <a href="#" onclick="showTab('pd-program', document.querySelectorAll('.tab-btn')[5])">PD program</a>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div style="max-width:1200px;margin:0 auto;font-size:12px;opacity:0.5">
+    Yindyamarra winhanganha — the wisdom of knowing how to live well in a world worth living in. Charles Sturt University acknowledges the Traditional Owners of the lands on which we live and work.
+  </div>
+</footer>
+
+<script>
+function showTab(tabId, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('tab-' + tabId);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showLens(group, lensId, btn) {
+  const prefix = group + '-';
+  document.querySelectorAll('[id^="' + prefix + '"]').forEach(p => p.classList.remove('active'));
+  const tabContainer = group === 'course' ? 'courseLensTabs' : 'strategicLensTabs';
+  document.getElementById(tabContainer).querySelectorAll('.lens-tab').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById(prefix + lensId);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function showInner(modelId, btn, activeClass) {
+  document.querySelectorAll('[id^="inner-"]').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.inner-tab').forEach(b => {
+    b.className = b.className.replace(/active-\w+/g, '').trim();
+  });
+  document.getElementById('inner-' + modelId).classList.add('active');
+  btn.classList.add(activeClass);
+}
+</script>
+</body>
+</html>
