@@ -416,6 +416,203 @@ function ImportModal({onImport,onClose}){
   </div></div>);
 }
 
+// ─── SECTION H — OPERATIONALISE ──────────────────────────────
+function SecH(){
+  const [openPanel,setOpenPanel]=useState(null);
+  const toggle=k=>setOpenPanel(p=>p===k?null:k);
+
+  const Panel=({id,title,tag,tagBg,tagCol,children})=>{
+    const open=openPanel===id;
+    return(
+      <div style={{border:`1px solid ${C.lightBrown}`,borderLeft:`3px solid ${tagBg}`,borderRadius:4,marginBottom:10,overflow:"hidden"}}>
+        <div onClick={()=>toggle(id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",gap:8}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
+            <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:3,background:tagBg,color:tagCol,flexShrink:0,letterSpacing:"0.04em"}}>{tag}</span>
+            <span style={{fontSize:14,fontWeight:500,color:C.charcoal}}>{title}</span>
+          </div>
+          <span style={{fontSize:12,color:C.darkBrown,flexShrink:0}}>{open?"▲":"▼"}</span>
+        </div>
+        {open&&<div style={{padding:"16px 14px",borderTop:`1px solid ${C.lightBrown}`}}>{children}</div>}
+      </div>
+    );
+  };
+
+  const Row=({label,children})=>(
+    <div style={{display:"flex",flexWrap:"wrap",gap:8,padding:"9px 0",borderBottom:`1px solid ${C.pink}`,fontSize:13,alignItems:"flex-start"}}>
+      <span style={{color:C.darkBrown,minWidth:160,flexShrink:0,fontWeight:500,fontSize:12,paddingTop:1}}>{label}</span>
+      <span style={{color:C.charcoal,flex:1,lineHeight:1.6}}>{children}</span>
+    </div>
+  );
+
+  const Pill=({label,color})=>{
+    const styles={
+      green:{bg:"#f0fdf4",col:"#14532d",br:"#4ade80"},
+      amber:{bg:"#fffbeb",col:"#78350f",br:"#fbbf24"},
+      blue:{bg:"#eff6ff",col:"#1e3a8a",br:"#93c5fd"},
+      red:{bg:"#fff3e0",col:"#7c2d12",br:"#fb923c"},
+    };
+    const s=styles[color]||styles.blue;
+    return <span style={{fontSize:11,fontWeight:500,padding:"2px 8px",borderRadius:4,background:s.bg,color:s.col,border:`1px solid ${s.br}`,whiteSpace:"nowrap"}}>{label}</span>;
+  };
+
+  const Note=({children,color="amber"})=>{
+    const bg=color==="green"?"#f0fdf4":color==="blue"?"#eff6ff":"#fffbeb";
+    const border=color==="green"?"#4ade80":color==="blue"?"#93c5fd":"#fbbf24";
+    const col=color==="green"?"#14532d":color==="blue"?"#1e3a8a":"#78350f";
+    return <div style={{background:bg,border:`1px solid ${border}`,borderRadius:4,padding:"10px 12px",fontSize:12,color:col,lineHeight:1.65,marginTop:10}}>{children}</div>;
+  };
+
+  return(
+    <div>
+      <SecHdr>Section H — Operationalising this tool</SecHdr>
+      <div style={{background:C.pink,borderRadius:4,padding:"12px 14px",marginBottom:18,fontSize:13,color:C.darkBrown,lineHeight:1.65}}>
+        This tab is a <strong>read-only reference</strong> for the project team. It documents what would need to be in place to move this tool from a personal prototype to a supported institutional system — covering where data lives, where the tool is hosted, and how access is controlled.
+      </div>
+
+      {/* BACKEND & DATA STORAGE */}
+      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:4}}>1 — Backend &amp; data storage</div>
+
+      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
+        <strong>Current state:</strong> All data is stored in <code style={{background:C.pink,padding:"1px 5px",borderRadius:3,fontSize:12}}>localStorage</code> in the user's browser. This means data is isolated per device, invisible to anyone else, and lost if the browser cache is cleared. For a shared institutional planning tool, data needs to live somewhere central.
+      </div>
+
+      <Panel id="b1" title="Google Sheets via Apps Script" tag="SIMPLEST" tagBg="#3c8364" tagCol="#fff">
+        <Row label="What it is">A free Google Apps Script deployed as a web app acts as a middleman. When a course is saved in the tool, it sends the data to the script, which writes a row into a Google Sheet.</Row>
+        <Row label="Setup effort"><Pill label="Low" color="green"/> No server required. Takes roughly 2–3 hours to configure end-to-end.</Row>
+        <Row label="Who sees data">Anyone with access to the Google Sheet. You control sharing permissions within Google Drive.</Row>
+        <Row label="Limitations">Not designed for complex nested data — the action tables and section C detail would need to be flattened into columns. Not ideal for concurrent multi-user editing. Data is held in Google's infrastructure, not CSU's.</Row>
+        <Row label="Best for">Early prototype validation with a small team. Quick to get running without IT involvement.</Row>
+        <Note color="amber">Google infrastructure sits outside CSU's Microsoft tenancy. Check with your IT team whether storing planning data in Google Workspace is acceptable under CSU's data governance policy.</Note>
+      </Panel>
+
+      <Panel id="b2" title="Airtable" tag="EASY API" tagBg="#5675bc" tagCol="#fff">
+        <Row label="What it is">Airtable is a cloud database with a clean REST API. Each course becomes a record. The tool posts data to Airtable on save. Data is visible and editable in Airtable's own interface as well as through the tool.</Row>
+        <Row label="Setup effort"><Pill label="Low–Medium" color="blue"/> Free tier available. API integration takes roughly 4–6 hours.</Row>
+        <Row label="Who sees data">Anyone added to the Airtable base. Granular field-level permissions available on paid plans.</Row>
+        <Row label="Limitations">Free tier has record and attachment limits. Airtable is a third-party US-hosted service — data sovereignty considerations apply. Not within CSU's Microsoft ecosystem.</Row>
+        <Row label="Best for">Prototypes where the team wants a nice visual interface for viewing and editing data alongside the tool.</Row>
+        <Note color="amber">As with Google, confirm with IT that storing course planning data in a third-party US cloud service is compliant with CSU's data classification requirements.</Note>
+      </Panel>
+
+      <Panel id="b3" title="SharePoint List (Microsoft 365)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
+        <Row label="What it is">A SharePoint List in CSU's Microsoft 365 tenancy acts as the database. The tool uses the Microsoft Graph API to read and write course records. Data stays within CSU's own Microsoft environment.</Row>
+        <Row label="Setup effort"><Pill label="Medium" color="amber"/> Requires a CSU Azure App Registration to generate API credentials. Estimated 1–2 days of technical setup, likely requiring DIT involvement.</Row>
+        <Row label="Who sees data">Controlled via SharePoint permissions — individuals, groups, or the whole tenancy. Integrates with CSU's existing Active Directory groups.</Row>
+        <Row label="Limitations">Graph API has a learning curve. Nested data structures (action tables, section C) require careful schema design in the List columns. Complex queries can be slow at scale.</Row>
+        <Row label="Best for">Any deployment beyond a small prototype. Data stays in CSU's tenancy, IT governance is straightforward, and SSO authentication is built in.</Row>
+        <Note color="green">This is the most institutionally appropriate option. It keeps data inside CSU's Microsoft 365 environment, aligns with existing IT governance, and enables SSO without additional infrastructure.</Note>
+      </Panel>
+
+      <Panel id="b4" title="Supabase or Firebase (full database)" tag="MOST SCALABLE" tagBg="#222944" tagCol="#fff">
+        <Row label="What it is">A proper hosted database (PostgreSQL via Supabase, or Firestore via Firebase). Full relational data model, real-time sync, multi-user support, and role-based access control built in.</Row>
+        <Row label="Setup effort"><Pill label="High" color="red"/> Requires a developer. Estimated 3–5 days of setup. Ongoing infrastructure management required.</Row>
+        <Row label="Who sees data">Fully configurable via row-level security policies. Can be as open or locked down as needed.</Row>
+        <Row label="Limitations">Overkill for a prototype. Requires ongoing technical maintenance. Third-party infrastructure unless self-hosted.</Row>
+        <Row label="Best for">If this tool becomes a sustained institutional system with many concurrent users and complex access control requirements.</Row>
+      </Panel>
+
+      {/* HOSTING */}
+      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>2 — Hosting options</div>
+
+      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
+        <strong>Current state:</strong> The tool is a single HTML file hosted on a personal website. This is fine for a prototype but has no access control, no institutional branding governance, and no IT support pathway.
+      </div>
+
+      <Panel id="h1" title="Static web host (Netlify / GitHub Pages)" tag="CURRENT APPROACH" tagBg="#5675bc" tagCol="#fff">
+        <Row label="What it is">The HTML file is deployed to a free static hosting service. Anyone with the URL can access it.</Row>
+        <Row label="Effort">Near zero. Drag-and-drop deployment in minutes.</Row>
+        <Row label="Authentication">None built in. URL is public unless the hosting provider's password protection is enabled (paid feature on Netlify).</Row>
+        <Row label="Suitable for">Prototype sharing with a small trusted group via a private URL. Not suitable for broader staff rollout.</Row>
+        <Note color="amber">No authentication means anyone who finds the URL can view and edit data. Fine for a prototype — not appropriate for institutional deployment.</Note>
+      </Panel>
+
+      <Panel id="h2" title="SharePoint page (embedded)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
+        <Row label="What it is">The tool is embedded into a SharePoint page as a web part or iframe, living within CSU's intranet. Staff access it through SharePoint with their existing CSU login.</Row>
+        <Row label="Effort"><Pill label="Medium" color="amber"/> Requires converting the React app to work within SharePoint's environment, or using SharePoint Framework (SPFx). DIT involvement likely needed.</Row>
+        <Row label="Authentication">Automatic — CSU SSO via Microsoft Entra ID. No separate login required for staff.</Row>
+        <Row label="Suitable for">Institutional deployment. Data stays in Microsoft 365, access is controlled by SharePoint permissions, and the tool sits alongside other DLT resources.</Row>
+        <Note color="green">Embedding in SharePoint is the natural institutional home for this tool. It removes the need for separate authentication infrastructure and keeps everything within CSU's existing Microsoft ecosystem.</Note>
+      </Panel>
+
+      <Panel id="h3" title="CSU-managed web server or Azure Static Web App" tag="IT-MANAGED" tagBg="#222944" tagCol="#fff">
+        <Row label="What it is">DIT hosts the tool on CSU's own web infrastructure or deploys it as an Azure Static Web App within CSU's Azure tenancy. The URL becomes a csu.edu.au address.</Row>
+        <Row label="Effort"><Pill label="High" color="red"/> Requires a formal IT request, security review, and ongoing infrastructure management by DIT.</Row>
+        <Row label="Authentication">Can be configured with CSU SSO via Microsoft Entra ID. Role-based access can be enforced at the server level.</Row>
+        <Row label="Suitable for">Production deployment at scale. Full institutional ownership. Appropriate if the tool becomes a formally supported DLT system.</Row>
+      </Panel>
+
+      {/* AUTHENTICATION */}
+      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>3 — Authentication &amp; access control</div>
+
+      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
+        <strong>Current state:</strong> No authentication. Anyone with the URL can view and edit all courses. For institutional use, access needs to be controlled so that Course Directors only see their own courses, DLT managers see across faculties, and Executive Deans see their portfolio.
+      </div>
+
+      <Panel id="a1" title="No authentication (current)" tag="PROTOTYPE ONLY" tagBg="#71634e" tagCol="#fff">
+        <Row label="What it is">The tool is open to anyone with the URL. All data is visible and editable by all visitors.</Row>
+        <Row label="Risk"><Pill label="High" color="red"/> Any visitor can edit or delete any course record. Not suitable beyond a small trusted group.</Row>
+        <Row label="Suitable for">Solo use or prototype demonstration only.</Row>
+      </Panel>
+
+      <Panel id="a2" title="Microsoft Entra ID (CSU SSO)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
+        <Row label="What it is">CSU's existing single sign-on system (Microsoft Entra ID, formerly Azure AD). Staff log in with their CSU credentials. The tool verifies their identity before granting access.</Row>
+        <Row label="Setup effort"><Pill label="Medium" color="amber"/> Requires an Azure App Registration and OAuth 2.0 integration in the tool's code. DIT involvement required. Once configured, login is seamless for all CSU staff.</Row>
+        <Row label="What it enables">Know who is accessing the tool. Restrict access to CSU staff only. Build role-based access rules (e.g. Course Director can only edit their own courses; DLT manager can see all).</Row>
+        <Row label="Role model suggestion">
+          <div style={{marginTop:4}}>
+            {[["Course Director","Can edit their own courses only"],["DLT Contact","Can view and comment on assigned courses"],["Head of School","Can view all courses in their school"],["Executive Dean / AD Academic","Can view all courses in their faculty"],["DLT Manager / Admin","Full read/write access across all courses"]].map(([role,desc],i)=>(
+              <div key={i} style={{display:"flex",gap:8,padding:"5px 0",borderBottom:`1px solid ${C.pink}`,alignItems:"flex-start"}}>
+                <span style={{fontSize:12,fontWeight:500,color:C.charcoal,minWidth:180,flexShrink:0}}>{role}</span>
+                <span style={{fontSize:12,color:C.darkBrown}}>{desc}</span>
+              </div>
+            ))}
+          </div>
+        </Row>
+        <Note color="green">CSU already has Microsoft Entra ID infrastructure in place. This is the lowest-friction authentication path for an institutional deployment — staff don't need new accounts or passwords.</Note>
+      </Panel>
+
+      <Panel id="a3" title="Simple password protection" tag="LIGHTWEIGHT OPTION" tagBg="#5675bc" tagCol="#fff">
+        <Row label="What it is">A shared password gates access to the tool. No individual identity is verified — anyone with the password can access everything.</Row>
+        <Row label="Setup effort"><Pill label="Very low" color="green"/> Can be implemented in the HTML file itself or via Netlify's password protection feature (paid).</Row>
+        <Row label="Limitations">Shared passwords get shared. No audit trail. No role-based access. Not scalable beyond a very small team.</Row>
+        <Row label="Suitable for">Keeping a prototype off public view without full SSO setup. Bridge measure only.</Row>
+      </Panel>
+
+      {/* SUMMARY */}
+      <div style={{marginTop:24,background:C.charcoal,borderRadius:4,padding:"14px 16px"}}>
+        <div style={{fontSize:11,fontWeight:500,color:C.lightBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10}}>Recommended path for CSU institutional deployment</div>
+        {[
+          ["Backend","SharePoint List via Microsoft Graph API — data stays in CSU's Microsoft 365 tenancy"],
+          ["Hosting","Embedded in a SharePoint page, or Azure Static Web App under csu.edu.au"],
+          ["Authentication","Microsoft Entra ID (SSO) — staff log in with existing CSU credentials"],
+          ["First step","Raise a project brief with DIT to register an Azure App and provision a SharePoint List — this unlocks all three of the above"],
+        ].map(([label,desc],i)=>(
+          <div key={i} style={{display:"flex",gap:10,padding:"7px 0",borderBottom:`1px solid rgba(255,255,255,0.08)`,alignItems:"flex-start"}}>
+            <span style={{fontSize:11,fontWeight:700,color:C.orange,minWidth:120,flexShrink:0,paddingTop:1,textTransform:"uppercase",letterSpacing:"0.03em"}}>{label}</span>
+            <span style={{fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.6}}>{desc}</span>
+          </div>
+        ))}
+      </div>
+
+    </div>
+  );
+}
+
+// ─── OPERATIONALISE MODAL ────────────────────────────────────
+function OpModal({onClose}){
+  return(
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:100,display:"flex",alignItems:"flex-start",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
+      <div style={{background:C.white,borderRadius:8,width:"100%",maxWidth:720,marginTop:8,marginBottom:8}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px",borderBottom:`1px solid ${C.lightBrown}`,position:"sticky",top:0,background:C.white,zIndex:1,borderRadius:"8px 8px 0 0"}}>
+          <div><div style={{fontWeight:500,fontSize:16,color:C.charcoal}}>Operationalising this tool</div><div style={{fontSize:12,color:C.darkBrown,marginTop:2}}>Backend, hosting &amp; access control — reference for the project team</div></div>
+          <button onClick={onClose} style={{background:"none",border:"none",fontSize:22,color:C.darkBrown,padding:"0 4px",lineHeight:1,cursor:"pointer"}}>×</button>
+        </div>
+        <div style={{padding:"20px"}}><SecH/></div>
+      </div>
+    </div>
+  );
+}
+
 // ─── FORM VIEW ────────────────────────────────────────────────
 const TABS=["A — Course details","B — Governance","C — Model gap","D — Marketing","E — Staff","F — Risks","G — Final"];
 function FormView({course,upd,updGov,updC,activeTab,setActiveTab,onSave,onCancel,onDelete,onScope,saved}){
@@ -440,6 +637,7 @@ function App(){
   const [tab,setTab]=useState(0);
   const [saved,setSaved]=useState(false);
   const [showImport,setShowImport]=useState(false);
+  const [showOp,setShowOp]=useState(false);
   const [activeFilter,setActiveFilter]=useState(null);
   const [w,setW]=useState(window.innerWidth);
 
@@ -487,10 +685,12 @@ function App(){
 
   return(<div>
     {showImport&&<ImportModal onImport={handleImport} onClose={()=>setShowImport(false)}/>}
+    {showOp&&<OpModal onClose={()=>setShowOp(false)}/>}
     <div style={{background:C.charcoal,padding:"0 1rem",position:"sticky",top:0,zIndex:10}}><div style={{maxWidth:1100,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56,gap:8}}>
       <div style={{display:"flex",alignItems:"center",gap:10}}><Crest size={30}/><div className="hide-mobile"><div style={{color:C.white,fontWeight:500,fontSize:14,lineHeight:1.2}}>Charles Sturt University</div><div style={{color:C.lightBrown,fontSize:11}}>Division of Learning and Teaching</div></div></div>
       <div style={{display:"flex",gap:8,alignItems:"center"}}>
         {saved&&<span style={{color:C.lightGreen,fontSize:12,fontWeight:500,whiteSpace:"nowrap"}}>✓ Saved</span>}
+        <button onClick={()=>setShowOp(true)} style={{background:"transparent",border:`1px solid ${C.lightBrown}`,color:C.lightBrown,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Operationalise</button>
         <button onClick={()=>setShowImport(true)} style={{background:"transparent",border:`1px solid ${C.lightBlue}`,color:C.lightBlue,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Import</button>
         <button onClick={()=>exportCSV(courses)} style={{background:"transparent",border:`1px solid ${C.lightGreen}`,color:C.lightGreen,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Export CSV</button>
         <button onClick={()=>{if(window.confirm("Reset to sample data? This will clear all current data.")){localStorage.removeItem(STORAGE_KEY);setCourses(makeSample());}}} style={{background:"transparent",border:`1px solid ${C.lightBrown}`,color:C.lightBrown,padding:"7px 12px",borderRadius:4,fontSize:12,fontWeight:500,minHeight:38}} className="hide-mobile">Reset</button>
