@@ -376,12 +376,68 @@ main { min-height: 80vh; }
   padding: 8px 16px;
   border-radius: 20px;
   transition: var(--transition);
-  cursor: default;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
 }
 .pillar-chip:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.3);
+  color: white;
+}
+.pillar-chip.active {
   background: var(--dark-orange);
   border-color: var(--dark-orange);
   color: white;
+}
+/* ── PILLAR POPOVER ── */
+.pillar-popover {
+  display: none;
+  position: fixed;
+  z-index: 500;
+  width: 280px;
+  background: #0e2e27;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 20px 22px 16px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.45);
+}
+.pillar-popover.visible {
+  display: block;
+  animation: popIn 0.17s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes popIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.pillar-popover-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--light-green);
+  margin-bottom: 6px;
+}
+.pillar-popover-name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.pillar-popover-def {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(255,255,255,0.78);
+  font-weight: 300;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+.pillar-popover-source {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.3px;
 }
 .pillars-label {
   font-size: 11px;
@@ -818,12 +874,19 @@ footer {
 
   <div class="pillars-strip">
     <span class="pillars-label">Six pillars</span>
-    <span class="pillar-chip">Place</span>
-    <span class="pillar-chip">Platform</span>
-    <span class="pillar-chip">Pace</span>
-    <span class="pillar-chip">Blend</span>
-    <span class="pillar-chip">Flex</span>
-    <span class="pillar-chip">Support</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Place',this)">Place</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Platform',this)">Platform</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Pace',this)">Pace</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Blend',this)">Blend</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Flex',this)">Flex</span>
+    <span class="pillar-chip" onclick="showPillarPopover('Support',this)">Support</span>
+  </div>
+
+  <div class="pillar-popover" id="pillarPopover">
+    <div class="pillar-popover-eyebrow">Jisc Beyond Blended</div>
+    <div class="pillar-popover-name" id="pillarPopoverName"></div>
+    <div class="pillar-popover-def" id="pillarPopoverDef"></div>
+    <div class="pillar-popover-source">Source: Jisc Beyond Blended framework (CC BY NC SA)</div>
   </div>
 
   <div class="page-section">
@@ -1570,6 +1633,67 @@ function showInner(modelId, btn, activeClass) {
   document.getElementById('inner-' + modelId).classList.add('active');
   btn.classList.add(activeClass);
 }
+
+/* ── PILLAR POPOVERS ── */
+const PILLAR_DATA = {
+  Place:    'Learners and educators are always physically somewhere. Where learning happens — on campus, at home, in the workplace, or in the community — shapes what is possible and what equity requires.',
+  Platform: 'Learners and educators can always be (virtually) somewhere else. Digital environments extend learning beyond physical location, enabling participation across distance and time zones.',
+  Pace:     'Learners experience time and pace differently — synchronous or asynchronous, responsive or reflective. Designing for pace means choosing deliberately when learning is live and when it is independent.',
+  Blend:    'Most learning has in-place and online, synchronous and asynchronous elements. The design challenge is combining these purposefully so each mode does what it does best.',
+  Flex:     'Learners and educators expect choice and flexibility in mode(s) of learning. Flexibility is not just a convenience — it is an equity issue, especially for regional, First Nations, and working students.',
+  Support:  'Learners and educators need support to engage in diverse modes. Effective support is designed into the curriculum — not bolted on — and addresses digital, academic, and belonging needs.'
+};
+
+let _activeChip = null;
+
+function showPillarPopover(name, chipEl) {
+  const popover = document.getElementById('pillarPopover');
+
+  // Toggle off if same chip clicked again
+  if (_activeChip === chipEl) {
+    closePillarPopover();
+    return;
+  }
+
+  // Deactivate previous chip
+  if (_activeChip) _activeChip.classList.remove('active');
+  _activeChip = chipEl;
+  chipEl.classList.add('active');
+
+  // Populate content
+  document.getElementById('pillarPopoverName').textContent = name;
+  document.getElementById('pillarPopoverDef').textContent = PILLAR_DATA[name];
+
+  // Position below the chip, within viewport
+  const rect = chipEl.getBoundingClientRect();
+  const pw = 280;
+  let left = rect.left;
+  let top  = rect.bottom + 10;
+
+  if (left + pw > window.innerWidth - 16) left = window.innerWidth - pw - 16;
+  if (left < 16) left = 16;
+
+  popover.style.left = left + 'px';
+  popover.style.top  = top  + 'px';
+
+  // Animate in
+  popover.classList.remove('visible');
+  void popover.offsetWidth; // force reflow
+  popover.classList.add('visible');
+}
+
+function closePillarPopover() {
+  document.getElementById('pillarPopover').classList.remove('visible');
+  if (_activeChip) { _activeChip.classList.remove('active'); _activeChip = null; }
+}
+
+// Close on outside click or Escape
+document.addEventListener('click', function(e) {
+  if (!e.target.classList.contains('pillar-chip')) closePillarPopover();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePillarPopover();
+});
 </script>
 </body>
 </html>
