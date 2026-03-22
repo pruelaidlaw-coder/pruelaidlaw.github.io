@@ -137,6 +137,12 @@ main { min-height: 80vh; }
   position: relative;
   overflow: hidden;
 }
+.hero-content-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
 .hero::before {
   content: '';
   position: absolute;
@@ -155,7 +161,7 @@ main { min-height: 80vh; }
   background: rgba(81,150,116,0.1);
   pointer-events: none;
 }
-.hero-inner { max-width: 900px; position: relative; z-index: 1; }
+.hero-inner { max-width: 900px; }
 .hero-eyebrow {
   font-size: 11px;
   font-weight: 600;
@@ -362,6 +368,10 @@ main { min-height: 80vh; }
 .pillars-strip {
   background: var(--dark-green);
   padding: 28px 40px;
+}
+.pillars-strip-inner {
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
@@ -805,6 +815,7 @@ footer {
 <!-- ── TAB: OVERVIEW ── -->
 <div id="tab-overview" class="tab-panel active">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">Models of Engagement and Assessment</div>
       <h1>Teaching well<br>in <em>every</em> model.</h1>
@@ -814,9 +825,11 @@ footer {
         <button class="btn-ghost" onclick="showTab('pd-program', document.querySelector('[onclick*=pd-program]'))">PD program framework</button>
       </div>
     </div>
+    </div>
   </div>
 
   <div class="pillars-strip">
+    <div class="pillars-strip-inner">
     <span class="pillars-label">Six pillars</span>
     <span class="pillar-chip">Place</span>
     <span class="pillar-chip">Platform</span>
@@ -824,6 +837,7 @@ footer {
     <span class="pillar-chip">Blend</span>
     <span class="pillar-chip">Flex</span>
     <span class="pillar-chip">Support</span>
+    </div>
   </div>
 
   <div class="page-section">
@@ -875,10 +889,12 @@ footer {
 <!-- ── TAB: MODELS ── -->
 <div id="tab-models" class="tab-panel">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">MEA Model Definitions</div>
       <h1>Three models.<br>Three <em>design logics.</em></h1>
       <p class="hero-lead">The MEA models are not administrative categories — each has a distinctive pedagogical logic that flows through every design decision about place, platform, pace, assessment, and support.</p>
+    </div>
     </div>
   </div>
 
@@ -1019,10 +1035,12 @@ footer {
 <!-- ── TAB: COURSE DESIGN PROMPTS ── -->
 <div id="tab-course-prompts" class="tab-panel">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">Course Design Prompts</div>
       <h1>Questions that<br><em>sharpen</em> your design.</h1>
       <p class="hero-lead">Six curriculum lenses, each offering prompting questions for course teams designing within their MEA model. Read the column for your model. Use these in design workshops, CCR reviews, and subject redesign sessions.</p>
+    </div>
     </div>
   </div>
 
@@ -1197,10 +1215,12 @@ footer {
 <!-- ── TAB: STRATEGIC PROMPTS ── -->
 <div id="tab-strategic-prompts" class="tab-panel">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">Strategic Planning Prompts</div>
       <h1>Questions for<br><em>leaders and governance.</em></h1>
       <p class="hero-lead">Six strategic lenses for Faculty leaders, MEA governance, and enabling divisions. These questions address the institutional decisions that make the MEA models possible — space, platforms, workload, equity, and data.</p>
+    </div>
     </div>
   </div>
 
@@ -1319,10 +1339,12 @@ footer {
 <!-- ── TAB: CSU LENSES ── -->
 <div id="tab-csu-lenses" class="tab-panel">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">CSU-Specific Lenses</div>
       <h1>Built for <em>our</em> students<br>and our context.</h1>
       <p class="hero-lead">Two lenses created using the Jisc blank template and designed specifically for Charles Sturt University. These address what the generic Jisc lenses don't — our regional and First Nations cohort, our compliance obligations, and our course-level assessment requirements.</p>
+    </div>
     </div>
   </div>
 
@@ -1393,10 +1415,12 @@ footer {
 <!-- ── TAB: PD PROGRAM ── -->
 <div id="tab-pd-program" class="tab-panel">
   <div class="hero">
+    <div class="hero-content-wrap">
     <div class="hero-inner">
       <div class="hero-eyebrow">MEA Teaching and Learning PD Program</div>
       <h1>Not tool training.<br><em>Real</em> pedagogical uplift.</h1>
       <p class="hero-lead">A mandatory three-tier professional development program for all academic staff, grounded in the Jisc six pillars. Required before teaching in an MEA model course. Designed to develop genuine capability — not just compliance — and to anticipate the revised Teaching Capabilities Framework.</p>
+    </div>
     </div>
   </div>
 
