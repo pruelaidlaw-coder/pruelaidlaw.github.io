@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Assurance Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#f4f2ee;--surface:#fff;--surface2:#ece8e1;--border:#d6d0c6;--text:#1a1714;--muted:#7a7268;--accent:#1b3d6e;--accent2:#b83c1a;--green:#256949;--green-bg:#d4edda;--amber:#8a4800;--amber-bg:#fff0d4;--red:#b52a1c;--red-bg:#fde8e5;--blue-bg:#dce8f7;--purple:#5a2d8e;--purple-bg:#ede9fe;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
+.hdr{background:var(--accent);color:#fff;padding:22px 36px 18px;border-bottom:4px solid var(--accent2);}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.hdr-left .badge-code{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.65;margin-bottom:5px;}
+.hdr-left h1{font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;line-height:1.25;}
+.hdr-left .sub{font-size:12px;opacity:.7;margin-top:3px;}
+.hdr-stats{display:flex;gap:14px;flex-shrink:0;flex-wrap:wrap;}
+.stat{text-align:center;background:rgba(255,255,255,.12);border-radius:6px;padding:10px 16px;}
+.stat .n{font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;}
+.stat .l{font-size:10px;opacity:.65;margin-top:2px;letter-spacing:.5px;}
+.cp-bar-wrap{margin-top:16px;background:rgba(255,255,255,.1);border-radius:6px;padding:10px 14px;}
+.cp-bar-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.65;margin-bottom:6px;}
+.cp-bar{display:flex;height:14px;border-radius:4px;overflow:hidden;gap:2px;}
+.cp-seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;letter-spacing:.5px;border-radius:2px;}
+.seg-core{background:#4a90d9;}.seg-comp{background:#56b08e;}.seg-elec{background:#e0954a;}.seg-unr{background:#9a7ecb;}
+.cp-legend{display:flex;gap:14px;margin-top:6px;flex-wrap:wrap;}
+.cp-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;opacity:.8;}
+.cp-dot{width:8px;height:8px;border-radius:2px;}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 36px;display:flex;gap:0;overflow-x:auto;}
+.tab{padding:12px 20px;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap;font-family:'IBM Plex Sans',sans-serif;}
+.tab:hover{color:var(--accent);}.tab.active{color:var(--accent);border-bottom-color:var(--accent2);font-weight:600;}
+.main{padding:28px 36px;}.panel{display:none;}.panel.active{display:block;}
+.notice{border-radius:7px;padding:11px 15px;font-size:12.5px;margin-bottom:18px;border:1px solid;}
+.notice-blue{background:var(--blue-bg);border-color:#b3d1f0;color:#1a3a6e;}
+.notice-amber{background:var(--amber-bg);border-color:#f5c97a;color:var(--amber);}
+.notice strong{font-weight:600;}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sec-hdr h2{font-family:'Libre Baskerville',serif;font-size:16px;}
+.cp-pill{padding:3px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;margin-left:auto;}
+.pill-core{background:#dce8f7;color:#1b3d6e;}.pill-comp{background:#d4edda;color:#256949;}
+.pill-elec{background:#fff0d4;color:var(--amber);}.pill-unr{background:var(--purple-bg);color:var(--purple);}
+.structure-section{margin-bottom:28px;}
+.structure-inner{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.subj-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.subj-row:last-child{border-bottom:none;}
+.subj-row-head{display:flex;align-items:center;padding:10px 16px;gap:10px;}
+.subj-row:hover .subj-row-head{background:var(--bg);}
+.subj-code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);min-width:64px;font-weight:500;}
+.subj-title-text{flex:1;font-size:13px;font-weight:500;line-height:1.3;}
+.role-chip{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500;flex-shrink:0;}
+.chip-core{background:#dce8f7;color:#1b3d6e;}.chip-compulsory{background:#d4edda;color:#256949;}.chip-elective{background:var(--purple-bg);color:var(--purple);}
+.subj-cp{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0;}
+.chevron{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0;}
+.subj-row.open .chevron{transform:rotate(90deg);}
+.subj-body{display:none;padding:14px 16px 16px;border-top:1px solid var(--border);background:#fdfcfb;}
+.subj-row.open .subj-body{display:block;}
+.slo-assess-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.mini-hdr{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.slo-item{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start;}
+.slo-n{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);min-width:16px;margin-top:2px;}
+.slo-txt{font-size:12px;line-height:1.5;color:var(--text);}
+.assess-item{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.assess-n{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);}
+.assess-name{font-size:12px;flex:1;}
+.wbar{height:5px;background:var(--border);border-radius:3px;width:70px;overflow:hidden;flex-shrink:0;}
+.wfill{height:100%;background:var(--accent);border-radius:3px;}
+.wpct{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);min-width:28px;text-align:right;}
+.no-data{font-size:12px;color:var(--muted);font-style:italic;}
+.clo-tag-sm{font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;color:#fff;}
+.set-tabs{display:flex;gap:6px;margin-bottom:12px;}
+.set-tab{padding:5px 12px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;font-family:'IBM Plex Sans',sans-serif;transition:all .15s;}
+.set-tab:hover{border-color:var(--accent);color:var(--accent);}
+.set-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.set-panel{display:none;}.set-panel.active{display:block;}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.filter-lbl{font-size:12px;font-weight:600;color:var(--muted);}
+.fchip{padding:4px 11px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--bg);cursor:pointer;transition:all .15s;font-family:'IBM Plex Sans',sans-serif;}
+.fchip:hover{border-color:var(--accent);color:var(--accent);}
+.fchip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.search-box{margin-left:auto;padding:6px 11px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);outline:none;width:200px;}
+.search-box:focus{border-color:var(--accent);}
+.align-instructions{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px;}
+.align-instructions h3{font-family:'Libre Baskerville',serif;font-size:15px;margin-bottom:10px;}
+.align-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.clo-align-item{padding:10px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .15s;border-left:4px solid;}
+.clo-align-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.1);}
+.clo-align-item.selected{box-shadow:0 0 0 2px var(--accent);}
+.clo-ai-num{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;margin-bottom:4px;}
+.clo-ai-desc{font-size:11px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.4;}
+.clo-ai-count{font-size:11px;margin-top:6px;}
+.matrix-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);}
+.mtable{border-collapse:collapse;width:100%;font-size:12px;}
+.mtable th{background:var(--surface2);padding:8px 10px;border:1px solid var(--border);font-weight:600;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.5px;white-space:nowrap;}
+.mtable td{padding:7px 10px;border:1px solid var(--border);vertical-align:middle;}
+.mtable tr:nth-child(even) td{background:#faf9f7;}
+.mtable tr:hover td{background:#eef3fc;}
+.cdot{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.cdot-on{color:#fff;}.cdot-off{background:var(--border);}
+.student-bar{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.student-bar label{font-size:13px;font-weight:500;color:var(--muted);}
+.student-bar select{padding:7px 11px;border:1px solid var(--border);border-radius:6px;font-family:'IBM Plex Sans',sans-serif;font-size:13px;background:var(--surface);color:var(--text);}
+.prog-note{font-size:12px;color:var(--muted);margin-left:auto;}
+.cp-progress-strip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;}
+.cp-prog-inner{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.cp-prog-bar{flex:1;height:12px;background:var(--border);border-radius:6px;overflow:hidden;}
+.cp-prog-fill{height:100%;border-radius:6px;transition:width .5s;background:linear-gradient(90deg,var(--accent),#4a90d9);}
+.cp-prog-text{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;}
+.clo-prog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.clo-pc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;border-top:4px solid;}
+.clo-pc-num{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;margin-bottom:3px;}
+.clo-pc-desc{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.clo-pg-row{display:flex;align-items:center;gap:8px;}
+.clo-pg-bar{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;}
+.clo-pg-fill{height:100%;border-radius:4px;transition:width .5s;}
+.clo-pg-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;min-width:32px;text-align:right;}
+.clo-pc-count{font-size:10px;color:var(--muted);margin-top:4px;}
+.submitted-section h3{font-family:'Libre Baskerville',serif;font-size:15px;margin-bottom:12px;}
+.sub-item{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:11px 14px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.sub-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;}
+.icon-done{background:#d4edda;color:var(--green);}.icon-pending{background:var(--amber-bg);color:var(--amber);}
+.sub-main{flex:1;}
+.sub-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+.sub-subj{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent);}
+.sub-name{font-size:13px;font-weight:500;}
+.sub-wt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);}
+/* THRESHOLD STYLES */
+.thresh-legend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.thresh-pip{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid;}
+.t-found{background:#e8f0fe;border-color:#93b4f5;color:#1b3d6e;}
+.t-dev{background:#fff0d4;border-color:#f5c97a;color:#8a4800;}
+.t-int{background:#d4edda;border-color:#7dd4a0;color:#256949;}
+.t-mast{background:#ede9fe;border-color:#b39ddb;color:#5a2d8e;}
+.t-not{background:#f5f3ef;border-color:#d6d0c6;color:#7a7268;}
+
+.stage-gates{display:flex;gap:0;margin-bottom:24px;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.stage-gate{flex:1;padding:14px 16px;border-right:1px solid var(--border);position:relative;}
+.stage-gate:last-child{border-right:none;}
+.sg-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.sg-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.sg-cp{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.sg-status{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;}
+.sg-confirmed{background:#d4edda;color:#256949;}
+.sg-current{background:#fff0d4;color:#8a4800;}
+.sg-upcoming{background:#f5f3ef;color:#7a7268;}
+.sg-notmet{background:#fde8e5;color:#b52a1c;}
+.sg-bar{height:3px;border-radius:2px;margin-top:10px;}
+
+.clo-thresh-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.clo-tc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;border-top:4px solid;}
+.clo-tc-num{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;margin-bottom:3px;}
+.clo-tc-desc{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.thresh-track{display:flex;gap:3px;margin-bottom:8px;align-items:center;}
+.thresh-seg{flex:1;height:8px;border-radius:3px;position:relative;transition:opacity .2s;}
+.thresh-seg.filled{opacity:1;}
+.thresh-seg.empty{opacity:.2;}
+.thresh-markers{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;margin-bottom:4px;}
+.thresh-current{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-block;margin-bottom:2px;}
+.thresh-evidence{font-size:10px;color:var(--muted);margin-top:2px;}
+
+.gov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:24px;}
+.gov-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.gov-card h4{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;font-family:'IBM Plex Mono',monospace;}
+.gov-val{font-family:'Libre Baskerville',serif;font-size:26px;font-weight:700;color:var(--accent);}
+.gov-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.clo-coverage-table{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px;}
+.cov-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);gap:10px;}
+.cov-row:last-child{border-bottom:none;}
+.cov-row:hover{background:var(--bg);}
+.cov-clo-num{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;min-width:48px;}
+.cov-clo-desc{flex:1;font-size:12px;color:var(--muted);}
+.cov-bar{width:120px;height:8px;background:var(--border);border-radius:4px;overflow:hidden;flex-shrink:0;}
+.cov-fill{height:100%;border-radius:4px;}
+.cov-pct{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;min-width:38px;text-align:right;}
+.cov-count{font-size:11px;color:var(--muted);min-width:70px;text-align:right;}
+.divider{height:1px;background:var(--border);margin:20px 0;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="hdr-left">
+      <div class="badge-code">4428CS01 · AQF Level 7 · 2026</div>
+      <h1>Bachelor of Health and Medical Science</h1>
+      <div class="sub">Course Assurance Dashboard — Academic Governance View</div>
+    </div>
+    <div class="hdr-stats">
+      <div class="stat"><div class="n">192</div><div class="l">Credit Points</div></div>
+      <div class="stat"><div class="n">9</div><div class="l">Course LOs</div></div>
+      <div class="stat"><div class="n">48</div><div class="l">Subjects</div></div>
+      <div class="stat"><div class="n">30</div><div class="l">Assessed</div></div>
+    </div>
+  </div>
+  <div class="cp-bar-wrap">
+    <div class="cp-bar-label">AQF 192 Credit Point Structure</div>
+    <div class="cp-bar">
+      <div class="cp-seg seg-core" style="width:33.3%" title="Core: 64 cp">CORE 64cp</div>
+      <div class="cp-seg seg-comp" style="width:8.3%" title="Compulsory: 16 cp">16cp</div>
+      <div class="cp-seg seg-elec" style="width:54.2%" title="Restricted Electives: 104 cp">RESTRICTED ELECTIVES 104cp</div>
+      <div class="cp-seg seg-unr" style="width:4.2%" title="Unrestricted: 8 cp">8cp</div>
+    </div>
+    <div class="cp-legend">
+      <span class="cp-leg-item"><span class="cp-dot" style="background:#4a90d9"></span>Core — 8 mandatory subjects (64 cp)</span>
+      <span class="cp-leg-item"><span class="cp-dot" style="background:#56b08e"></span>Compulsory Foundational — 1 set of 2 subjects (16 cp)</span>
+      <span class="cp-leg-item"><span class="cp-dot" style="background:#e0954a"></span>Restricted Electives — choose 13 subjects from pool of 38 (104 cp)</span>
+      <span class="cp-leg-item"><span class="cp-dot" style="background:#9a7ecb"></span>Unrestricted Elective — any 1 subject (8 cp)</span>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="tab active" onclick="switchTab('structure')">Course Structure</button>
+  <button class="tab" onclick="switchTab('mapping')">CLO Mapping</button>
+  <button class="tab" onclick="switchTab('student')">Student Progress</button>
+  <button class="tab" onclick="switchTab('governance')">Governance Overview</button>
+  <button class="tab" onclick="switchTab('guide')" style="margin-left:auto;color:var(--accent2);border-bottom-color:transparent">? How to use this dashboard</button>
+</div>
+
+<div class="main">
+
+<!-- STRUCTURE -->
+<div class="panel active" id="panel-structure">
+  <div class="notice notice-blue"><strong>AQF Level 7 — 192 Credit Points.</strong> Students complete all 8 Core subjects (64 cp) + one Compulsory Foundational set (16 cp) + Restricted Electives totalling 104 cp (13 subjects, noting PHM233 = 16 cp) + 1 Unrestricted Elective (8 cp) = <strong>192 cp total</strong>.</div>
+
+  <div class="structure-section">
+    <div class="sec-hdr"><h2>Core Subjects</h2><span class="cp-pill pill-core">64 cp · All 8 mandatory</span></div>
+    <div class="structure-inner" id="core-subjects"></div>
+  </div>
+
+  <div class="structure-section">
+    <div class="sec-hdr"><h2>Compulsory Foundational Subjects</h2><span class="cp-pill pill-comp">16 cp · Choose ONE set</span></div>
+    <div class="notice notice-amber"><strong>Students choose ONE of Set A, B or C</strong> — completing both subjects in their chosen set (2 × 8 cp = 16 cp).</div>
+    <div class="set-tabs">
+      <button class="set-tab active" onclick="switchSet('A')">Set A — Science &amp; Case Study</button>
+      <button class="set-tab" onclick="switchSet('B')">Set B — Society &amp; Communication</button>
+      <button class="set-tab" onclick="switchSet('C')">Set C — Case Study &amp; Nutrition</button>
+    </div>
+    <div class="set-panel active" id="set-A"><div class="structure-inner" id="comp-A"></div></div>
+    <div class="set-panel" id="set-B"><div class="structure-inner" id="comp-B"></div></div>
+    <div class="set-panel" id="set-C"><div class="structure-inner" id="comp-C"></div></div>
+  </div>
+
+  <div class="structure-section">
+    <div class="sec-hdr"><h2>Restricted Electives</h2><span class="cp-pill pill-elec">104 cp needed · 13 subjects from pool of 38</span></div>
+    <div class="notice notice-amber"><strong>Students select subjects totalling 104 credit points</strong> from the approved pool. PHM233 (Pharmaceutics) carries <strong>16 cp</strong> and counts as two subject slots. All other subjects are 8 cp.</div>
+    <div class="filter-row">
+      <span class="filter-lbl">Filter by prefix:</span>
+      <div id="elec-filters" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      <input class="search-box" id="elec-search" placeholder="Search subjects…" oninput="filterElectives()">
+    </div>
+    <div class="structure-inner" id="elective-subjects"></div>
+  </div>
+
+  <div class="structure-section">
+    <div class="sec-hdr"><h2>Unrestricted Elective</h2><span class="cp-pill pill-unr">8 cp · Any approved subject</span></div>
+    <div class="structure-inner">
+      <div class="subj-row-head" style="cursor:default">
+        <span class="subj-code">XUN008</span>
+        <span class="subj-title-text">Unrestricted Elective — any approved subject from the university catalogue</span>
+        <span class="role-chip chip-elective">Elective</span>
+        <span class="subj-cp">8 cp</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAPPING -->
+<div class="panel" id="panel-mapping">
+  <div class="notice notice-blue"><strong>CLO–SLO–Assessment Mapping.</strong> Alignments are auto-computed by matching keywords between CLO and SLO descriptions. Click a CLO to filter the table. Use this view to identify coverage gaps and confirm alignment with subject coordinators.</div>
+  <div class="align-instructions">
+    <h3>Course Learning Outcomes — click to filter</h3>
+    <div class="align-grid" id="clo-chips"></div>
+  </div>
+  <div class="filter-row">
+    <span class="filter-lbl">Role:</span>
+    <button class="fchip active" onclick="setMapFilter('all',this)">All</button>
+    <button class="fchip" onclick="setMapFilter('Core',this)">Core</button>
+    <button class="fchip" onclick="setMapFilter('Compulsory',this)">Compulsory</button>
+    <button class="fchip" onclick="setMapFilter('Elective',this)">Elective</button>
+    <input class="search-box" id="map-search" placeholder="Search subjects…" oninput="renderMappingTable()">
+  </div>
+  <div class="matrix-wrap">
+    <table class="mtable"><thead id="map-thead"></thead><tbody id="map-tbody"></tbody></table>
+  </div>
+</div>
+
+<!-- STUDENT -->
+<div class="panel" id="panel-student">
+  <div class="notice notice-amber"><strong>Prototype — simulated student data.</strong> In production this connects to your student records system. Threshold level is derived from subject level code (1xx = Foundational, 2xx = Developing, 3xx = Integrated, 4xx = Mastered) combined with assessment completion evidence.</div>
+
+  <div class="student-bar">
+    <label>Student:</label>
+    <select id="student-select" onchange="renderStudentView()">
+      <option value="0">Sarah Johnson (ID: 220034) — Level 100 stage</option>
+      <option value="1">Marcus Chen (ID: 220187) — Level 200 stage</option>
+      <option value="2">Amara Osei (ID: 221045) — Level 300 stage</option>
+    </select>
+    <span class="prog-note" id="student-cp-note"></span>
+  </div>
+
+  <!-- Threshold legend -->
+  <div class="thresh-legend">
+    <span style="font-size:11px;font-weight:600;color:var(--muted);align-self:center">Developmental thresholds:</span>
+    <span class="thresh-pip t-found">● Foundational</span>
+    <span class="thresh-pip t-dev">● Developing</span>
+    <span class="thresh-pip t-int">● Integrated</span>
+    <span class="thresh-pip t-mast">● Mastered</span>
+    <span class="thresh-pip t-not">○ Not yet evidenced</span>
+  </div>
+
+  <!-- CP progress -->
+  <div class="cp-progress-strip">
+    <div class="mini-hdr">Credit Point Progress toward 192 cp (AQF Level 7)</div>
+    <div class="cp-prog-inner">
+      <div class="cp-prog-bar"><div class="cp-prog-fill" id="cp-prog-fill" style="width:0%"></div></div>
+      <div class="cp-prog-text" id="cp-prog-text"></div>
+    </div>
+  </div>
+
+  <!-- Stage gates -->
+  <div class="mini-hdr" style="margin-bottom:10px">Stage Boundaries — Course-Level Assessment Checkpoints</div>
+  <div class="stage-gates" id="stage-gates"></div>
+
+  <!-- CLO attainment cards with threshold track -->
+  <div class="mini-hdr" style="margin-bottom:10px">CLO Attainment — Developmental Threshold per Course Learning Outcome</div>
+  <div class="clo-thresh-grid" id="clo-progress"></div>
+
+  <!-- Remediation panel -->
+  <div id="remediation-panel" style="display:none;margin-bottom:24px">
+    <div style="background:var(--surface);border:1px solid #f5c97a;border-radius:8px;overflow:hidden;">
+      <div style="background:#fff0d4;border-bottom:1px solid #f5c97a;padding:12px 16px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">⚠</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--amber)">CLO Attainment Alert — Action Required</div>
+          <div style="font-size:12px;color:var(--amber);opacity:.8" id="remediation-summary"></div>
+        </div>
+      </div>
+      <div id="remediation-items" style="padding:14px 16px"></div>
+    </div>
+  </div>
+
+  <!-- Submissions -->
+  <div class="submitted-section">
+    <h3>Assessment Submissions &amp; CLO Alignment</h3>
+    <div id="submitted-list"></div>
+  </div>
+</div>
+
+<!-- GOVERNANCE -->
+<div class="panel" id="panel-governance">
+  <div class="notice notice-blue"><strong>Governance Overview.</strong> Course-level assurance metrics for Academic Board and quality committee review. Confirm CLO mappings with subject coordinators before accreditation submissions.</div>
+  <div class="gov-grid" id="gov-cards"></div>
+  <div class="mini-hdr" style="margin-bottom:10px">CLO Coverage — subjects aligned per CLO (auto-mapped)</div>
+  <div class="clo-coverage-table" id="clo-coverage"></div>
+  <div class="divider"></div>
+  <div class="mini-hdr" style="margin-bottom:10px">Threshold Coverage by Stage — Subjects aligned per threshold level</div>
+  <div id="thresh-coverage" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px;"></div>
+  <div class="divider"></div>
+  <div class="mini-hdr" style="margin-bottom:10px">Assessment Count by Subject Role</div>
+  <div id="assess-dist" style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;"></div>
+</div>
+
+</div>
+<!-- GUIDE -->
+<div class="panel" id="panel-guide">
+<div style="max-width:860px">
+
+  <div style="background:var(--accent);color:#fff;border-radius:10px;padding:28px 32px;margin-bottom:28px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.65;margin-bottom:8px">Reading guide</div>
+    <h2 style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;margin-bottom:10px">Understanding this Dashboard</h2>
+    <p style="font-size:13px;line-height:1.7;opacity:.85">This dashboard is a prototype governance tool for <strong>course-level assessment</strong> — sometimes called programmatic assessment internationally. It maps Course Learning Outcomes (CLOs) through Subject Learning Outcomes (SLOs) to individual assessments, and tracks how a student's evidence accumulates across a degree toward four developmental thresholds. It is designed for use by academic staff, course teams, and School Assessment Committees.</p>
+  </div>
+
+  <!-- Key concepts -->
+  <div style="margin-bottom:28px">
+    <div class="mini-hdr" style="margin-bottom:14px">Key concepts</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid var(--accent)">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">Course Learning Outcome (CLO)</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">The defined knowledge, skills, and capabilities a student must demonstrate to be awarded the degree. CLOs are set at course level, aligned with AQF Level 7 requirements, and do not change when individual subjects are updated. This course has <strong style="color:var(--text)">9 CLOs</strong>.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid #4caf7d">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">Subject Learning Outcome (SLO)</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">The specific capabilities assessed within a single subject. SLOs are the building blocks — a student demonstrating an SLO provides <em>evidence</em> toward one or more CLOs. The chain is: Assessment → SLO → CLO.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid #e0954a">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">Developmental Thresholds</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">A shared language for how capability grows across a degree. There are four levels:</p>
+        <div style="margin-top:8px;display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;gap:8px;align-items:center"><span class="thresh-pip t-found" style="flex-shrink:0">Foundational</span><span style="font-size:11px;color:var(--muted)">Introduced — Level 100 subjects</span></div>
+          <div style="display:flex;gap:8px;align-items:center"><span class="thresh-pip t-dev" style="flex-shrink:0">Developing</span><span style="font-size:11px;color:var(--muted)">Building — Level 200 subjects</span></div>
+          <div style="display:flex;gap:8px;align-items:center"><span class="thresh-pip t-int" style="flex-shrink:0">Integrated</span><span style="font-size:11px;color:var(--muted)">Applying across contexts — Level 300</span></div>
+          <div style="display:flex;gap:8px;align-items:center"><span class="thresh-pip t-mast" style="flex-shrink:0">Mastered</span><span style="font-size:11px;color:var(--muted)">Confirmed at capstone / graduation</span></div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid #9a7ecb">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">Stage Boundaries</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">Formal checkpoints where CLO attainment is reviewed before a student progresses. Boundaries are triggered by academic level transition — not calendar year — so they work equitably for part-time and non-linear study patterns. At each boundary, <em>all 9 CLOs</em> must reach the required threshold.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid #4a90d9">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">192 Credit Point Structure</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">This AQF Level 7 degree is <strong style="color:var(--text)">192 credit points</strong>. Not all subjects are equal — students complete all Core subjects, choose one Compulsory Foundational set, then select Restricted Electives to reach 104 cp. This means different students may have different CLO coverage depending on which electives they choose.</p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:4px solid var(--accent2)">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">CLO Mapping — how it works</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.6">In this prototype, CLO→SLO alignment is <strong style="color:var(--text)">auto-computed</strong> by matching keywords between CLO descriptions and SLO text. A subject is considered to address a CLO if two or more keywords match. In production, these mappings should be <strong style="color:var(--text)">confirmed by subject coordinators</strong> and ratified through course governance.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tab guide -->
+  <div style="margin-bottom:28px">
+    <div class="mini-hdr" style="margin-bottom:14px">What each tab shows</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--surface2);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent)">Tab 1</span>
+          <span style="font-size:13px;font-weight:600">Course Structure</span>
+        </div>
+        <div style="padding:14px 16px">
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px">A complete, navigable view of the degree. Subjects are organised by their structural role — Core (mandatory), Compulsory Foundational (choose one set), Restricted Electives (pool of 38, student selects 104 cp worth), and Unrestricted Elective.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6"><strong style="color:var(--text)">How to use it:</strong> Click any subject row to expand it and see all its SLOs and assessments. Use the prefix filters in the Restricted Electives section to browse by discipline area. Each expanded subject also shows which CLOs it aligns to as coloured tags.</p>
+          <div style="background:var(--blue-bg);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:#1a3a6e"><strong>Governance use:</strong> Confirm that all subjects have SLOs and assessments recorded. Subjects showing "No assessments in system" cannot contribute threshold evidence and should be prioritised for data completion.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--surface2);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent)">Tab 2</span>
+          <span style="font-size:13px;font-weight:600">CLO Mapping</span>
+        </div>
+        <div style="padding:14px 16px">
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px">A matrix showing which subjects provide evidence toward each of the 9 CLOs. Each row is a subject; each CLO column shows a filled circle (✓) if the subject aligns to it, or an empty circle if not.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6"><strong style="color:var(--text)">How to use it:</strong> Click a CLO card at the top to filter the table to only subjects aligned to that CLO. Use the Role filter (Core / Compulsory / Elective) to check whether CLO coverage is reliant on elective choices students may not make. Look for CLOs with sparse columns — these may be under-served by the current course design.</p>
+          <div style="background:var(--amber-bg);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--amber)"><strong>Important:</strong> Mappings in this prototype are auto-generated and must be verified by subject coordinators before use in formal governance decisions or accreditation submissions.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--surface2);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent)">Tab 3</span>
+          <span style="font-size:13px;font-weight:600">Student Progress</span>
+        </div>
+        <div style="padding:14px 16px">
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px">A longitudinal view of an individual student's CLO attainment. Shows credit point progress, four stage boundary checkpoints, a threshold track for each of the 9 CLOs, and a full submission history with CLO tags and threshold levels.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6"><strong style="color:var(--text)">How to use it:</strong> Select a student from the dropdown. Read the stage boundary indicators first — these tell you whether the student is confirmed, in progress, or has evidence gaps at each checkpoint. Then examine the CLO threshold cards: the four coloured segments represent Foundational, Developing, Integrated, Mastered from left to right. Filled segments indicate accumulated evidence at that level.</p>
+          <div style="background:var(--red-bg);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--red)"><strong>Remediation alerts:</strong> An amber alert panel appears when a student is behind threshold for their current stage. It lists subjects in progress (complete remaining assessments) and available subjects not yet undertaken (enrolment conversation). A red course design gap flag means the gap is a curriculum issue, not a student issue.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+        <div style="background:var(--surface2);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent)">Tab 4</span>
+          <span style="font-size:13px;font-weight:600">Governance Overview</span>
+        </div>
+        <div style="padding:14px 16px">
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:8px">A course-level summary intended for Academic Board, School Assessment Committee, and accreditation reporting. Shows key metrics, CLO coverage across the subject pool, threshold distribution by stage, and assessment counts by subject role.</p>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6"><strong style="color:var(--text)">How to use it:</strong> The CLO coverage table shows what proportion of subjects address each CLO — thin bars signal potential risk. The threshold coverage matrix shows whether each CLO has subjects at each developmental level. Empty cells in the Integrated or Mastered columns are the most significant governance concern, as they mean students cannot accumulate evidence at that level for that CLO regardless of effort.</p>
+          <div style="background:var(--blue-bg);border-radius:6px;padding:8px 12px;margin-top:8px;font-size:12px;color:#1a3a6e"><strong>Governance use:</strong> Use this view as the basis for the Course Assurance Plan review at School Assessment Committee stage boundaries and Comprehensive Course Review cycles.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- What this is NOT -->
+  <div style="margin-bottom:28px">
+    <div class="mini-hdr" style="margin-bottom:14px">What this dashboard does not do</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Replace academic judgement</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Threshold attainment is evidence-informed, not automatically determined. Academic staff confirm all progression decisions.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Assign grades</div><div style="font-size:11px;color:var(--muted);line-height:1.5">The dashboard tracks evidence accumulation, not marks. GPA and award rules are entirely unchanged.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Guarantee accreditation</div><div style="font-size:11px;color:var(--muted);line-height:1.5">It provides the evidentiary record. The judgement about whether accreditation standards are met is made by academic staff and committees.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Replace the student record system</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Student data in this prototype is simulated. Production deployment requires integration with enrolment and assessment systems.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Confirm CLO mappings</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Auto-generated mappings are a starting point only. Subject coordinators must verify them through course governance before use.</div></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:6px">
+          <span style="color:var(--red);font-size:14px;flex-shrink:0;margin-top:1px">✗</span>
+          <div><div style="font-size:12px;font-weight:600;margin-bottom:2px">Apply equally to all elective combinations</div><div style="font-size:11px;color:var(--muted);line-height:1.5">Because students choose different restricted electives, CLO coverage varies between students. The dashboard shows individual profiles, not a single universal course map.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regulatory context -->
+  <div style="margin-bottom:28px">
+    <div class="mini-hdr" style="margin-bottom:14px">Regulatory and policy context</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div style="padding:10px;background:var(--blue-bg);border-radius:6px">
+        <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;font-family:'IBM Plex Mono',monospace">HESF 2021</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Higher Education Standards Framework. Domains 1, 3 and 5 require formal confirmation of staged CLO attainment. This dashboard provides the evidentiary infrastructure to support that requirement.</div>
+      </div>
+      <div style="padding:10px;background:var(--amber-bg);border-radius:6px">
+        <div style="font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px;font-family:'IBM Plex Mono',monospace">TEQSA</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">TEQSA guidance on generative AI emphasises coherent course-level assessment with triangulated longitudinal evidence. Detection-based responses to AI alone are insufficient — this model is the substantive response.</div>
+      </div>
+      <div style="padding:10px;background:var(--green-bg);border-radius:6px">
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px;font-family:'IBM Plex Mono',monospace">AQF Level 7</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Bachelor degree — 192 credit points. The four developmental thresholds align with AQF descriptors for breadth and depth of knowledge, cognitive skills, and personal and professional skills at Level 7.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Glossary -->
+  <div style="margin-bottom:28px">
+    <div class="mini-hdr" style="margin-bottom:14px">Glossary</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fdfcfb"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">CLO</span><span style="font-size:12px;color:var(--muted);line-height:1.6">Course Learning Outcome — the capability a student must demonstrate to be awarded the degree. Set at course level, aligned to AQF.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">SLO</span><span style="font-size:12px;color:var(--muted);line-height:1.6">Subject Learning Outcome — the specific capability assessed within one subject. Multiple SLOs contribute evidence toward CLOs.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fdfcfb"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Course Assurance Plan</span><span style="font-size:12px;color:var(--muted);line-height:1.6">A whole-of-course blueprint identifying where each CLO is introduced, developed, integrated and confirmed across stages. This dashboard is its operational expression.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Developmental threshold</span><span style="font-size:12px;color:var(--muted);line-height:1.6">One of four levels — Foundational, Developing, Integrated, Mastered — describing how capability grows across the degree.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fdfcfb"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Stage boundary</span><span style="font-size:12px;color:var(--muted);line-height:1.6">A formal checkpoint triggered by level transition (100→200, 200→300, 300→capstone) at which all CLOs are reviewed against the expected threshold.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Triangulated evidence</span><span style="font-size:12px;color:var(--muted);line-height:1.6">Evidence drawn from multiple assessments, contexts and assessors. Progression decisions should be based on patterns of evidence, not single tasks.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fdfcfb"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Remediation pathway</span><span style="font-size:12px;color:var(--muted);line-height:1.6">A structured opportunity for a student to provide additional evidence toward a CLO where threshold has not been met — without repeating an entire subject.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border)"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Course design gap</span><span style="font-size:12px;color:var(--muted);line-height:1.6">A finding where no assessed subjects are mapped to a CLO at a required threshold level. Requires course team action — not a student issue.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px;border-bottom:1px solid var(--border);background:#fdfcfb"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">CDAP</span><span style="font-size:12px;color:var(--muted);line-height:1.6">Curriculum Design and Assurance Platform — the system from which the subject, SLO and assessment data in this dashboard is derived.</span></div>
+      <div style="display:flex;gap:14px;padding:10px 16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:180px;flex-shrink:0">Programmatic assessment</span><span style="font-size:12px;color:var(--muted);line-height:1.6">The international term for longitudinal, systems-based assessment design. At CSU referred to as course-level assessment to reflect local curriculum architecture.</span></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+
+<script>
+const CLO_COLORS=['#1b3d6e','#256949','#b83c1a','#6a2d8e','#8a4800','#1a5c4a','#8b2252','#2a5a8c','#5a4020'];
+const CLO_LIGHT=['#dce8f7','#d4edda','#fde8e5','#ede9fe','#fff0d4','#d0ece5','#fde0ec','#d6e8f7','#ece5d8'];
+
+const CLOS=[
+  {id:'CLO1',number:1,description:'Demonstrate a sound knowledge and understanding of foundational and biomedical sciences in the context of health care and research.'},
+  {id:'CLO2',number:2,description:'Integrate knowledge between different subjects and discipline areas studied including global citizenship and understandings of sustainable practices in health.'},
+  {id:'CLO3',number:3,description:'Demonstrate critical thinking by the ability to critique professional practice and knowledge.'},
+  {id:'CLO4',number:4,description:'Discuss the processes involved in health breakdown and development of disease.'},
+  {id:'CLO5',number:5,description:'Demonstrate understanding of multidisciplinary, transdisciplinary and preventative health care.'},
+  {id:'CLO6',number:6,description:'Demonstrate an understanding of factors influencing First Nations peoples health as well as aspects of rurality that impact on health.'},
+  {id:'CLO7',number:7,description:'Demonstrate effective digital literacy and communication to support inclusive, ethical, culturally sensitive, interaction with a range of individuals.'},
+  {id:'CLO8',number:8,description:'Demonstrate knowledge of research methods as they apply to evidence based practice and ethical scientific research.'},
+  {id:'CLO9',number:9,description:'Demonstrate capacity for research interpretation, problem solving and reasoning skills.'}
+];
+
+const CLO_KW={
+  1:['biomedical','anatomy','physiol','biochem','molecular','pharmacol','pathophysiol','microbiol','immunol','genetics','nutriti','science','foundational','structure','function','organism','cell','tissue','disease','clinical'],
+  2:['integrat','interdisciplin','multidisciplin','global','sustainab','society','social','across','diverse','broad','ecology','system'],
+  3:['critical','critique','analys','evaluat','problem','reflect','compare','challenge','argue','assess','evidence','apprais'],
+  4:['disease','pathogen','pathophysiol','disorder','breakdown','dysfunction','infection','illness','injury','cancer','pathol','chronic','clinical','breakdown','manifestat'],
+  5:['multidisciplin','transdisciplin','preventat','prevent','health care','community','public health','wellness','wellbeing','promot','collaborat','interprofess'],
+  6:['indigenous','first nations','aboriginal','rural','rurality','cultural','decolon','standpoint','equity','inequit','first.nations','reconcili'],
+  7:['communicat','digital','literacy','language','ethical','inclusive','culturally','sensitiv','professional','oral','written','present','interpersonal'],
+  8:['research','evidence','method','scientific','literature','data','statistic','review','inquiry','ethics','scholarly','systematic'],
+  9:['reasoning','problem.solv','interpretation','interpret','synthes','evaluat','complex','analys','logic','critical.think']
+};
+
+function getSubjectCLOs(s){
+  const txt=(s.slos.map(x=>x.description).join(' ')+' '+s.title).toLowerCase();
+  return Object.entries(CLO_KW).filter(([n,kws])=>kws.filter(k=>new RegExp(k,'i').test(txt)).length>=2).map(([n])=>parseInt(n));
+}
+
+// SUBJECTS
+const CORE=[
+  {code:'BMS181',title:'Human Anatomy and Physiology 1',credits:8,role:'Core',slos:[{number:1,description:'communicate anatomical and physiological concepts using discipline specific terminology and illustrations'},{number:2,description:'describe common disease-causing microorganisms, their classification, and how infection is transmitted and may be controlled'},{number:3,description:'describe the structure and function of biological molecules, cells, and tissues'},{number:4,description:'identify and describe structures and features of the integumentary systems and explain their function'},{number:5,description:'identify, and describe the principal structures and features of the nervous system, its sub-divisions and neurophysiological processes'},{number:6,description:'identify and describe the principal structures and functions of the musculo-skeletal system, muscle contraction and movement'}],assessments:[{number:1,name:'Online Tests (Topics 1, 2 & 3)',weight:15},{number:2,name:'Online Tests (Topics 4, 5, 6, 7 & 8)',weight:50},{number:3,name:'Physiology Presentation',weight:35}]},
+  {code:'BMS182',title:'Human Anatomy and Physiology 2',credits:8,role:'Core',slos:[{number:1,description:'describe the principal structural features and normal functioning of the endocrine, cardiovascular, immune, lymphatic, respiratory, urinary, digestive and reproductive systems'},{number:2,description:'apply foundational knowledge of body systems to discipline-specific contexts'},{number:3,description:'explain how the interaction of these body systems maintains homeostasis'},{number:4,description:'explain the anatomical and functional relationships between nutrition, metabolism and temperature regulation'},{number:5,description:'discuss the relationship between genes and inheritance'}],assessments:[{number:1,name:'Early Assessment - Topic 1',weight:10},{number:2,name:'Mid Session Timed Test - Topics 2 to 5',weight:40},{number:3,name:'END of SESSION Timed EXAM - Topics 6 to 13',weight:50}]},
+  {code:'BMS263',title:'Foundational Pharmacology and Pathophysiology for Allied Health',credits:8,role:'Core',slos:[{number:1,description:'appropriately apply the professional language associated with medical and pharmacological practice'},{number:2,description:'explain the mechanism of action and properties of pharmacological agents used for treatment of cardiac, respiratory, renal, endocrine and inflammatory pathology'},{number:3,description:'analyse the implications of polypharmacy, drug-drug and drug-disease interactions'},{number:4,description:'apply foundational knowledge of pathology and pharmacology to explain the clinical management of chronic disease'}],assessments:[{number:1,name:'Online tests',weight:60},{number:2,name:'A/V Presentation',weight:40}]},
+  {code:'BMS291',title:'Pathophysiology and Pharmacology 1',credits:8,role:'Core',slos:[{number:1,description:'define common pathophysiological and pharmacological terms'},{number:2,description:'describe characteristics and origin of different types of cellular injury'},{number:3,description:'demonstrate an understanding of cellular adaptation to injury'},{number:4,description:'identify the interaction and relative contribution genetic and environmental factors have on health breakdown'},{number:5,description:'describe the characteristics of cancerous cells'},{number:6,description:'describe the four pharmacokinetic processes'},{number:7,description:'outline key pharmacodynamic principles'},{number:8,description:'describe the involvement of microorganisms in disease'},{number:9,description:'describe consequences of alterations in fluids, electrolytes and acid-base balance'},{number:10,description:'outline the major haematological pathologies and malignancies'},{number:11,description:'describe the pathogenesis of major cardiovascular system dysfunction'},{number:12,description:'describe the pathogenesis of common respiratory dysfunctions'}],assessments:[]},
+  {code:'BMS301',title:'Medical Science Special Topic',credits:8,role:'Core',slos:[{number:1,description:'appreciate the organisation and structure of the scientific literature'},{number:2,description:'apply knowledge of medical science information sources to literature searching'},{number:3,description:'collect, collate and critically review information on a specific topic'},{number:4,description:'apply scientific conventions in oral seminar, scientific poster and written report'},{number:5,description:'describe in depth a specific area of medical science through the literature review'}],assessments:[]},
+  {code:'HLT417',title:'Indigenous Perspectives on Health and Wellbeing',credits:8,role:'Core',slos:[{number:1,description:'apply Standpoint Theory to reflexively examine social, cultural, historical, and institutional forces that impact health professional practice'},{number:2,description:'analyse evolving understandings of Indigenous and non-Indigenous Australian cultures, histories and contemporary health service delivery'},{number:3,description:'examine core principles of culturally responsive health partnerships'},{number:4,description:'apply a decolonising framework to collection, use, and interpretation of data'},{number:5,description:'explain a decolonising approach to decision-making for innovative health services for Indigenous Australian communities'},{number:6,description:'identify opportunities to enhance health outcomes for Indigenous Australian peoples'},{number:7,description:'design strategies for continued personal and professional learning in cultural capabilities'}],assessments:[{number:1,name:'Standpoint Statement',weight:20},{number:2,name:'Professional Presentation',weight:35},{number:3,name:'Decolonising Framework',weight:45}]},
+  {code:'IKC100',title:'Indigenous Australian Health',credits:8,role:'Core',slos:[{number:1,description:'describe, analyse and theorise individual and collective standpoint in relation to Indigenous and non-Indigenous peoples historical health experiences'},{number:2,description:'investigate, compare and reflect on health practices and social determinants of health for Indigenous Australians'},{number:3,description:'critically reflect on historical and socio-economic factors framing Indigenous Australian peoples health'},{number:4,description:'critically examine how racial science influences historical and contemporary health institutions'},{number:5,description:'demonstrate understanding of Indigenous Australian perspectives on health and wellbeing'},{number:6,description:'relate and map knowledge to demonstrate ethical practice and respectful partnerships with Indigenous Australian communities'}],assessments:[{number:1,name:'Reflections',weight:20},{number:2,name:'Information Package',weight:50},{number:3,name:'Personal Learning Objective',weight:30}]},
+  {code:'PSY214',title:'Health Psychology',credits:8,role:'Core',slos:[{number:1,description:'outline and compare major models of health and illness'},{number:2,description:'identify the influence of personality and social factors on health'},{number:3,description:'define the concept of stress, and discuss physiological and psychological reactions to stress'},{number:4,description:'critically evaluate psychological factors associated with certain risk behaviours'},{number:5,description:'evaluate psychological approaches to changing risk behaviours and outline methods of health promotion'},{number:6,description:'analyse reactions to illness, disability, pain and medical treatment'}],assessments:[]}
+];
+
+const COMP_SETS={
+  'Set A':[
+    {code:'BMS105',title:'Science Communication and Methodology',credits:8,role:'Compulsory',slos:[{number:1,description:'Express and apply communication skills appropriate for health and medical science'},{number:2,description:'Demonstrate information, digital and academic literacy and numeracy skills'},{number:3,description:'Describe and apply the scientific method as it applies to the featured disciplines'},{number:4,description:'Critically analyse a scientific paper'},{number:5,description:'Demonstrate knowledge of professional and ethical issues related to health and medical science, including research'}],assessments:[]},
+    {code:'BMS142',title:'Introduction to Case Based Study',credits:8,role:'Compulsory',slos:[{number:1,description:'reflect on their own communication strengths and weaknesses to inform self-directed learning'},{number:2,description:'communicate using the language and conventions of healthcare professionals'},{number:3,description:'identify the factors associated with the social determinants of health'},{number:4,description:'discuss the ethical implications of diagnostic processes and diagnostic determinism'},{number:5,description:'discuss aspects of multidisciplinary, interdisciplinary and preventative healthcare in rural and regional contexts'}],assessments:[]}
+  ],
+  'Set B':[
+    {code:'HIP101',title:'Introduction to Australian Society and Health',credits:8,role:'Compulsory',slos:[{number:1,description:'demonstrate academic literacy skills, identify credible sources of information and express ideas using clear written English'},{number:2,description:'self-reflect and explore assumptions, bias and stereotypes about culture and diversity in Australian society'},{number:3,description:'identify holistic concepts, theories and models of health and wellbeing in relation to health service delivery in Australia'},{number:4,description:'discuss socio-cultural factors in health industries which influence engagement of people with diverse needs'},{number:5,description:'identify foundational principles of professional collaboration and communication'}],assessments:[{number:1,name:'Academic Integrity module: BKSB',weight:0},{number:2,name:'Professional Practice quiz: Library and Academic Skills',weight:10},{number:3,name:'Essay',weight:45},{number:4,name:'Diversity statement',weight:45}]},
+    {code:'OCC103',title:'Communication for Health Practice',credits:8,role:'Compulsory',slos:[{number:1,description:'demonstrate appropriate communication skills and professional behaviour for health, community, social and education practice contexts'},{number:2,description:'describe and demonstrate a range of verbal and non-verbal communication skills relevant to practice'},{number:3,description:'describe the link between effective communication and health and wellbeing outcomes'},{number:4,description:'identify areas for development in communication skills and develop strategies to improve'},{number:5,description:'identify and implement techniques for communicating with a broad range of people with focus on respectful communication with Indigenous Australian people'},{number:6,description:'identify strategies for communicating with people who use alternative forms of communication'},{number:7,description:'explain strategies for effectively working with interpreters'}],assessments:[]}
+  ],
+  'Set C':[
+    {code:'BMS142',title:'Introduction to Case Based Study',credits:8,role:'Compulsory',slos:[{number:1,description:'reflect on their own communication strengths and weaknesses to inform self-directed learning'},{number:2,description:'communicate using the language and conventions of healthcare professionals'},{number:3,description:'identify the factors associated with the social determinants of health'},{number:4,description:'discuss the ethical implications of diagnostic processes'},{number:5,description:'discuss aspects of multidisciplinary, interdisciplinary and preventative healthcare in rural and regional contexts'}],assessments:[]},
+    {code:'FDS102',title:'Introduction to Food and Nutrition',credits:8,role:'Compulsory',slos:[{number:1,description:'apply communications skills appropriate for food and nutrition scientists'},{number:2,description:'describe the use of research methods, including the scientific method, to inform food and nutrition practice'},{number:3,description:'describe the major nutrients and non-nutrients present in common foods'},{number:4,description:'outline the contribution of major and minor nutrients to human health and identify how nutrition requirements change across the life span'},{number:5,description:'explain the importance of food safety and describe procedures for the safe handling of food'},{number:6,description:'describe typical production and processing operations underpinning the provision of common food products'},{number:7,description:'discuss the characteristics of the modern food system, including the concept of food security'}],assessments:[{number:1,name:'Topic tests (including numeracy and literacy)',weight:20},{number:2,name:'Food and Nutrition Report',weight:35},{number:3,name:'End of session exam',weight:45}]}
+  ]
+};
+
+const ELECTIVES=[
+  {code:'BCM210',title:'Foundations and Techniques in Biochemistry',credits:8,role:'Elective',slos:[{number:1,description:'describe the structure and function of the four major classes of biological macromolecules'},{number:2,description:'describe the properties of enzymes as biological catalysts'},{number:3,description:'describe the role of energy in living cells'},{number:4,description:'describe the major metabolic pathways used to synthesise and consume ATP'},{number:5,description:'perform basic techniques in biochemistry'},{number:6,description:'describe common techniques used in the study of biochemistry'}],assessments:[]},
+  {code:'BCM266',title:'Foundations of Biochemistry and Human Molecular Genetics',credits:8,role:'Elective',slos:[{number:1,description:'describe the structure and function of the major classes of biological macromolecules'},{number:2,description:'explain how cells store and provide energy for enzymatic processes'},{number:3,description:'describe DNA and chromatin structure'},{number:4,description:'outline the processes of DNA replication, transcription, translation, mutation, repair and heredity'},{number:5,description:'explain how genetic variation occurs and contributes to human disease'},{number:6,description:'discuss how DNA technology can direct diagnosis and treatment of human disease'}],assessments:[{number:1,name:'Online test',weight:10},{number:2,name:'Mid-session exam',weight:30},{number:3,name:'Presentation',weight:20},{number:4,name:'End of Session Exam',weight:40}]},
+  {code:'BMS171',title:'Introduction to Functional Human Anatomy',credits:8,role:'Elective',slos:[{number:1,description:'define fundamental anatomical terminology and the anatomical position'},{number:2,description:'describe the relationship between the structure and function of the human body'},{number:3,description:'describe the anatomy of tissues and list their major functions'},{number:4,description:'describe the anatomy of the musculoskeletal system'},{number:5,description:'describe the anatomy of the central and peripheral nervous systems'},{number:6,description:'describe the anatomy of the cardiovascular system'},{number:7,description:'describe the anatomy of the respiratory system'},{number:8,description:'briefly describe the anatomy of the digestive, urinary and reproductive systems'}],assessments:[{number:1,name:'Online Quizzes',weight:10},{number:2,name:'Practical Exam',weight:50},{number:3,name:'Theory Exam (Online and Timed)',weight:40}]},
+  {code:'BMS172',title:'Functional Anatomy of the Vertebral Column, Pelvic Girdle and Lower Limb',credits:8,role:'Elective',slos:[{number:1,description:'explain the anatomical basis of relevant practical diagnostic procedures'},{number:2,description:'identify and interpret surface features of the normal living body'},{number:3,description:'identify and interpret key features of radiological images'},{number:4,description:'describe the relationship between key surface features of the lower limb and motion'},{number:5,description:'describe normal anatomical variation between individuals due to age, gender and body build'}],assessments:[{number:1,name:'Online Quizzes',weight:10},{number:2,name:'Practical Exam',weight:60},{number:3,name:'Theory Exam (Online and timed)',weight:30}]},
+  {code:'BMS208',title:'Human Nutrition',credits:8,role:'Elective',slos:[{number:1,description:'describe the range of nutrients and recommended nutrient intakes'},{number:2,description:'outline the digestion, absorption and transport of nutrients in the human body'},{number:3,description:'calculate the energy values provided by the macro-nutrients'},{number:4,description:'describe the nutritional importance of water, vitamins, minerals and trace minerals'},{number:5,description:'distinguish special nutritional requirements during periods of physiological stress'}],assessments:[]},
+  {code:'BMS224',title:'Head and Neck Anatomy',credits:8,role:'Elective',slos:[{number:1,description:'identify the bones, joints and cavities of the skull and cervical spine'},{number:2,description:'identify the face muscles and their relation to facial expressions'},{number:3,description:'describe the neurovascular anatomy of the head and neck'},{number:4,description:'identify the musculoskeletal anatomy of the larynx, pharynx, palate, oral cavity and nasal cavity'},{number:5,description:'explain anatomical structures in terms of their role in communication, auditory, swallowing and respiratory functions'}],assessments:[]},
+  {code:'BMS233',title:'Nutritional Pathophysiology',credits:8,role:'Elective',slos:[{number:1,description:'define and apply common pathophysiological terms'},{number:2,description:'explain the role and inter-relationships between gene function and the gut microbiome in nutrition'},{number:3,description:'discuss regulatory mechanisms and dysfunction in metabolic disorders'},{number:4,description:'analyse the inter-relationship between nutrition and metabolic disorders'},{number:5,description:'analyse the inter-relationship between nutrition and disorders of the nervous system'}],assessments:[{number:1,name:'Online questions',weight:30},{number:2,name:'Case Study',weight:30},{number:3,name:'Oral Presentation',weight:40}]},
+  {code:'BMS240',title:'Human Molecular Genetics',credits:8,role:'Elective',slos:[{number:1,description:'describe DNA structure, chromatin structure, DNA replication, transcription, RNA processing, translation'},{number:2,description:'describe Mendelian inheritance principles and predict phenotypical outcomes'},{number:3,description:'identify and explain how genetic changes can cause or contribute to human disease'},{number:4,description:'define and discuss how DNA technology influences knowledge of genomics and epigenetics'},{number:5,description:'describe and analyse the genetics, pathophysiology and treatment of Mendelian inherited disorders'},{number:6,description:'discuss the ethical and professional issues arising from genetic testing and diagnosing'}],assessments:[]},
+  {code:'BMS243',title:'Metabolic Biochemistry in Health and Disease',credits:8,role:'Elective',slos:[{number:1,description:'describe the underlying principles of inherited metabolic disorders'},{number:2,description:'discuss the role of metabolic aberrations on the pathogenesis of common human diseases'},{number:3,description:'integrate metabolic knowledge to describe metabolic adaptations to physiological states'},{number:4,description:'describe the influence of dietary factors on the development of common diseases'},{number:5,description:'explain the influences of reactive oxygen species and antioxidants on human diseases'}],assessments:[{number:1,name:'Topic Mini Tests',weight:20},{number:2,name:'Essay - chosen topic in metabolic biochemistry',weight:35},{number:3,name:'End of Session Exam',weight:45}]},
+  {code:'BMS255',title:'Neuroscience for Health Practice',credits:8,role:'Elective',slos:[{number:1,description:'describe the parts and function of the peripheral and central nervous systems'},{number:2,description:'apply knowledge of the nervous systems to interpret clinical findings'},{number:3,description:'determine appropriate diagnostic tests to identify neurological function / dysfunction'},{number:4,description:'explain the pharmacological basis of the treatment of neurological and psychiatric disease'}],assessments:[{number:1,name:'Online tests',weight:10},{number:2,name:'Neurological Condition Assignment',weight:35},{number:3,name:'End of Session Exam',weight:55}]},
+  {code:'BMS266',title:'Nutritional Physiology',credits:8,role:'Elective',slos:[{number:1,description:'explain the anatomy and physiology of digestive processes and nutrient absorption'},{number:2,description:'explain the endocrine and neural control of metabolism'},{number:3,description:'explain normal physiological control and hedonic control of appetite and food intake'},{number:4,description:'discuss the impact of stress on physiology'}],assessments:[{number:1,name:'Online Tests',weight:30},{number:2,name:'Presentation task - Debunking myths',weight:30},{number:3,name:'End of Session Exam',weight:40}]},
+  {code:'BMS271',title:'Functional Anatomy of the Head, Neck, Pectoral Girdle and Upper Limb',credits:8,role:'Elective',slos:[{number:1,description:'explain the anatomical basis of relevant practical diagnostic procedures'},{number:2,description:'identify and interpret surface features of the normal living body'},{number:3,description:'identify and interpret key features of radiological images'},{number:4,description:'describe the relationship between surface features of the upper limb and joint motion'}],assessments:[]},
+  {code:'BMS292',title:'Pathophysiology and Pharmacology 2',credits:8,role:'Elective',slos:[{number:1,description:'demonstrate the application of professional language associated with medical and pharmacological practice'},{number:2,description:'apply foundational knowledge of pathophysiology and related pharmacology to explain management of dysfunction of the nervous, endocrine, gastrointestinal, integument and immune systems'},{number:3,description:'explain the mechanism of action and properties of pharmacological agents for treatment of nervous, endocrine, gastrointestinal, integument and immune systems'},{number:4,description:'analyse the implications of polypharmacy, drug-drug and drug-disease interactions'}],assessments:[{number:1,name:'Topic tests',weight:40},{number:2,name:'Case Study',weight:40},{number:3,name:'Presentation',weight:20}]},
+  {code:'BMS308',title:'Immunology',credits:8,role:'Elective',slos:[{number:1,description:'describe the structure and properties of tissues, cells and molecules involved in immune responses'},{number:2,description:'explain the mechanisms of immune responses and anti-microbial defences'},{number:3,description:'evaluate the importance of various components of the immune system'},{number:4,description:'evaluate the range of immunological techniques in modern biomedical science'},{number:5,description:'perform a range of immunological techniques and interpret the data generated'},{number:6,description:'explain the pathology of the immune system including immunodeficiency, hypersensitivity and autoimmune diseases'}],assessments:[]},
+  {code:'BMS310',title:'Disease Processes',credits:8,role:'Elective',slos:[{number:1,description:'integrate and demonstrate knowledge from various biomedical science disciplines to understand disease processes'},{number:2,description:'demonstrate knowledge of the role of genetic factors in development of monogenic disorders and multifactorial human diseases'},{number:3,description:'demonstrate knowledge of the need for drug therapy arising from understanding of disease processes'},{number:4,description:'describe and demonstrate knowledge of the biomedical rationale of routinely encountered laboratory tests'},{number:5,description:'interpret results presented in routine pathology laboratory reports'}],assessments:[]},
+  {code:'BMS313',title:'Infectious Diseases And Applied Immunology',credits:8,role:'Elective',slos:[{number:1,description:'describe the pathogenesis of infections'},{number:2,description:'describe the actions and properties of antimicrobial therapies'},{number:3,description:'explain the interactions between important human pathogens and the immune system'},{number:4,description:'explain the mechanisms involved in important disorders of the immune system'},{number:5,description:'explain microbial mechanisms of resistance to antimicrobial therapies'}],assessments:[{number:1,name:'Test 1',weight:30},{number:2,name:'Test 2',weight:30},{number:3,name:'Test 3',weight:40}]},
+  {code:'BMS315',title:'Medical Microbiology',credits:8,role:'Elective',slos:[{number:1,description:'describe the causative organisms, pathogenesis, epidemiology and clinical signs of viral, fungal and parasitic diseases'},{number:2,description:'outline the range of antiviral, antifungal and antiparasitic chemotherapeutic agents'},{number:3,description:'analyse clinical issues and implications associated with viral, fungal and parasitic infections'},{number:4,description:'explain the importance of world-wide viral infections and vector-borne infections'}],assessments:[]},
+  {code:'BMS338',title:'Clinical Bacteriology',credits:8,role:'Elective',slos:[{number:1,description:'demonstrate an understanding of the basic taxonomy of medically significant bacterial agents'},{number:2,description:'demonstrate an understanding of the underlying principles of bacterial genetics with emphasis on antibiotic resistance'},{number:3,description:'describe the principles behind antibacterial chemotherapies'},{number:4,description:'identify the kinds of bacteria that cause disease'},{number:5,description:'describe the principles of diagnosis, specimen collection and specimen quality'}],assessments:[]},
+  {code:'BMS342',title:'First Nations Foods and Diets',credits:8,role:'Elective',slos:[{number:1,description:'classify foods on the basis of physical form, chemical composition and nutritional functions'},{number:2,description:'compare medicinal, cultural and social non-nutritional uses of food'},{number:3,description:'discuss how foods can be used as medicines'},{number:4,description:'identify traditional foods and medicines used by Australian First Nations people'},{number:5,description:'identify traditional foods and medicines from First Nations people around the world'},{number:6,description:'describe functional foods and their contributions to health and well-being'}],assessments:[{number:1,name:'Module 1 Test',weight:30},{number:2,name:'Module 2 Test',weight:30},{number:3,name:'Module 3 Test',weight:40}]},
+  {code:'BMS406',title:'Human Reproductive Biology',credits:8,role:'Elective',slos:[{number:1,description:'describe the structure of the organs of the reproductive system and how this relates to function'},{number:2,description:'explain the processes of spermatogenesis, oogenesis and folliculogenesis'},{number:3,description:'describe the hormonal, tissue and behavioural changes that occur across the menstrual cycle'},{number:4,description:'demonstrate an understanding of the hormonal control of reproduction in males'}],assessments:[{number:1,name:'Mini review',weight:30},{number:2,name:'Oral presentation',weight:20},{number:3,name:'Final exam',weight:50}]},
+  {code:'COM240',title:'Envisioning the Digital Society',credits:8,role:'Elective',slos:[{number:1,description:'demonstrate knowledge of debates about the impact of information technology on society'},{number:2,description:'critically examine how information technology has transformed economic, political and social structures'},{number:3,description:'communicate understanding of the impact of social media on society'},{number:4,description:'work collaboratively in a team to investigate a contemporary issue'}],assessments:[]},
+  {code:'EHR202',title:'Human Exercise Physiology',credits:8,role:'Elective',slos:[{number:1,description:'explain the metabolic, muscular, hormonal and cardiorespiratory responses to exercise and adaptations to training'},{number:2,description:'differentiate the physiological changes and adaptations during exercise in different environmental conditions'},{number:3,description:'demonstrate the application and proficiency of various techniques used in exercise physiology research'},{number:4,description:'describe the fundamental principles underlying prescription, implementation and monitoring of exercise programs'}],assessments:[{number:1,name:'Laboratory Report',weight:25},{number:2,name:'Practical Test',weight:35},{number:3,name:'Final Examination',weight:40}]},
+  {code:'HIP302',title:'Understanding Healthy Communities',credits:8,role:'Elective',slos:[{number:1,description:'evaluate the interdisciplinary and contextual nature of primary health care, public health, health promotion and community development'},{number:2,description:'describe strategies used when working in collaboration with people from a range of cultural and linguistic backgrounds'},{number:3,description:'effect positive change in the context of health promotion and community development'},{number:4,description:'utilise a variety of methods to assess community capacity and needs'},{number:5,description:'apply information and data to different contexts to facilitate planning, implementation, funding and evaluation of a health promotion project'},{number:6,description:'reflect critically on the values intrinsic to health promotion including human rights, equity, equality, social justice, cultural responsiveness and sustainable practice'}],assessments:[{number:1,name:'Essay/audiovisual presentation',weight:30},{number:2,name:'Funding Application',weight:50},{number:3,name:'Discussion Board Posts',weight:20}]},
+  {code:'MCR101',title:'Introduction to Microbiology',credits:8,role:'Elective',slos:[{number:1,description:'describe the structure and function of microorganisms'},{number:2,description:'demonstrate a good understanding of the processes used to study microorganisms'},{number:3,description:'describe the means by which microorganisms can be cultivated and assayed'},{number:4,description:'demonstrate knowledge of the means by which the growth of microorganisms can be controlled'},{number:5,description:'demonstrate a good understanding of the interactions of microorganisms with human beings and the health implications'}],assessments:[]},
+  {code:'NUT201',title:'Food, Nutrition and Sociology',credits:8,role:'Elective',slos:[{number:1,description:'identify evidence based literature relevant to food and nutrition issues'},{number:2,description:'describe and demonstrate the application of reflective practice contributing to professional development'},{number:3,description:'analyse the complex range of factors that impact individual food choice throughout the life cycle'},{number:4,description:'analyse the methods of food and nutritional monitoring, food systems and nutrition policy'},{number:5,description:'discuss what is meant by cultural safety and social justice in relation to food and nutrition issues with emphasis on First Nations and CALD communities'}],assessments:[{number:1,name:'Journal and Interactive Oral Assessment',weight:60},{number:2,name:'Discussion Board Debate and Case Study',weight:40}]},
+  {code:'NUT220',title:'Practical Skills in Nutrition Science',credits:8,role:'Elective',slos:[{number:1,description:'analyse and interpret food and dietary data utilising current dietary analysis methods'},{number:2,description:'evaluate the relevance of current dietary data collection and analysis methods in clinical and research settings'},{number:3,description:'define nutritional status and nutritional risk, and identify methods used to screen for nutritional risk'},{number:4,description:'develop evidence based and culturally safe nutrition education and communication strategies'}],assessments:[{number:1,name:'Case Study - food composition analysis',weight:30},{number:2,name:'Interactive Oral Assessment',weight:30},{number:3,name:'Nutrition Education Resource and Rationale',weight:40}]},
+  {code:'NUT301',title:'Community and Public Health Nutrition',credits:8,role:'Elective',slos:[{number:1,description:'analyse the cause of health inequities, specifically in relation to social determinants of health'},{number:2,description:'discuss the principles of public health approaches and delivery as they apply to food and nutrition'},{number:3,description:'collate and evaluate demographic, epidemiological and other data for a health needs assessment'},{number:4,description:'apply skills in health promotion planning informed by analysis of food and nutrition related health problems in Australian communities with particular focus on First Nations and rural communities'}],assessments:[{number:1,name:'Health Inequities Case Study',weight:30},{number:2,name:'Health Needs Assessment',weight:30},{number:3,name:'Health Promotion Program Plan',weight:40}]},
+  {code:'NUT305',title:'Nutrition for Disease Prevention',credits:8,role:'Elective',slos:[{number:1,description:'analyse the influence of the food and nutrition environment on nutrition related health outcomes and chronic disease'},{number:2,description:'critically evaluate the evidence base that underpins nutrition related chronic disease prevention and health promotion strategies'},{number:3,description:'compare and contrast the relative benefits and challenges of developing manufactured and novel foods'},{number:4,description:'analyse the challenges and opportunities in implementing nutrition related chronic disease prevention strategies with focus on First Nations and rural communities'}],assessments:[{number:1,name:'Food Environment Analysis Presentation',weight:20},{number:2,name:'Critical Appraisal',weight:30},{number:3,name:'Intelligence Summary (Evidence Review) and Communication',weight:50}]},
+  {code:'NUT306',title:'Menu Planning for the Community',credits:8,role:'Elective',slos:[{number:1,description:'analyse quality management through regulatory compliance with respect to nutrition and accreditation standards'},{number:2,description:'analyse the challenges and opportunities in the ability of individuals and communities to make optimal food choices'},{number:3,description:'apply a critical, evidence based approach to the development of culturally and socially appropriate food-based plans'},{number:4,description:'select appropriate foods consistent with evidence based nutrition recommendations for a range of special dietary needs'},{number:5,description:'analyse the nutrition quality of recipes and menus using relevant standards and databases'}],assessments:[{number:1,name:'Meeting Nutrition Requirements in Different Food Environments',weight:40},{number:2,name:'Planning Food Environments to Enable Improved or Optimal Food Choices',weight:60}]},
+  {code:'PHM233',title:'Pharmaceutics ★ 16 cp',credits:16,role:'Elective',slos:[{number:1,description:'describe a range of dose forms and routes of drug administration'},{number:2,description:'identify and discuss the physicochemical principles that underpin dose form design, formulation, manufacture, packaging and use'},{number:3,description:'explain how formulations and devices influence delivery of drugs to patients'},{number:4,description:'describe factors affecting stability of drug formulations, quality assurance procedures and shelf-life determination'},{number:5,description:'accurately perform pharmaceutical calculations'},{number:6,description:'apply pharmaceutical principles and knowledge to contemporary issues of dose form development'}],assessments:[{number:1,name:'Topic tests',weight:15},{number:2,name:'Practical quiz',weight:10},{number:3,name:'Mid-year exam',weight:30},{number:4,name:'Seminar',weight:15},{number:5,name:'Final exam',weight:28}]},
+  {code:'PHY107',title:'General Physics',credits:8,role:'Elective',slos:[{number:1,description:'outline the principles of and perform calculations in kinematics and dynamics'},{number:2,description:'explain the concepts and perform calculations in elasticity and fluids'},{number:3,description:'explain the concepts and perform calculations in thermal physics'},{number:4,description:'demonstrate comprehension and perform calculations involving waves and optics'},{number:5,description:'compute and solve problems of a conceptual and quantitative nature in physics'}],assessments:[]},
+  {code:'PSY111',title:'Foundations of Psychology for Health and Human Services',credits:8,role:'Elective',slos:[{number:1,description:'understand and recount key concepts and theories in psychology which are relevant to health and human services'},{number:2,description:'apply academic skills including sourcing, reading and evaluating scientific research articles and critical thinking'},{number:3,description:'apply psychological theories and concepts to relevant issues and real world situations'}],assessments:[]},
+  {code:'SPH101',title:'Speech, Language, and Culture',credits:8,role:'Elective',slos:[{number:1,description:'identify and compare institutional and academic perspectives on speech, language and culture'},{number:2,description:'apply knowledge of linguistics, including phonetics, phonology, morphology, syntax, and semantics, to analyse speech and language'},{number:3,description:'identify and describe social, cultural and geographic language varieties'},{number:4,description:'use the International Phonetic Alphabet to transcribe Standard Australian English speech'},{number:5,description:'describe the linguistic context of Australia, and discuss processes of language and cultural contact within Australia'}],assessments:[]},
+  {code:'STA201',title:'Scientific Statistics',credits:8,role:'Elective',slos:[{number:1,description:'explain standard uses of statistics in the media and in scientific papers'},{number:2,description:'use a statistical package to summarise data graphically and numerically and analyse data appropriately'},{number:3,description:'calculate and interpret probabilities, and use standard discrete and continuous probability distributions'},{number:4,description:'explain the concepts of statistical inference, and apply these to confidence intervals and tests of hypotheses'},{number:5,description:'apply basic principles of experimental design, such as determination of appropriate sample sizes, randomisation and blocking'}],assessments:[]},
+  {code:'WEL206',title:'Facilitating Positive Behaviours',credits:8,role:'Elective',slos:[{number:1,description:'demonstrate an understanding of the bio-psycho-social model of healthcare intervention'},{number:2,description:'demonstrate an understanding of behavioural principles and of behaviour as a means of communication'},{number:3,description:'demonstrate an understanding of how human rights, legal perspectives and the concept of ability can be applied in relation to behaviour change'},{number:4,description:'appropriately utilise the terminology of behaviours of concern and positive behavioural approaches'},{number:5,description:'demonstrate the skills to facilitate positive behaviours as a primary approach to practice'}],assessments:[{number:1,name:'Forum posting and short answer questions',weight:10},{number:2,name:'Consumer Participation, Choice and Behaviour',weight:40},{number:3,name:'Case study - Behaviours of Concern',weight:50}]},
+  {code:'WEL217',title:'Social Dimensions of Disability',credits:8,role:'Elective',slos:[{number:1,description:'Explore and understand a range of theories and models of disability'},{number:2,description:'Compare Australian laws and policies relating to disability against international human rights frameworks'},{number:3,description:'Understand the Australian disability service sector its structures and services in the light of disability rights and standards'},{number:4,description:'Understand the range of disability practice roles for human service workers in the disability sector'},{number:5,description:'Explore in depth one aspect of the disability services sector, demonstrating research and digital literacy skills'}],assessments:[{number:1,name:'Essay',weight:40},{number:2,name:'Proposal',weight:60}]},
+  {code:'WEL218',title:'Developing Cross Cultural Competencies',credits:8,role:'Elective',slos:[{number:1,description:'analyse critically the key issues that have influenced service provision to culturally diverse communities'},{number:2,description:'understand the strategies and policy implications of access and equity in relation to welfare programs throughout Australia'},{number:3,description:'demonstrate an understanding of cross cultural competencies in delivering services to individuals from diverse cultural backgrounds'},{number:4,description:'assess the impact of policies on special needs groups'}],assessments:[{number:1,name:'Report',weight:50},{number:2,name:'Reflective statement and essay',weight:50}]},
+  {code:'WEL222',title:'Case Management',credits:8,role:'Elective',slos:[{number:1,description:'explain case management'},{number:2,description:'demonstrate an understanding of several models of case management with specific focus on a designated human services model'},{number:3,description:'apply the designated model of case management to a simulated situation via a case study'},{number:4,description:'articulate the theoretical underpinnings of the functions of the case management model'},{number:5,description:'identify and discuss case management systems within agency and community contexts'},{number:6,description:'apply case management theory to practice including analysis of skills and tensions'}],assessments:[{number:1,name:'Portfolio of tasks',weight:50},{number:2,name:'Case management discussion',weight:50}]}
+];
+
+function getAllSubjects(){
+  const all=[...CORE];
+  ['Set A','Set B','Set C'].forEach(set=>COMP_SETS[set].forEach(s=>{if(!all.find(x=>x.code===s.code))all.push(s);}));
+  ELECTIVES.forEach(s=>all.push(s));
+  return all;
+}
+
+function makeSubjectRow(s){
+  const cc=s.role==='Core'?'chip-core':s.role==='Compulsory'?'chip-compulsory':'chip-elective';
+  const clos=getSubjectCLOs(s);
+  const slosH=s.slos.length?s.slos.map(sl=>`<div class="slo-item"><span class="slo-n">${sl.number}</span><span class="slo-txt">${sl.description}</span></div>`).join(''):'<span class="no-data">No SLOs recorded</span>';
+  const assH=s.assessments.length?s.assessments.map(a=>`<div class="assess-item"><span class="assess-n">${a.number}.</span><span class="assess-name">${a.name}</span><div style="display:flex;align-items:center;gap:4px"><div class="wbar"><div class="wfill" style="width:${a.weight}%"></div></div><span class="wpct">${a.weight}%</span></div></div>`).join(''):'<span class="no-data">No assessments in system</span>';
+  const cloTags=clos.map(n=>`<span class="clo-tag-sm" style="background:${CLO_COLORS[n-1]}">CLO${n}</span>`).join('');
+  const cpLabel=s.credits===16?'16 cp ★':`${s.credits} cp`;
+  return `<div class="subj-row" onclick="this.classList.toggle('open')">
+    <div class="subj-row-head">
+      <span class="subj-code">${s.code}</span>
+      <span class="subj-title-text">${s.title}</span>
+      <span class="role-chip ${cc}">${s.role}</span>
+      <span class="subj-cp">${cpLabel}</span>
+      <span class="chevron">›</span>
+    </div>
+    <div class="subj-body">
+      ${clos.length?`<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:10px"><span style="font-size:11px;color:var(--muted)">Aligns to:</span>${cloTags}</div>`:''}
+      <div class="slo-assess-grid">
+        <div><div class="mini-hdr">Subject Learning Outcomes (${s.slos.length})</div>${slosH}</div>
+        <div><div class="mini-hdr">Assessments (${s.assessments.length})</div>${assH}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function initStructure(){
+  document.getElementById('core-subjects').innerHTML=CORE.map(makeSubjectRow).join('');
+  ['A','B','C'].forEach(k=>{ document.getElementById(`comp-${k}`).innerHTML=COMP_SETS[`Set ${k}`].map(makeSubjectRow).join(''); });
+  const prefixes=[...new Set(ELECTIVES.map(s=>s.code.replace(/\d/g,'')))].sort();
+  document.getElementById('elec-filters').innerHTML=`<button class="fchip active" onclick="setElecFilter('all',this)">All</button>`+prefixes.map(p=>`<button class="fchip" onclick="setElecFilter('${p}',this)">${p}</button>`).join('');
+  renderElectives('all','');
+}
+
+let elecF='all';
+function setElecFilter(v,btn){elecF=v;document.querySelectorAll('#elec-filters .fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filterElectives();}
+function filterElectives(){renderElectives(elecF,document.getElementById('elec-search').value.toLowerCase());}
+function renderElectives(pf,q){
+  const list=ELECTIVES.filter(s=>(pf==='all'||s.code.replace(/\d/g,'')===pf)&&(!q||s.title.toLowerCase().includes(q)||s.code.toLowerCase().includes(q)));
+  document.getElementById('elective-subjects').innerHTML=list.length?list.map(makeSubjectRow).join(''):'<div style="padding:14px 16px;color:var(--muted);font-size:13px">No subjects match.</div>';
+}
+function switchSet(s){document.querySelectorAll('.set-tab').forEach((b,i)=>b.classList.toggle('active',['A','B','C'][i]===s));document.querySelectorAll('.set-panel').forEach(p=>p.classList.remove('active'));document.getElementById(`set-${s}`).classList.add('active');}
+
+// MAPPING
+let selCLO=null,mapFilt='all';
+function initMapping(){
+  const all=getAllSubjects().filter((s,i,a)=>a.findIndex(x=>x.code===s.code)===i);
+  document.getElementById('clo-chips').innerHTML=CLOS.map(c=>{
+    const cnt=all.filter(s=>getSubjectCLOs(s).includes(c.number)).length;
+    return `<div class="clo-align-item" style="border-left-color:${CLO_COLORS[c.number-1]}" onclick="selCLOfn(${c.number},this)">
+      <div class="clo-ai-num" style="color:${CLO_COLORS[c.number-1]}">CLO ${c.number}</div>
+      <div class="clo-ai-desc">${c.description}</div>
+      <div class="clo-ai-count"><strong>${cnt}</strong> subjects aligned</div></div>`;
+  }).join('');
+  renderMappingTable();
+}
+function selCLOfn(n,el){selCLO=selCLO===n?null:n;document.querySelectorAll('.clo-align-item').forEach(e=>e.classList.remove('selected'));if(selCLO)el.classList.add('selected');renderMappingTable();}
+function setMapFilter(v,btn){mapFilt=v;document.querySelectorAll('#panel-mapping .fchip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMappingTable();}
+function renderMappingTable(){
+  const q=document.getElementById('map-search').value.toLowerCase();
+  let subjs=getAllSubjects().filter((s,i,a)=>a.findIndex(x=>x.code===s.code)===i);
+  if(mapFilt!=='all')subjs=subjs.filter(s=>s.role===mapFilt);
+  if(q)subjs=subjs.filter(s=>s.title.toLowerCase().includes(q)||s.code.toLowerCase().includes(q));
+  if(selCLO)subjs=subjs.filter(s=>getSubjectCLOs(s).includes(selCLO));
+  document.getElementById('map-thead').innerHTML=`<tr><th>Code</th><th>Subject</th><th>Role</th><th>CP</th>${CLOS.map(c=>`<th style="background:${CLO_LIGHT[c.number-1]};color:${CLO_COLORS[c.number-1]};text-align:center;min-width:36px;font-size:10px">C${c.number}</th>`).join('')}<th>Assessed</th></tr>`;
+  document.getElementById('map-tbody').innerHTML=subjs.map(s=>{
+    const clos=getSubjectCLOs(s);
+    const cc=s.role==='Core'?'chip-core':s.role==='Compulsory'?'chip-compulsory':'chip-elective';
+    const dots=CLOS.map(c=>{
+      const on=clos.includes(c.number);
+      return `<td style="text-align:center;${selCLO===c.number?'background:'+CLO_LIGHT[c.number-1]:''}">${on?`<div class="cdot cdot-on" style="background:${CLO_COLORS[c.number-1]};margin:auto;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px">✓</div>`:'<div class="cdot cdot-off" style="margin:auto"></div>'}</td>`;
+    }).join('');
+    return `<tr><td style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent)">${s.code}</td><td style="font-size:12px">${s.title}</td><td><span class="role-chip ${cc}" style="font-size:10px">${s.role}</span></td><td style="font-family:'IBM Plex Mono',monospace;font-size:11px">${s.credits}</td>${dots}<td style="text-align:center">${s.assessments.length?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--border)">–</span>'}</td></tr>`;
+  }).join('');
+}
+
+// STUDENT
+const STUDENTS=[
+  {name:'Sarah Johnson',id:'220034',cp:80,subs:[
+    {subj:'BMS181',name:'Online Tests (Topics 1,2&3)',weight:15,done:true},
+    {subj:'BMS181',name:'Physiology Presentation',weight:35,done:true},
+    {subj:'BMS182',name:'Early Assessment - Topic 1',weight:10,done:true},
+    {subj:'BMS182',name:'Mid Session Timed Test',weight:40,done:true},
+    {subj:'BMS263',name:'Online tests',weight:60,done:true},
+    {subj:'HLT417',name:'Standpoint Statement',weight:20,done:true},
+    {subj:'HIP101',name:'Essay',weight:45,done:true},
+    {subj:'BCM266',name:'Online test',weight:10,done:true},
+    {subj:'BCM266',name:'Mid-session exam',weight:30,done:false},
+    {subj:'BMS313',name:'Test 1',weight:30,done:false}
+  ]},
+  {name:'Marcus Chen',id:'220187',cp:128,subs:[
+    {subj:'BMS181',name:'Online Tests (Topics 1,2&3)',weight:15,done:true},
+    {subj:'BMS181',name:'Online Tests (Topics 4-8)',weight:50,done:true},
+    {subj:'BMS181',name:'Physiology Presentation',weight:35,done:true},
+    {subj:'BMS182',name:'Early Assessment',weight:10,done:true},
+    {subj:'BMS182',name:'Mid Session Timed Test',weight:40,done:true},
+    {subj:'BMS182',name:'END of SESSION Timed EXAM',weight:50,done:true},
+    {subj:'BMS263',name:'Online tests',weight:60,done:true},
+    {subj:'BMS263',name:'A/V Presentation',weight:40,done:true},
+    {subj:'HLT417',name:'Standpoint Statement',weight:20,done:true},
+    {subj:'HLT417',name:'Professional Presentation',weight:35,done:true},
+    {subj:'HLT417',name:'Decolonising Framework',weight:45,done:true},
+    {subj:'IKC100',name:'Reflections',weight:20,done:true},
+    {subj:'IKC100',name:'Information Package',weight:50,done:true},
+    {subj:'HIP101',name:'Essay',weight:45,done:true},
+    {subj:'BCM266',name:'Online test',weight:10,done:true},
+    {subj:'BCM266',name:'Mid-session exam',weight:30,done:true},
+    {subj:'BMS171',name:'Practical Exam',weight:50,done:true},
+    {subj:'BMS255',name:'Online tests',weight:10,done:true},
+    {subj:'BMS292',name:'Topic tests',weight:40,done:false}
+  ]},
+  {name:'Amara Osei',id:'221045',cp:160,subs:[
+    {subj:'BMS181',name:'Online Tests (Topics 1,2&3)',weight:15,done:true},
+    {subj:'BMS181',name:'Online Tests (Topics 4-8)',weight:50,done:true},
+    {subj:'BMS181',name:'Physiology Presentation',weight:35,done:true},
+    {subj:'BMS182',name:'Early Assessment',weight:10,done:true},
+    {subj:'BMS182',name:'Mid Session Timed Test',weight:40,done:true},
+    {subj:'BMS182',name:'END of SESSION Timed EXAM',weight:50,done:true},
+    {subj:'BMS263',name:'Online tests',weight:60,done:true},
+    {subj:'BMS263',name:'A/V Presentation',weight:40,done:true},
+    {subj:'HLT417',name:'Standpoint Statement',weight:20,done:true},
+    {subj:'HLT417',name:'Professional Presentation',weight:35,done:true},
+    {subj:'HLT417',name:'Decolonising Framework',weight:45,done:true},
+    {subj:'IKC100',name:'Reflections',weight:20,done:true},
+    {subj:'IKC100',name:'Information Package',weight:50,done:true},
+    {subj:'IKC100',name:'Personal Learning Objective',weight:30,done:true},
+    {subj:'HIP101',name:'Essay',weight:45,done:true},
+    {subj:'HIP101',name:'Diversity statement',weight:45,done:true},
+    {subj:'BCM266',name:'Online test',weight:10,done:true},
+    {subj:'BCM266',name:'Mid-session exam',weight:30,done:true},
+    {subj:'BCM266',name:'Presentation',weight:20,done:true},
+    {subj:'BCM266',name:'End of Session Exam',weight:40,done:true},
+    {subj:'BMS171',name:'Online Quizzes',weight:10,done:true},
+    {subj:'BMS171',name:'Practical Exam',weight:50,done:true},
+    {subj:'BMS171',name:'Theory Exam',weight:40,done:true},
+    {subj:'BMS255',name:'Online tests',weight:10,done:true},
+    {subj:'BMS255',name:'Neurological Condition Assignment',weight:35,done:true},
+    {subj:'BMS292',name:'Topic tests',weight:40,done:true},
+    {subj:'BMS292',name:'Case Study',weight:40,done:true},
+    {subj:'NUT301',name:'Health Inequities Case Study',weight:30,done:true},
+    {subj:'NUT301',name:'Health Needs Assessment',weight:30,done:true},
+    {subj:'BMS342',name:'Module 1 Test',weight:30,done:false}
+  ]}
+];
+
+// ── THRESHOLD CONFIG ──────────────────────────────────────────
+// Levels: 0=none, 1=Foundational, 2=Developing, 3=Integrated, 4=Mastered
+const THRESH_NAMES  = ['Not yet evidenced','Foundational','Developing','Integrated','Mastered'];
+const THRESH_COLORS = ['#d6d0c6','#4a90d9','#e0954a','#4caf7d','#9a7ecb'];
+const THRESH_BG     = ['#f5f3ef','#e8f0fe','#fff0d4','#d4edda','#ede9fe'];
+const THRESH_TEXT   = ['#7a7268','#1b3d6e','#8a4800','#256949','#5a2d8e'];
+const THRESH_CLASS  = ['t-not','t-found','t-dev','t-int','t-mast'];
+
+// Derive subject level from code (first digit of numeric part)
+function subjectLevel(code){
+  const m=code.match(/(\d)/);
+  if(!m)return 0;
+  const d=parseInt(m[1]);
+  return d>=4?4:d; // 1→1(Found), 2→2(Dev), 3→3(Int), 4→4(Mast)
+}
+
+// Stage gate definitions
+const STAGE_GATES=[
+  {id:'sg1', label:'Stage 1 Boundary',name:'Foundational confirmed',level:'Level 100 → 200',cpThreshold:48,threshReq:1,color:'#4a90d9',bg:'#e8f0fe'},
+  {id:'sg2', label:'Stage 2 Boundary',name:'Developing confirmed',  level:'Level 200 → 300',cpThreshold:112,threshReq:2,color:'#e0954a',bg:'#fff0d4'},
+  {id:'sg3', label:'Stage 3 Boundary',name:'Integrated confirmed',  level:'Level 300 → Capstone',cpThreshold:168,threshReq:3,color:'#4caf7d',bg:'#d4edda'},
+  {id:'sg4', label:'Completion',       name:'Mastered — Graduation', level:'Course completion',cpThreshold:192,threshReq:4,color:'#9a7ecb',bg:'#ede9fe'},
+];
+
+// For each CLO, determine current threshold level based on:
+// - what subject levels the student has COMPLETED assessed subjects in
+function calcCLOThreshold(cloNum, doneSubjs, allSubjects){
+  // Gather completed subjects that align to this CLO
+  const aligned = allSubjects.filter(s=>
+    getSubjectCLOs(s).includes(cloNum) && doneSubjs.has(s.code) && s.assessments.length > 0
+  );
+  if(!aligned.length) return {level:0, evidence:[]};
+
+  // Highest subject level with completed assessments = threshold earned
+  const maxLevel = Math.max(...aligned.map(s=>subjectLevel(s.code)));
+
+  // Also collect evidence detail by level
+  const byLevel={1:[],2:[],3:[],4:[]};
+  aligned.forEach(s=>{ const l=subjectLevel(s.code); if(byLevel[l])byLevel[l].push(s.code); });
+
+  return {level:maxLevel, evidence:byLevel, aligned};
+}
+
+function renderStudentView(){
+  const st=STUDENTS[parseInt(document.getElementById('student-select').value)];
+  const pct=Math.round(st.cp/192*100);
+  document.getElementById('student-cp-note').textContent=`${st.cp} / 192 cp (${pct}%) · Stage: ${st.cp<80?'Level 100':'${st.cp<144?\'Level 200\':\'Level 300+\'}'}`;
+  // fix template literal escaping
+  const stageLabel = st.cp < 80 ? 'Level 100' : st.cp < 144 ? 'Level 200' : 'Level 300+';
+  document.getElementById('student-cp-note').textContent=`${st.cp} / 192 cp completed (${pct}%) · Currently: ${stageLabel}`;
+  document.getElementById('cp-prog-fill').style.width=pct+'%';
+  document.getElementById('cp-prog-text').textContent=`${st.cp} / 192 cp`;
+
+  const doneSubjs=new Set(st.subs.filter(x=>x.done).map(x=>x.subj));
+  const allS=getAllSubjects().filter((s,i,a)=>a.findIndex(x=>x.code===s.code)===i);
+
+  // ── STAGE GATES ──────────────────────────────────────────────
+  // For stage confirmation we need ALL 9 CLOs to reach the required threshold
+  const cloThresholds = {};
+  CLOS.forEach(c=>{ cloThresholds[c.number]=calcCLOThreshold(c.number,doneSubjs,allS); });
+
+  document.getElementById('stage-gates').innerHTML = STAGE_GATES.map(sg=>{
+    const allCLOsMeet = CLOS.every(c=>cloThresholds[c.number].level >= sg.threshReq);
+    const anyEvidence = CLOS.some(c=>cloThresholds[c.number].level >= sg.threshReq);
+    const cpMet = st.cp >= sg.cpThreshold;
+    const isPast = cpMet && allCLOsMeet;
+    const isCurrent = st.cp < sg.cpThreshold && st.cp >= (sg.cpThreshold - 80);
+    const notMet = cpMet && !allCLOsMeet; // cp met but CLO evidence gaps
+
+    let statusHtml, statusClass;
+    if(isPast){ statusClass='sg-confirmed'; statusHtml='✓ Confirmed'; }
+    else if(notMet){ statusClass='sg-notmet'; statusHtml='⚠ Evidence gaps'; }
+    else if(isCurrent){ statusClass='sg-current'; statusHtml='◎ In progress'; }
+    else { statusClass='sg-upcoming'; statusHtml='○ Upcoming'; }
+
+    const barPct = Math.min(100, Math.round(st.cp/sg.cpThreshold*100));
+    return `<div class="stage-gate">
+      <div class="sg-label">${sg.label}</div>
+      <div class="sg-name" style="color:${sg.color}">${sg.name}</div>
+      <div class="sg-cp">${sg.level} · ${sg.cpThreshold} cp</div>
+      <span class="sg-status ${statusClass}">${statusHtml}</span>
+      <div class="sg-bar" style="background:${isPast||notMet?sg.color:cpMet?sg.color+'44':'var(--border)'};width:${barPct}%;max-width:100%"></div>
+    </div>`;
+  }).join('');
+
+  // ── CLO THRESHOLD CARDS ────────────────────────────────────────
+  document.getElementById('clo-progress').innerHTML=CLOS.map(c=>{
+    const {level,evidence,aligned=[]}=cloThresholds[c.number];
+    const col=CLO_COLORS[c.number-1];
+
+    // Four threshold segments
+    const segs=[1,2,3,4].map(l=>{
+      const filled=level>=l;
+      return `<div class="thresh-seg ${filled?'filled':'empty'}" style="background:${THRESH_COLORS[l]};border-radius:3px;height:10px;flex:1"></div>`;
+    }).join('');
+
+    // Evidence summary: which levels have data
+    const evidenceLines=[];
+    if(evidence){
+      if(evidence[1]&&evidence[1].length) evidenceLines.push(`<span style="color:${THRESH_COLORS[1]};font-weight:600">F</span>: ${evidence[1].join(', ')}`);
+      if(evidence[2]&&evidence[2].length) evidenceLines.push(`<span style="color:${THRESH_COLORS[2]};font-weight:600">D</span>: ${evidence[2].join(', ')}`);
+      if(evidence[3]&&evidence[3].length) evidenceLines.push(`<span style="color:${THRESH_COLORS[3]};font-weight:600">I</span>: ${evidence[3].join(', ')}`);
+      if(evidence[4]&&evidence[4].length) evidenceLines.push(`<span style="color:${THRESH_COLORS[4]};font-weight:600">M</span>: ${evidence[4].join(', ')}`);
+    }
+
+    return `<div class="clo-tc" style="border-top-color:${col}">
+      <div class="clo-tc-num" style="color:${col}">CLO ${c.number}</div>
+      <div class="clo-tc-desc">${c.description}</div>
+      <div class="thresh-markers"><span>Found.</span><span>Dev.</span><span>Integ.</span><span>Mast.</span></div>
+      <div class="thresh-track" style="display:flex;gap:3px;margin-bottom:8px">${segs}</div>
+      <span class="thresh-current ${THRESH_CLASS[level]}">${THRESH_NAMES[level]}</span>
+      <div class="thresh-evidence" style="margin-top:5px;font-size:10px;color:var(--muted);line-height:1.6">
+        ${evidenceLines.length ? evidenceLines.join(' · ') : '<em>No assessed subjects completed yet</em>'}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── REMEDIATION ANALYSIS ─────────────────────────────────────
+  // Find CLOs where student is below threshold for their current stage
+  const currentStageReq = st.cp < 80 ? 1 : st.cp < 144 ? 2 : st.cp < 168 ? 3 : 4;
+  const atRiskCLOs = CLOS.filter(c => cloThresholds[c.number].level < currentStageReq);
+
+  const remPanel = document.getElementById('remediation-panel');
+  if(atRiskCLOs.length === 0){
+    remPanel.style.display = 'none';
+  } else {
+    remPanel.style.display = 'block';
+    const stageLabel = THRESH_NAMES[currentStageReq];
+    document.getElementById('remediation-summary').textContent =
+      `${atRiskCLOs.length} CLO${atRiskCLOs.length>1?'s':''} have not yet reached ${stageLabel} level — subjects that could address these gaps are listed below.`;
+
+    // For each at-risk CLO, find subjects NOT yet done that would contribute
+    // at the appropriate level
+    document.getElementById('remediation-items').innerHTML = atRiskCLOs.map(c => {
+      const needed = currentStageReq; // what level we need
+      const col = CLO_COLORS[c.number-1];
+
+      // Subjects that align to this CLO at the needed level (not yet completed with assessments)
+      const candidates = allS.filter(s => {
+        const sl = subjectLevel(s.code);
+        const alignsCLO = getSubjectCLOs(s).includes(c.number);
+        const rightLevel = sl === needed;
+        const hasAssess = s.assessments.length > 0;
+        const notDone = !doneSubjs.has(s.code) || !st.subs.find(x=>x.subj===s.code&&x.done);
+        return alignsCLO && rightLevel && hasAssess && notDone;
+      });
+
+      // Also: subjects at this level already in progress (some subs done, not all)
+      const inProgress = allS.filter(s => {
+        const sl = subjectLevel(s.code);
+        const alignsCLO = getSubjectCLOs(s).includes(c.number);
+        const rightLevel = sl === needed;
+        const subjSubs = st.subs.filter(x=>x.subj===s.code);
+        const someNotDone = subjSubs.some(x=>!x.done);
+        const someDone = subjSubs.some(x=>x.done);
+        return alignsCLO && rightLevel && someDone && someNotDone;
+      });
+
+      // Design gap: no subjects exist at this level for this CLO
+      const noDesignCoverage = allS.filter(s =>
+        getSubjectCLOs(s).includes(c.number) && subjectLevel(s.code) === needed
+      ).length === 0;
+
+      const inProgressHtml = inProgress.length ? `
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;font-weight:600;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">▶ In progress — complete remaining assessments</div>
+          ${inProgress.map(s => {
+            const doneCount = st.subs.filter(x=>x.subj===s.code&&x.done).length;
+            const totalCount = s.assessments.length;
+            const sloCount = s.slos.filter(sl => {
+              const txt = sl.description.toLowerCase();
+              return (CLO_KW[c.number]||[]).some(k=>new RegExp(k,'i').test(txt));
+            }).length;
+            return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--green-bg);border-radius:6px;margin-bottom:5px;border-left:3px solid var(--green)">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:64px">${s.code}</span>
+              <span style="font-size:12px;flex:1">${s.title}</span>
+              <span style="font-size:11px;color:var(--green);font-weight:600">${doneCount}/${totalCount} assessments done</span>
+              <span style="font-size:10px;color:var(--muted)">${sloCount} SLO${sloCount!==1?'s':''} address CLO${c.number}</span>
+            </div>`;
+          }).join('')}
+        </div>` : '';
+
+      const candidatesHtml = candidates.length ? `
+        <div>
+          <div style="font-size:10px;font-weight:600;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px">○ Available subjects — not yet undertaken</div>
+          ${candidates.map(s => {
+            const sloMatches = s.slos.filter(sl => {
+              const txt = sl.description.toLowerCase();
+              return (CLO_KW[c.number]||[]).some(k=>new RegExp(k,'i').test(txt));
+            });
+            const roleClass = s.role==='Core'?'chip-core':s.role==='Compulsory'?'chip-compulsory':'chip-elective';
+            return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:var(--bg);border-radius:6px;margin-bottom:5px;border-left:3px solid ${THRESH_COLORS[needed]}">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--accent);min-width:64px;margin-top:1px">${s.code}</span>
+              <div style="flex:1">
+                <div style="font-size:12px;font-weight:500;margin-bottom:3px">${s.title}</div>
+                <div style="font-size:11px;color:var(--muted)">
+                  ${sloMatches.slice(0,2).map(sl=>`<span style="display:block;line-height:1.4">· ${sl.description.substring(0,90)}${sl.description.length>90?'…':''}</span>`).join('')}
+                  ${sloMatches.length>2?`<span style="color:var(--muted)">+${sloMatches.length-2} more SLOs</span>`:''}
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0">
+                <span class="role-chip ${roleClass}" style="font-size:10px">${s.role}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">${s.credits} cp</span>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>` : '';
+
+      const gapWarning = noDesignCoverage ? `
+        <div style="padding:10px 12px;background:var(--red-bg);border-radius:6px;border-left:3px solid var(--red);font-size:12px;color:var(--red)">
+          <strong>⚠ Course design gap:</strong> No assessed subjects at ${stageLabel} level are mapped to CLO ${c.number}. 
+          This requires review by the Course Team — the Course Assurance Plan may need updating.
+        </div>` : '';
+
+      const hasNothing = !inProgress.length && !candidates.length && !noDesignCoverage;
+
+      return `<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:${CLO_LIGHT[c.number-1]};color:${col};font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px">CLO ${c.number}</span>
+          <span style="font-size:12px;color:var(--text)">${c.description}</span>
+          <span class="${THRESH_CLASS[cloThresholds[c.number].level]}" style="padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;margin-left:auto;flex-shrink:0">Currently: ${THRESH_NAMES[cloThresholds[c.number].level]}</span>
+        </div>
+        ${gapWarning}
+        ${inProgressHtml}
+        ${candidatesHtml}
+        ${hasNothing ? `<div style="font-size:12px;color:var(--muted);font-style:italic">No further ${stageLabel}-level subjects available — check enrolment plan with academic advisor.</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('submitted-list').innerHTML=st.subs.map(sub=>{
+    const s=allS.find(x=>x.code===sub.subj);
+    const clos=s?getSubjectCLOs(s):[];
+    const lvl=s?subjectLevel(s.code):0;
+    const lvlLabel=lvl?`<span style="font-size:10px;padding:1px 6px;border-radius:8px;background:${THRESH_BG[lvl]};color:${THRESH_TEXT[lvl]};font-weight:600;font-family:'IBM Plex Mono',monospace">${THRESH_NAMES[lvl]}</span>`:'';
+    const tags=clos.map(n=>`<span class="clo-tag-sm" style="background:${CLO_COLORS[n-1]}">CLO${n}</span>`).join('');
+    const icon=sub.done?'<div class="sub-icon icon-done">✓</div>':'<div class="sub-icon icon-pending">○</div>';
+    const note=sub.done?'':`<em style="color:var(--amber);font-size:11px"> (pending)</em>`;
+    return `<div class="sub-item">${icon}<div class="sub-main">
+      <div class="sub-top"><span class="sub-subj">${sub.subj}</span><span class="sub-name">${sub.name}${note}</span>${lvlLabel}<span class="sub-wt">${sub.weight}%</span></div>
+      ${tags?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${tags}</div>`:''}
+    </div></div>`;
+  }).join('');
+}
+
+function initGovernance(){
+  const allS=getAllSubjects().filter((s,i,a)=>a.findIndex(x=>x.code===s.code)===i);
+  const assessed=allS.filter(s=>s.assessments.length>0);
+  const totalSLOs=allS.reduce((n,s)=>n+s.slos.length,0);
+  const totalAss=allS.reduce((n,s)=>n+s.assessments.length,0);
+
+  document.getElementById('gov-cards').innerHTML=[
+    ['Total Subjects in System',allS.length,'across all roles and components'],
+    ['Mandatory Core Subjects',8,'64 cp — all students complete'],
+    ['Subjects with Assessments',assessed.length,`${Math.round(assessed.length/allS.length*100)}% of total subject pool`],
+    ['Total SLOs Recorded',totalSLOs,'across all subjects in system'],
+    ['Total Assessments Mapped',totalAss,'in curriculum management system'],
+    ['Restricted Elective Pool',38,'students need 104 cp (≈13 subjects)']
+  ].map(([h,v,s])=>`<div class="gov-card"><h4>${h}</h4><div class="gov-val">${v}</div><div class="gov-sub">${s}</div></div>`).join('');
+
+  document.getElementById('clo-coverage').innerHTML=CLOS.map(c=>{
+    const cnt=allS.filter(s=>getSubjectCLOs(s).includes(c.number)).length;
+    const p=Math.round(cnt/allS.length*100);
+    return `<div class="cov-row">
+      <span class="cov-clo-num" style="color:${CLO_COLORS[c.number-1]}">CLO ${c.number}</span>
+      <span class="cov-clo-desc">${c.description.substring(0,75)}…</span>
+      <div class="cov-bar"><div class="cov-fill" style="width:${p}%;background:${CLO_COLORS[c.number-1]}"></div></div>
+      <span class="cov-pct" style="color:${CLO_COLORS[c.number-1]}">${p}%</span>
+      <span class="cov-count">${cnt} subjects</span></div>`;
+  }).join('');
+
+  // Threshold coverage per CLO
+  const threshEl=document.getElementById('thresh-coverage');
+  const threshRows=CLOS.map(c=>{
+    // Count subjects per threshold level that align to this CLO
+    const byLvl={1:0,2:0,3:0,4:0};
+    allS.filter(s=>getSubjectCLOs(s).includes(c.number)).forEach(s=>{
+      const l=subjectLevel(s.code);
+      if(byLvl[l]!==undefined)byLvl[l]++;
+    });
+    const segs=[1,2,3,4].map(l=>{
+      const n=byLvl[l];
+      const w=n?Math.max(8,Math.round(n/allS.length*200))+'px':'8px';
+      return n?`<div style="height:20px;width:${w};background:${THRESH_COLORS[l]};border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff" title="${THRESH_NAMES[l]}: ${n} subjects">${n}</div>`
+              :`<div style="height:20px;width:8px;background:var(--border);border-radius:3px" title="${THRESH_NAMES[l]}: none"></div>`;
+    }).join('');
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:${CLO_COLORS[c.number-1]};min-width:48px">CLO ${c.number}</span>
+      <span style="font-size:11px;color:var(--muted);flex:1;min-width:200px;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.description.substring(0,60)}…</span>
+      <div style="display:flex;gap:4px;align-items:center">${segs}</div>
+      <div style="display:flex;gap:8px;font-size:10px;color:var(--muted)">
+        ${[1,2,3,4].filter(l=>byLvl[l]>0).map(l=>`<span style="color:${THRESH_COLORS[l]}">${THRESH_NAMES[l][0]}: ${byLvl[l]}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  threshEl.innerHTML=`<div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+    ${[1,2,3,4].map(l=>`<span style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:10px;height:10px;border-radius:2px;background:${THRESH_COLORS[l]};display:inline-block"></span>${THRESH_NAMES[l]}</span>`).join('')}
+  </div>${threshRows}`;
+  const byRole={Core:{c:0,s:0},Compulsory:{c:0,s:0},Elective:{c:0,s:0}};
+  allS.forEach(s=>{const r=byRole[s.role]||byRole.Elective;r.c+=s.assessments.length;r.s++;});
+  const mx=Math.max(...Object.values(byRole).map(x=>x.c));
+  const cols={Core:'#4a90d9',Compulsory:'#56b08e',Elective:'#e0954a'};
+  document.getElementById('assess-dist').innerHTML=Object.entries(byRole).map(([r,d])=>`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+    <span style="min-width:90px;font-size:13px;font-weight:500">${r}</span>
+    <div style="flex:1;height:20px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:${mx?Math.round(d.c/mx*100):0}%;background:${cols[r]};border-radius:4px"></div></div>
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;min-width:90px">${d.c} assessments</span>
+    <span style="font-size:11px;color:var(--muted)">(${d.s} subjects)</span></div>`).join('');
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  ['structure','mapping','student','governance','guide'].forEach((t,i)=>{
+    if(t===id){ document.querySelectorAll('.tab')[i].classList.add('active'); }
+  });
+  const panel = document.getElementById(`panel-${id}`);
+  if(panel){ panel.classList.add('active'); panel.style.display='block'; }
+  // hide others explicitly (handles the guide panel's inline style)
+  ['structure','mapping','student','governance','guide'].filter(t=>t!==id).forEach(t=>{
+    const p=document.getElementById(`panel-${t}`);
+    if(p){ p.classList.remove('active'); p.style.display='none'; }
+  });
+}
+
+initStructure();initMapping();renderStudentView();initGovernance();
+</script>
+
+
+</body>
+</html>
