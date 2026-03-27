@@ -674,7 +674,8 @@ function App(){
   const openForm=c=>{setActive({...c});setView("form");setTab(0);};
   const openScope=c=>{setActive({...c});setView("scope");};
   const newCourse=()=>{const c=emptyCourse();setActive(c);setView("form");setTab(0);};
-  const save=()=>{setCourses(p=>{const idx=p.findIndex(c=>c.id===active.id);return idx>=0?p.map(c=>c.id===active.id?active:c):[...p,active];});setSaved(true);setTimeout(()=>setSaved(false),2500);setView("dashboard");};
+  const SHEETS_URL='https://script.google.com/macros/s/AKfycbzYBr1dAXxlpqeAsEEoPExnmYNIjkjwneh5jmNuJexy8vZ6UWv7Pepx_TsLI7YFMIEbig/exec';
+  const save=()=>{setCourses(p=>{const idx=p.findIndex(c=>c.id===active.id);return idx>=0?p.map(c=>c.id===active.id?active:c):[...p,active];});setSaved(true);setTimeout(()=>setSaved(false),2500);fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({course:active})}).catch(err=>console.warn('Sheets sync failed:',err));setView("dashboard");};
   const del=id=>{setCourses(p=>p.filter(c=>c.id!==id));setView("dashboard");};
   const upd=(k,v)=>setActive(p=>({...p,[k]:v}));
   const updGov=(k,sk,v)=>setActive(p=>({...p,govFlags:{...p.govFlags,[k]:{...(p.govFlags?.[k]||{}),[sk]:v}}}));
