@@ -25,7 +25,7 @@ table{border-collapse:collapse}
 <script type="text/babel">
 const {useState,useEffect}=React;
 
-const STORAGE_KEY="mea_ctp_v3";
+const STORAGE_KEY="mea_ctp_v4";
 const C={orange:"#f0572a",charcoal:"#222222",white:"#ffffff",darkGreen:"#07342d",lightGreen:"#3c8364",darkBlue:"#222944",lightBlue:"#5675bc",pink:"#e9ceca",lightBrown:"#c7b8a0",darkBrown:"#71634e"};
 
 const MODELS=["Fully Online","In-Person Immersive","Combined"];
@@ -64,19 +64,26 @@ const emptyCourse=()=>({
   ccrStart:"",ccrEnd:"",ccrNote:"",
   govFlags:Object.fromEntries(GOV_FIELDS.map(f=>[f.key,{flagged:"No",note:"",actions:[]}])),
   govApprovals:{schoolBoard:"No",facultyBoard:"No",aqsc:"No",ucc:"No",ibs:"No",senate:"No",actions:[]},
-  sectionC:Object.fromEntries(SECTION_C.map(s=>[s.id,{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"",actions:[]}])),
-  ocbChanges:"No",printedGuideChanges:"No",ugGuideChanges:"No",studentComms:"",marketingActions:[],
+  sectionC:Object.fromEntries(SECTION_C.map(s=>[s.id,{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"",facultyComments:"",actions:[]}])),
+  ocbChanges:"No",printedGuideChanges:"No",ugGuideChanges:"No",studentComms:"",studentCommsFacultyComments:"",marketingActions:[],
   pdRequired:"No",facilityConstraints:"No",staffingViable:"Yes",digitalCapability:"No",staffingNote:"",staffActions:[],
-  riskSummary:"",overallRisk:"",goLiveGroup:"",additionalComments:"",additionalConditions:"",
+  riskSummary:"",riskFacultyComments:"",overallRisk:"",goLiveGroup:"",additionalComments:"",additionalConditions:"",goLiveFacultyComments:"",
 });
 
 const normaliseCourse=c=>{
   const base=emptyCourse();
+  // normalise sectionC entries to include facultyComments
+  const normSC={};
+  SECTION_C.forEach(s=>{
+    const existing=(c.sectionC||{})[s.id]||{};
+    normSC[s.id]={...base.sectionC[s.id],...existing};
+    if(normSC[s.id].facultyComments===undefined)normSC[s.id].facultyComments="";
+  });
   return {
     ...base,...c,
     govFlags:{...base.govFlags,...(c.govFlags||{})},
     govApprovals:{...base.govApprovals,...(c.govApprovals||{})},
-    sectionC:{...base.sectionC,...(c.sectionC||{})},
+    sectionC:normSC,
   };
 };
 
@@ -104,14 +111,14 @@ const s1=normaliseCourse({
   govApprovals:{schoolBoard:"Yes",facultyBoard:"Yes",aqsc:"No",ucc:"Yes",ibs:"No",senate:"Yes",
     actions:[{activity:"Lodge UCC submission with supporting documentation",subject:"BN001",responsible:"Course Director",startDate:"2026-08-01",endDate:"2026-09-30"}]},
   sectionC:{
-    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require full redesign to meet evidence-based design standards. Ed designer audit of 34 subjects underway. Priority subjects identified for Semester 1 2027 intake.",actions:[{activity:"Complete ed design audit of all subjects",subject:"All 34 subjects",responsible:"Ed Designer",startDate:"2026-02-01",endDate:"2026-06-30"}]},
-    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current delivery is predominantly synchronous face-to-face. Transition requires significant shift to asynchronous online delivery for online phases. Staff capability gap identified.",actions:[]},
-    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"On-campus intensives to be scheduled at Bathurst as home campus. Orange and Dubbo students will travel for intensives. Travel support and scheduling to be confirmed.",actions:[{activity:"Confirm intensive schedule and locations",subject:"Clinical subjects",responsible:"Head of School",startDate:"2026-04-01",endDate:"2026-06-30"}]},
-    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Explicit transition support materials required for students moving between online and on-campus phases. Particular concern for first-year students.",actions:[]},
-    "5":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Teaching presence standards for online phases to be embedded in subject redesign. Synchronous online sessions to maintain relational connection during online phases.",actions:[]},
-    "6":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Clinical assessment components must remain on-campus. Online assessment audit required to ensure integrity and diversity of formats across online phases.",actions:[{activity:"Assessment audit — identify items requiring modification",subject:"All subjects",responsible:"Course Director",startDate:"2026-03-01",endDate:"2026-05-31"}]},
-    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Placements are locally based and unaffected by model change. Pre-placement preparation to be delivered online. Debriefs to occur on-campus during intensive phases.",actions:[]},
-    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Student support continuity across phases is a priority. Wraparound support mapping required to ensure students do not lose access to services during online phases.",actions:[]},
+    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require full redesign to meet evidence-based design standards. Ed designer audit of 34 subjects underway. Priority subjects identified for Semester 1 2027 intake.",facultyComments:"Course team is aware of the redesign requirement. The Head of School has flagged that academic staff will need protected time to participate in the redesign process.",actions:[{activity:"Complete ed design audit of all subjects",subject:"All 34 subjects",responsible:"Ed Designer",startDate:"2026-02-01",endDate:"2026-06-30"}]},
+    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current delivery is predominantly synchronous face-to-face. Transition requires significant shift to asynchronous online delivery for online phases. Staff capability gap identified.",facultyComments:"",actions:[]},
+    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"On-campus intensives to be scheduled at Bathurst as home campus. Orange and Dubbo students will travel for intensives. Travel support and scheduling to be confirmed.",facultyComments:"Faculty supports Bathurst as home campus for intensives. Associate Dean Academic has requested that intensive scheduling be provided at least 12 weeks in advance to allow students to plan travel.",actions:[{activity:"Confirm intensive schedule and locations",subject:"Clinical subjects",responsible:"Head of School",startDate:"2026-04-01",endDate:"2026-06-30"}]},
+    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Explicit transition support materials required for students moving between online and on-campus phases. Particular concern for first-year students.",facultyComments:"",actions:[]},
+    "5":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Teaching presence standards for online phases to be embedded in subject redesign. Synchronous online sessions to maintain relational connection during online phases.",facultyComments:"",actions:[]},
+    "6":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Clinical assessment components must remain on-campus. Online assessment audit required to ensure integrity and diversity of formats across online phases.",facultyComments:"The course team has flagged concerns about the feasibility of some online assessment formats for clinical reasoning subjects. This will be raised with the Ed Designer during the assessment audit.",actions:[{activity:"Assessment audit — identify items requiring modification",subject:"All subjects",responsible:"Course Director",startDate:"2026-03-01",endDate:"2026-05-31"}]},
+    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"Placements are locally based and unaffected by model change. Pre-placement preparation to be delivered online. Debriefs to occur on-campus during intensive phases.",facultyComments:"",actions:[]},
+    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Student support continuity across phases is a priority. Wraparound support mapping required to ensure students do not lose access to services during online phases.",facultyComments:"",actions:[]},
   },
   ocbChanges:"Yes",printedGuideChanges:"Yes",ugGuideChanges:"No",
   studentComms:"Dedicated student communication plan required. Current students to be notified of model change and teach-out arrangements. Prospective students to receive updated course information from 2027 intake.",
@@ -145,14 +152,14 @@ const s2=normaliseCourse({
   },
   govApprovals:{schoolBoard:"No",facultyBoard:"No",aqsc:"No",ucc:"No",ibs:"No",senate:"No",actions:[]},
   sectionC:{
-    "1":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"All subjects meet online design standards following 2023 CCR redesign. Minor UDL updates required in two subjects. Ed designer sign-off confirmed.",actions:[]},
-    "2":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"92% async average across PG cohort — meets 90% threshold. Synchronous sessions used for assessment preparation and high-value feedback only.",actions:[]},
-    "3":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Zero mandatory campus attendance. All learning and assessment fully online. Professional experience placements in students' local school contexts as per AITSL requirements.",actions:[]},
-    "4":{edDesignerStatus:"Complete",facultyStatus:"In progress",notes:"Transition support scaffolds in place. Digital literacy modules embedded in Year 1. Self-regulation resources available via Brightspace. Faculty review of first-year transition data underway.",actions:[]},
-    "5":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Strong teaching presence across all subjects. Responsive communication protocols and structured discussion facilitation guides provided to all academic staff.",actions:[]},
-    "6":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Fully online diverse assessment suite — interactive orals, portfolios, case studies, professional experience assessments. Academic integrity measures embedded.",actions:[]},
-    "7":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Locally based placements with fully online preparation, supervision and debrief. AITSL requirements met. Industry engagement via online guest sessions.",actions:[]},
-    "8":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Integrated proactive support model in place. Library, wellbeing and academic skills services introduced at orientation. Proactive outreach at census and mid-session.",actions:[]},
+    "1":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"All subjects meet online design standards following 2023 CCR redesign. Minor UDL updates required in two subjects. Ed designer sign-off confirmed.",facultyComments:"Faculty is satisfied with current design standards. No additional actions required from the course team at this stage.",actions:[]},
+    "2":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"92% async average across PG cohort — meets 90% threshold. Synchronous sessions used for assessment preparation and high-value feedback only.",facultyComments:"",actions:[]},
+    "3":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Zero mandatory campus attendance. All learning and assessment fully online. Professional experience placements in students' local school contexts as per AITSL requirements.",facultyComments:"",actions:[]},
+    "4":{edDesignerStatus:"Complete",facultyStatus:"In progress",notes:"Transition support scaffolds in place. Digital literacy modules embedded in Year 1. Self-regulation resources available via Brightspace. Faculty review of first-year transition data underway.",facultyComments:"The Head of School has requested that first-year transition data be presented at the next School Board meeting for review.",actions:[]},
+    "5":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Strong teaching presence across all subjects. Responsive communication protocols and structured discussion facilitation guides provided to all academic staff.",facultyComments:"",actions:[]},
+    "6":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Fully online diverse assessment suite — interactive orals, portfolios, case studies, professional experience assessments. Academic integrity measures embedded.",facultyComments:"",actions:[]},
+    "7":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Locally based placements with fully online preparation, supervision and debrief. AITSL requirements met. Industry engagement via online guest sessions.",facultyComments:"",actions:[]},
+    "8":{edDesignerStatus:"Complete",facultyStatus:"Complete",notes:"Integrated proactive support model in place. Library, wellbeing and academic skills services introduced at orientation. Proactive outreach at census and mid-session.",facultyComments:"",actions:[]},
   },
   ocbChanges:"No",printedGuideChanges:"No",ugGuideChanges:"No",
   studentComms:"Brief notice to current students of formal Fully Online model designation — no change to their study experience.",
@@ -187,14 +194,14 @@ const s3=normaliseCourse({
   govApprovals:{schoolBoard:"No",facultyBoard:"Yes",aqsc:"No",ucc:"No",ibs:"No",senate:"No",
     actions:[{activity:"Prepare Faculty Board briefing paper on Combined model transition",subject:"BB001",responsible:"Associate Dean Academic",startDate:"2026-07-01",endDate:"2026-08-31"}]},
   sectionC:{
-    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require intentional redesign. Current online delivery is largely content delivery with limited interaction. Ed designer working with course team to redesign online phases.",actions:[{activity:"Redesign online phases of 12 priority subjects",subject:"Year 1 and 2 subjects",responsible:"Ed Designer",startDate:"2026-03-01",endDate:"2026-12-31"}]},
-    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current mixed delivery does not clearly delineate async and sync components. Sequencing of asynchronous online preparation followed by synchronous on-campus intensives to be designed explicitly.",actions:[]},
-    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Bathurst confirmed as home campus for intensives. Port Macquarie students to attend two intensive blocks per year. Intensive schedule to be published 12 weeks in advance.",actions:[{activity:"Publish 2028 intensive schedule",subject:"All subjects",responsible:"Course Director",startDate:"2027-06-01",endDate:"2027-08-31"}]},
-    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Students transitioning between online and on-campus phases require explicit preparation. Particular attention to Port Macquarie cohort managing travel logistics alongside study demands.",actions:[]},
-    "5":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Teaching presence continuity across phases needs to be explicitly designed. Academic staff to be supported to maintain consistent presence in both online and on-campus phases.",actions:[]},
-    "6":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Assessment is sequenced across phases — online preparation tasks, on-campus performance assessments, and online consolidation reflections. Assessment schedule aligned to intensive blocks.",actions:[{activity:"Audit and realign assessment schedule to intensive calendar",subject:"All subjects",responsible:"Course Director",startDate:"2026-05-01",endDate:"2026-09-30"}]},
-    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"WIL placements currently occur in Bathurst and Port Macquarie contexts. Online groundwork and on-campus simulation to precede placement. Partnership review underway.",actions:[]},
-    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Support continuity across phases to be mapped. Students should not need to re-register with support services when switching between online and on-campus phases.",actions:[]},
+    "1":{edDesignerStatus:"In progress",facultyStatus:"Not started",notes:"Online phases require intentional redesign. Current online delivery is largely content delivery with limited interaction. Ed designer working with course team to redesign online phases.",facultyComments:"",actions:[{activity:"Redesign online phases of 12 priority subjects",subject:"Year 1 and 2 subjects",responsible:"Ed Designer",startDate:"2026-03-01",endDate:"2026-12-31"}]},
+    "2":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Current mixed delivery does not clearly delineate async and sync components. Sequencing of asynchronous online preparation followed by synchronous on-campus intensives to be designed explicitly.",facultyComments:"",actions:[]},
+    "3":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Bathurst confirmed as home campus for intensives. Port Macquarie students to attend two intensive blocks per year. Intensive schedule to be published 12 weeks in advance.",facultyComments:"The Associate Dean Academic has confirmed Bathurst as home campus. Faculty is seeking clarity on cost support options for Port Macquarie students travelling to intensives.",actions:[{activity:"Publish 2028 intensive schedule",subject:"All subjects",responsible:"Course Director",startDate:"2027-06-01",endDate:"2027-08-31"}]},
+    "4":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Students transitioning between online and on-campus phases require explicit preparation. Particular attention to Port Macquarie cohort managing travel logistics alongside study demands.",facultyComments:"",actions:[]},
+    "5":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Teaching presence continuity across phases needs to be explicitly designed. Academic staff to be supported to maintain consistent presence in both online and on-campus phases.",facultyComments:"",actions:[]},
+    "6":{edDesignerStatus:"In progress",facultyStatus:"In progress",notes:"Assessment is sequenced across phases — online preparation tasks, on-campus performance assessments, and online consolidation reflections. Assessment schedule aligned to intensive blocks.",facultyComments:"",actions:[{activity:"Audit and realign assessment schedule to intensive calendar",subject:"All subjects",responsible:"Course Director",startDate:"2026-05-01",endDate:"2026-09-30"}]},
+    "7":{edDesignerStatus:"Not started",facultyStatus:"In progress",notes:"WIL placements currently occur in Bathurst and Port Macquarie contexts. Online groundwork and on-campus simulation to precede placement. Partnership review underway.",facultyComments:"Industry partners have been informally briefed on the model change. Formal notification to follow once the WIL partnership agreement review is complete.",actions:[]},
+    "8":{edDesignerStatus:"Not started",facultyStatus:"Not started",notes:"Support continuity across phases to be mapped. Students should not need to re-register with support services when switching between online and on-campus phases.",facultyComments:"",actions:[]},
   },
   ocbChanges:"Yes",printedGuideChanges:"No",ugGuideChanges:"Yes",
   studentComms:"Port Macquarie students require specific communication about intensive attendance at Bathurst. Prospective student information to be updated for 2028 intake.",
@@ -298,8 +305,8 @@ const parseImportCSV=text=>{
 const exportCSV=courses=>{
   const esc=v=>`"${String(v||"").replace(/"/g,'""')}"`;
   const rows=[];
-  rows.push(["Course name","Course code","Faculty","School","Locations","Current mode","Nominated model","Complexity","Main campus","Group 1 candidate","Go-live group","Overall risk","Completion %","Executive Dean","Associate Dean Academic","Head of School","Course Director","DLT contact","CCR start","CCR end","CCR note",...GOV_FIELDS.map(f=>`${f.label} — flagged`),...SECTION_C.map(s=>`C${s.id} Ed designer status`),...SECTION_C.map(s=>`C${s.id} Faculty status`),...SECTION_C.map(s=>`C${s.id} Notes`),"OCB changes","Printed guide changes","UG guide changes","Student comms","PD required","Facility constraints","Staffing viable","Digital capability","Staff notes","Risk summary","Additional comments","Additional conditions"].map(esc).join(","));
-  courses.forEach(c=>{rows.push([c.courseName,c.courseCode,c.faculty,c.school,c.locations,c.currentMode,c.nominatedModel,c.complexity,c.mainCampus,c.group1candidate,c.goLiveGroup,c.overallRisk,pct(c),c.execDean,c.adAcademic,c.headOfSchool,c.courseDirector,c.dltContact,c.ccrStart,c.ccrEnd,c.ccrNote,...GOV_FIELDS.map(f=>c.govFlags?.[f.key]?.flagged||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.edDesignerStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.facultyStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.notes||""),c.ocbChanges,c.printedGuideChanges,c.ugGuideChanges,c.studentComms,c.pdRequired,c.facilityConstraints,c.staffingViable,c.digitalCapability,c.staffingNote,c.riskSummary,c.additionalComments,c.additionalConditions].map(esc).join(","));});
+  rows.push(["Course name","Course code","Faculty","School","Locations","Current mode","Nominated model","Complexity","Main campus","Group 1 candidate","Go-live group","Overall risk","Completion %","Executive Dean","Associate Dean Academic","Head of School","Course Director","DLT contact","CCR start","CCR end","CCR note",...GOV_FIELDS.map(f=>`${f.label} — flagged`),...SECTION_C.map(s=>`C${s.id} Ed designer status`),...SECTION_C.map(s=>`C${s.id} Faculty status`),...SECTION_C.map(s=>`C${s.id} Ed designer notes`),...SECTION_C.map(s=>`C${s.id} Faculty comments`),"OCB changes","Printed guide changes","UG guide changes","Student comms","Section D — Faculty comments","PD required","Facility constraints","Staffing viable","Digital capability","Staff notes","Risk summary","Section F — Faculty comments","Overall risk level","Go live group","Additional comments","Additional conditions","Section G — Faculty comments"].map(esc).join(","));
+  courses.forEach(c=>{rows.push([c.courseName,c.courseCode,c.faculty,c.school,c.locations,c.currentMode,c.nominatedModel,c.complexity,c.mainCampus,c.group1candidate,c.goLiveGroup,c.overallRisk,pct(c),c.execDean,c.adAcademic,c.headOfSchool,c.courseDirector,c.dltContact,c.ccrStart,c.ccrEnd,c.ccrNote,...GOV_FIELDS.map(f=>c.govFlags?.[f.key]?.flagged||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.edDesignerStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.facultyStatus||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.notes||""),...SECTION_C.map(s=>c.sectionC?.[s.id]?.facultyComments||""),c.ocbChanges,c.printedGuideChanges,c.ugGuideChanges,c.studentComms,c.studentCommsFacultyComments||"",c.pdRequired,c.facilityConstraints,c.staffingViable,c.digitalCapability,c.staffingNote,c.riskSummary,c.riskFacultyComments||"",c.overallRisk,c.goLiveGroup,c.additionalComments,c.additionalConditions,c.goLiveFacultyComments||""].map(esc).join(","));});
   rows.push([]);rows.push([`"ACTIONS — all courses"`]);
   rows.push(["Course","Course code","Section","Area","Activity","Subject","Responsible","Start date","End date"].map(esc).join(","));
   courses.forEach(c=>{
@@ -320,7 +327,7 @@ const Crest=({size=28,col=C.orange})=>(<svg width={size} height={size} viewBox="
 const Inp=({value,onChange,placeholder,type="text"})=>(<input type={type} value={value||""} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""}/>);
 const Sel=({value,onChange,options,placeholder})=>(<select value={value||""} onChange={e=>onChange(e.target.value)}><option value="">{placeholder||"Select..."}</option>{options.map(o=><option key={o} value={o}>{o}</option>)}</select>);
 const Txt=({value,onChange,placeholder,rows=3})=>(<textarea value={value||""} onChange={e=>onChange(e.target.value)} placeholder={placeholder||""} rows={rows}/>);
-const Fld=({label,children,half})=>(<div style={{marginBottom:14,flex:half?"1 1 calc(50% - 6px)":"1 1 100%",minWidth:half?180:0}}><label style={{display:"block",fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em"}}>{label}</label>{children}</div>);
+const Fld=({label,children,half,hint})=>(<div style={{marginBottom:14,flex:half?"1 1 calc(50% - 6px)":"1 1 100%",minWidth:half?180:0}}><label style={{display:"block",fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em"}}>{label}{hint&&<span style={{fontWeight:400,textTransform:"none",letterSpacing:0,color:C.lightBrown,marginLeft:6,fontSize:10}}>{hint}</span>}</label>{children}</div>);
 const SecHdr=({children})=>(<div style={{fontWeight:500,fontSize:12,color:C.white,background:C.darkGreen,padding:"8px 12px",borderRadius:4,marginBottom:14,marginTop:24,letterSpacing:"0.02em"}}>{children}</div>);
 
 const ActTable=({rows,onChange,label})=>{
@@ -346,20 +353,142 @@ function SecA({c,u}){return(<div><SecHdr>Section A — Course details</SecHdr><d
 
 function SecB({c,u,ug}){return(<div><SecHdr>Section B — Governance and approvals</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:16}}><Fld label="CCR start date" half><Inp type="date" value={c.ccrStart} onChange={v=>u("ccrStart",v)}/></Fld><Fld label="CCR end date" half><Inp type="date" value={c.ccrEnd} onChange={v=>u("ccrEnd",v)}/></Fld><Fld label="Note on interaction with MEA transition"><Txt value={c.ccrNote} onChange={v=>u("ccrNote",v)} placeholder="How does the CCR timeline interact with MEA transition?"/></Fld></div>{GOV_FIELDS.map(f=>(<div key={f.key} style={{border:`1px solid ${C.lightBrown}`,borderLeft:`3px solid ${C.orange}`,borderRadius:4,padding:"12px",marginBottom:10}}><div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:8,flexWrap:"wrap"}}><span style={{fontWeight:500,fontSize:14,flex:1}}>{f.label}</span><div style={{width:130,flexShrink:0}}><Sel value={c.govFlags?.[f.key]?.flagged||"No"} onChange={v=>ug(f.key,"flagged",v)} options={["Yes","No","TBC"]}/></div></div>{c.govFlags?.[f.key]?.flagged!=="No"&&(<><Txt value={c.govFlags?.[f.key]?.note||""} onChange={v=>ug(f.key,"note",v)} placeholder="Notes" rows={2}/><ActTable rows={c.govFlags?.[f.key]?.actions||[]} onChange={v=>ug(f.key,"actions",v)}/></>)}</div>))}<SecHdr>Governance approvals</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:12}}>{[["schoolBoard","School Board"],["facultyBoard","Faculty Board"],["aqsc","AQSC"],["ucc","University Courses Committee"],["ibs","Indigenous Board of Studies"],["senate","Academic Senate"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c.govApprovals?.[k]||"No"} onChange={v=>u("govApprovals",{...c.govApprovals,[k]:v})} options={["Yes","No","TBC"]}/></Fld>))}</div><ActTable rows={c.govApprovals?.actions||[]} onChange={v=>u("govApprovals",{...(c.govApprovals||{}),actions:v})} label="Governance approval actions"/></div>);}
 
+// ─── SECTION C — with split notes/faculty comments ───────────
 function SecC({c,uc}){
   const [exp,setExp]=useState("all");
   const isOpen=id=>exp==="all"||exp===id;
-  return(<div><SecHdr>Section C — Model gap analysis</SecHdr><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}><p style={{fontSize:14,color:C.darkBrown}}>Nominated model: <strong style={{color:C.charcoal}}>{c.nominatedModel||"Not yet selected — set in Section A"}</strong></p><div style={{display:"flex",gap:6}}><button onClick={()=>setExp("all")} style={{fontSize:11,padding:"4px 10px",background:exp==="all"?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp==="all"?C.white:C.darkGreen,borderRadius:4}}>Expand all</button><button onClick={()=>setExp(null)} style={{fontSize:11,padding:"4px 10px",background:exp===null?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp===null?C.white:C.darkGreen,borderRadius:4}}>Collapse all</button></div></div>
-  {SECTION_C.map(s=>{const sc=c.sectionC?.[s.id]||{};const open=isOpen(s.id);const ss=statSty(sc.edDesignerStatus||"Not started");return(<div key={s.id} style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,marginBottom:8,overflow:"hidden"}}><div onClick={()=>setExp(open&&exp!=="all"?null:s.id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",borderLeft:`3px solid ${C.darkGreen}`,gap:8}}><span style={{fontSize:14,fontWeight:500,flex:1}}>C{s.id}. {s.title}</span><div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}><Badge label={sc.edDesignerStatus||"Not started"} bg={ss.bg} col={ss.col} br={ss.br}/><span style={{fontSize:12,color:C.darkBrown}}>{open?"▲":"▼"}</span></div></div>{open&&(<div style={{padding:"14px",borderTop:`1px solid ${C.lightBrown}`}}><div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:12}}><Fld label="Ed designer review status" half><Sel value={sc.edDesignerStatus||"Not started"} onChange={v=>uc(s.id,"edDesignerStatus",v)} options={STATUS}/></Fld><Fld label="Faculty review status" half><Sel value={sc.facultyStatus||"Not started"} onChange={v=>uc(s.id,"facultyStatus",v)} options={STATUS}/></Fld></div><Fld label="Notes"><Txt value={sc.notes||""} onChange={v=>uc(s.id,"notes",v)} placeholder="Notes on gap analysis for this standard"/></Fld><ActTable rows={sc.actions||[]} onChange={v=>uc(s.id,"actions",v)}/></div>)}</div>);})}
+
+  // has a faculty comment been entered?
+  const hasFacComment=id=>(c.sectionC?.[id]?.facultyComments||"").trim().length>0;
+
+  return(<div><SecHdr>Section C — Model gap analysis</SecHdr>
+  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,flexWrap:"wrap",gap:8}}>
+    <p style={{fontSize:14,color:C.darkBrown}}>Nominated model: <strong style={{color:C.charcoal}}>{c.nominatedModel||"Not yet selected — set in Section A"}</strong></p>
+    <div style={{display:"flex",gap:6}}>
+      <button onClick={()=>setExp("all")} style={{fontSize:11,padding:"4px 10px",background:exp==="all"?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp==="all"?C.white:C.darkGreen,borderRadius:4}}>Expand all</button>
+      <button onClick={()=>setExp(null)} style={{fontSize:11,padding:"4px 10px",background:exp===null?C.darkGreen:"transparent",border:`1px solid ${C.darkGreen}`,color:exp===null?C.white:C.darkGreen,borderRadius:4}}>Collapse all</button>
+    </div>
+  </div>
+
+  {SECTION_C.map(s=>{
+    const sc=c.sectionC?.[s.id]||{};
+    const open=isOpen(s.id);
+    const ss=statSty(sc.edDesignerStatus||"Not started");
+    const hasFC=hasFacComment(s.id);
+
+    return(<div key={s.id} style={{border:`1px solid ${C.lightBrown}`,borderRadius:4,marginBottom:8,overflow:"hidden"}}>
+      {/* accordion header */}
+      <div onClick={()=>setExp(open&&exp!=="all"?null:s.id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",borderLeft:`3px solid ${C.darkGreen}`,gap:8}}>
+        <span style={{fontSize:14,fontWeight:500,flex:1}}>C{s.id}. {s.title}</span>
+        <div style={{display:"flex",gap:6,alignItems:"center",flexShrink:0}}>
+          {hasFC&&!open&&<span title="Faculty comment added" style={{fontSize:10,background:C.lightBlue,color:C.white,padding:"2px 7px",borderRadius:10,fontWeight:600,letterSpacing:"0.02em"}}>Faculty comment</span>}
+          <Badge label={sc.edDesignerStatus||"Not started"} bg={ss.bg} col={ss.col} br={ss.br}/>
+          <span style={{fontSize:12,color:C.darkBrown}}>{open?"▲":"▼"}</span>
+        </div>
+      </div>
+
+      {open&&(<div style={{padding:"14px",borderTop:`1px solid ${C.lightBrown}`}}>
+        {/* status row */}
+        <div style={{display:"flex",flexWrap:"wrap",gap:12,marginBottom:12}}>
+          <Fld label="Ed designer review status" half>
+            <Sel value={sc.edDesignerStatus||"Not started"} onChange={v=>uc(s.id,"edDesignerStatus",v)} options={STATUS}/>
+          </Fld>
+          <Fld label="Faculty review status" half>
+            <Sel value={sc.facultyStatus||"Not started"} onChange={v=>uc(s.id,"facultyStatus",v)} options={STATUS}/>
+          </Fld>
+        </div>
+
+        {/* side-by-side notes boxes */}
+        <div style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:4}}>
+          {/* Ed designer notes */}
+          <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220}}>
+            <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:6}}>
+              <span style={{display:"inline-block",width:8,height:8,borderRadius:2,background:C.darkGreen,flexShrink:0}}></span>
+              Ed designer notes
+            </div>
+            <textarea
+              value={sc.notes||""}
+              onChange={e=>uc(s.id,"notes",e.target.value)}
+              placeholder="Ed designer analysis and notes for this standard"
+              rows={4}
+              style={{width:"100%",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.darkGreen}`,borderRadius:4,padding:"9px 11px",fontSize:14,fontFamily:"Arial,sans-serif",color:C.charcoal,background:"#fafaf9",resize:"vertical",lineHeight:1.6,outline:"none"}}
+              onFocus={e=>{e.target.style.borderColor=C.darkGreen;e.target.style.boxShadow=`0 0 0 3px rgba(7,52,45,0.1)`;}}
+              onBlur={e=>{e.target.style.borderColor=C.lightBrown;e.target.style.borderTopColor=C.darkGreen;e.target.style.boxShadow="none";}}
+            />
+          </div>
+
+          {/* Faculty comments */}
+          <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220}}>
+            <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:6}}>
+              <span style={{display:"inline-block",width:8,height:8,borderRadius:2,background:C.lightBlue,flexShrink:0}}></span>
+              Faculty comments
+            </div>
+            <textarea
+              value={sc.facultyComments||""}
+              onChange={e=>uc(s.id,"facultyComments",e.target.value)}
+              placeholder="Faculty response, context, or additional information"
+              rows={4}
+              style={{width:"100%",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"9px 11px",fontSize:14,fontFamily:"Arial,sans-serif",color:C.charcoal,background:"#f0f4ff",resize:"vertical",lineHeight:1.6,outline:"none"}}
+              onFocus={e=>{e.target.style.borderColor=C.lightBlue;e.target.style.boxShadow=`0 0 0 3px rgba(86,117,188,0.15)`;}}
+              onBlur={e=>{e.target.style.borderColor=C.lightBrown;e.target.style.borderTopColor=C.lightBlue;e.target.style.boxShadow="none";}}
+            />
+          </div>
+        </div>
+
+        <ActTable rows={sc.actions||[]} onChange={v=>uc(s.id,"actions",v)}/>
+      </div>)}
+    </div>);
+  })}
   </div>);}
 
-function SecD({c,u}){return(<div><SecHdr>Section D — Marketing and student communications</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["ocbChanges","Changes required in the OCB?"],["printedGuideChanges","Changes required in printed course guide?"],["ugGuideChanges","Changes required in UG Guide?"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c[k]||"No"} onChange={v=>u(k,v)} options={["Yes","No","TBC"]}/></Fld>))}<Fld label="Additional student communications required"><Txt value={c.studentComms} onChange={v=>u("studentComms",v)} placeholder="Describe any additional student communication needs"/></Fld></div><ActTable rows={c.marketingActions||[]} onChange={v=>u("marketingActions",v)} label="Marketing and communications actions"/></div>);}
+const FacultyCommentBox=({value,onChange})=>(
+  <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220,marginBottom:14}}>
+    <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:6}}>
+      <span style={{display:"inline-block",width:8,height:8,borderRadius:2,background:C.lightBlue,flexShrink:0}}></span>
+      Faculty comments
+    </div>
+    <textarea
+      value={value||""}
+      onChange={e=>onChange(e.target.value)}
+      placeholder="Faculty response, context, or additional information"
+      rows={4}
+      style={{width:"100%",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"9px 11px",fontSize:14,fontFamily:"Arial,sans-serif",color:C.charcoal,background:"#f0f4ff",resize:"vertical",lineHeight:1.6,outline:"none"}}
+      onFocus={e=>{e.target.style.borderColor=C.lightBlue;e.target.style.boxShadow=`0 0 0 3px rgba(86,117,188,0.15)`;}}
+      onBlur={e=>{e.target.style.borderColor=C.lightBrown;e.target.style.borderTopColor=C.lightBlue;e.target.style.boxShadow="none";}}
+    />
+  </div>
+);
+
+function SecD({c,u}){return(<div><SecHdr>Section D — Marketing and student communications</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["ocbChanges","Changes required in the OCB?"],["printedGuideChanges","Changes required in printed course guide?"],["ugGuideChanges","Changes required in UG Guide?"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c[k]||"No"} onChange={v=>u(k,v)} options={["Yes","No","TBC"]}/></Fld>))}</div>
+  <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+    <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220,marginBottom:14}}>
+      <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-block",width:8,height:8,borderRadius:2,background:C.darkGreen,flexShrink:0}}></span>Additional student communications required</div>
+      <Txt value={c.studentComms} onChange={v=>u("studentComms",v)} placeholder="Describe any additional student communication needs" rows={4}/>
+    </div>
+    <FacultyCommentBox value={c.studentCommsFacultyComments} onChange={v=>u("studentCommsFacultyComments",v)}/>
+  </div>
+  <ActTable rows={c.marketingActions||[]} onChange={v=>u("marketingActions",v)} label="Marketing and communications actions"/></div>);}
 
 function SecE({c,u}){return(<div><SecHdr>Section E — Staff experience and readiness</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}>{[["pdRequired","Additional PD required?"],["facilityConstraints","Facility or infrastructure constraints?"],["digitalCapability","Digital capability constraints identified?"]].map(([k,l])=>(<Fld key={k} label={l} half><Sel value={c[k]||"No"} onChange={v=>u(k,v)} options={["Yes","No","TBC"]}/></Fld>))}<Fld label="Staffing viable in new mode?" half><Sel value={c.staffingViable||"Yes"} onChange={v=>u("staffingViable",v)} options={["Yes","No","With conditions"]}/></Fld><Fld label="Notes"><Txt value={c.staffingNote} onChange={v=>u("staffingNote",v)} placeholder="Notes on staff readiness" rows={4}/></Fld></div><ActTable rows={c.staffActions||[]} onChange={v=>u("staffActions",v)} label="Staff readiness actions"/></div>);}
 
-function SecF({c,u}){return(<div><SecHdr>Section F — Risks</SecHdr><Fld label="Concise synthesis of significant implementation risks"><Txt value={c.riskSummary} onChange={v=>u("riskSummary",v)} placeholder="Summarise the most significant implementation risks and any support or decisions required" rows={5}/></Fld><Fld label="Overall implementation risk level"><Sel value={c.overallRisk||""} onChange={v=>u("overallRisk",v)} options={RISK}/></Fld></div>);}
+function SecF({c,u}){return(<div><SecHdr>Section F — Risks</SecHdr>
+  <div style={{display:"flex",gap:12,flexWrap:"wrap"}}>
+    <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220,marginBottom:14}}>
+      <div style={{fontSize:11,color:C.darkBrown,fontWeight:500,marginBottom:5,textTransform:"uppercase",letterSpacing:"0.04em",display:"flex",alignItems:"center",gap:6}}><span style={{display:"inline-block",width:8,height:8,borderRadius:2,background:C.darkGreen,flexShrink:0}}></span>Concise synthesis of significant implementation risks</div>
+      <Txt value={c.riskSummary} onChange={v=>u("riskSummary",v)} placeholder="Summarise the most significant implementation risks and any support or decisions required" rows={5}/>
+    </div>
+    <FacultyCommentBox value={c.riskFacultyComments} onChange={v=>u("riskFacultyComments",v)}/>
+  </div>
+  <Fld label="Overall implementation risk level"><Sel value={c.overallRisk||""} onChange={v=>u("overallRisk",v)} options={RISK}/></Fld>
+</div>);}
 
-function SecG({c,u}){return(<div><SecHdr>Section G — Final details</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}><Fld label="Go live group"><Sel value={c.goLiveGroup||""} onChange={v=>u("goLiveGroup",v)} options={GO_LIVE}/></Fld><Fld label="Additional comments"><Txt value={c.additionalComments} onChange={v=>u("additionalComments",v)} placeholder="Any additional comments"/></Fld><Fld label="Additional conditions"><Txt value={c.additionalConditions} onChange={v=>u("additionalConditions",v)} placeholder="Any conditions attached to approval or transition"/></Fld></div><div style={{marginTop:16,padding:"14px 16px",background:"#f0fdf4",border:"1px solid #4ade80",borderLeft:`4px solid ${C.lightGreen}`,borderRadius:4,fontSize:14,color:"#14532d",fontWeight:500}}>This form is now complete and ready for submission.</div></div>);}
+function SecG({c,u}){return(<div><SecHdr>Section G — Final details</SecHdr><div style={{display:"flex",flexWrap:"wrap",gap:12}}><Fld label="Go live group"><Sel value={c.goLiveGroup||""} onChange={v=>u("goLiveGroup",v)} options={GO_LIVE}/></Fld><Fld label="Additional comments"><Txt value={c.additionalComments} onChange={v=>u("additionalComments",v)} placeholder="Any additional comments"/></Fld><Fld label="Additional conditions"><Txt value={c.additionalConditions} onChange={v=>u("additionalConditions",v)} placeholder="Any conditions attached to approval or transition"/></Fld></div>
+  <div style={{display:"flex",gap:12,flexWrap:"wrap",marginTop:4}}>
+    <div style={{flex:"1 1 calc(50% - 6px)",minWidth:220}} />
+    <FacultyCommentBox value={c.goLiveFacultyComments} onChange={v=>u("goLiveFacultyComments",v)}/>
+  </div>
+  <div style={{marginTop:16,padding:"14px 16px",background:"#f0fdf4",border:"1px solid #4ade80",borderLeft:`4px solid ${C.lightGreen}`,borderRadius:4,fontSize:14,color:"#14532d",fontWeight:500}}>This form is now complete and ready for submission.</div>
+</div>);}
 
 // ─── SCOPE VIEW ───────────────────────────────────────────────
 const SRow=({label,value})=>value?(<div style={{display:"flex",flexWrap:"wrap",gap:8,padding:"8px 0",borderBottom:`1px solid ${C.pink}`,fontSize:13}}><span style={{color:C.darkBrown,minWidth:180,flexShrink:0,fontWeight:500}}>{label}</span><span style={{color:C.charcoal,flex:1}}>{value}</span></div>):null;
@@ -386,14 +515,65 @@ function ScopeView({course:c,onBack,onEdit}){
       <ScopeSec title="Key contacts">{[["Executive Dean",c.execDean],["Associate Dean Academic",c.adAcademic],["Head of School",c.headOfSchool],["Course Director",c.courseDirector],["DLT contact",c.dltContact],["Additional contacts",c.additionalContacts]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
       <ScopeSec title="Section B — Governance and approvals"><SRow label="CCR start date" value={c.ccrStart}/><SRow label="CCR end date" value={c.ccrEnd}/><SRow label="CCR interaction note" value={c.ccrNote}/>{GOV_FIELDS.map(f=>{const fl=c.govFlags?.[f.key];return fl&&fl.flagged!=="No"?(<div key={f.key} style={{padding:"7px 0",borderBottom:`1px solid ${C.pink}`}}><div style={{display:"flex",flexWrap:"wrap",gap:8,fontSize:13,alignItems:"center"}}><span style={{color:C.darkBrown,minWidth:180,fontWeight:500}}>{f.label}</span><Badge label={fl.flagged} bg={C.pink} col={C.darkBrown} br={C.lightBrown}/></div>{fl.note&&<div style={{fontSize:12,color:C.darkBrown,marginTop:4,paddingLeft:8}}>{fl.note}</div>}</div>):null;})}</ScopeSec>
       <ConsolidatedActions course={c} sectionLabel="Section B" sections={[...GOV_FIELDS.map(f=>({label:f.label,getActions:x=>x.govFlags?.[f.key]?.actions||[]})),{label:"Governance approvals",getActions:x=>x.govApprovals?.actions||[]}]}/>
-      <ScopeSec title="Section C — Model gap analysis">{SECTION_C.map(s=>{const sc=c.sectionC?.[s.id]||{};const es=statSty(sc.edDesignerStatus||"Not started");const fs=statSty(sc.facultyStatus||"Not started");return(<div key={s.id} style={{padding:"8px 0",borderBottom:`1px solid ${C.pink}`}}><div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,fontSize:13}}><span style={{fontWeight:500}}>C{s.id}. {s.title}</span><div style={{display:"flex",gap:6,flexWrap:"wrap"}}><Badge label={`Ed: ${sc.edDesignerStatus||"Not started"}`} bg={es.bg} col={es.col} br={es.br}/><Badge label={`Faculty: ${sc.facultyStatus||"Not started"}`} bg={fs.bg} col={fs.col} br={fs.br}/></div></div>{sc.notes&&<div style={{fontSize:12,color:C.darkBrown,marginTop:4}}>{sc.notes}</div>}</div>);})}</ScopeSec>
+
+      {/* Section C in scope view — with Faculty comments */}
+      <ScopeSec title="Section C — Model gap analysis">
+        {SECTION_C.map(s=>{
+          const sc=c.sectionC?.[s.id]||{};
+          const es=statSty(sc.edDesignerStatus||"Not started");
+          const fs=statSty(sc.facultyStatus||"Not started");
+          const hasFC=(sc.facultyComments||"").trim().length>0;
+          return(<div key={s.id} style={{padding:"10px 0",borderBottom:`1px solid ${C.pink}`}}>
+            <div style={{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:6,fontSize:13,marginBottom:6}}>
+              <span style={{fontWeight:500}}>C{s.id}. {s.title}</span>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                <Badge label={`Ed: ${sc.edDesignerStatus||"Not started"}`} bg={es.bg} col={es.col} br={es.br}/>
+                <Badge label={`Faculty: ${sc.facultyStatus||"Not started"}`} bg={fs.bg} col={fs.col} br={fs.br}/>
+              </div>
+            </div>
+            {/* side-by-side in scope doc */}
+            <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+              {sc.notes&&(
+                <div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f7faf9",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.darkGreen}`,borderRadius:4,padding:"8px 10px"}}>
+                  <div style={{fontSize:10,fontWeight:600,color:C.darkGreen,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Ed designer notes</div>
+                  <div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{sc.notes}</div>
+                </div>
+              )}
+              {hasFC&&(
+                <div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f0f4ff",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"8px 10px"}}>
+                  <div style={{fontSize:10,fontWeight:600,color:C.lightBlue,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Faculty comments</div>
+                  <div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{sc.facultyComments}</div>
+                </div>
+              )}
+            </div>
+          </div>);
+        })}
+      </ScopeSec>
+
       <ConsolidatedActions course={c} sectionLabel="Section C" sections={SECTION_C.map(s=>({label:`C${s.id}. ${s.title}`,getActions:x=>x.sectionC?.[s.id]?.actions||[]}))}/>
-      <ScopeSec title="Section D — Marketing and communications">{[["OCB changes?",c.ocbChanges],["Printed guide changes?",c.printedGuideChanges],["UG guide changes?",c.ugGuideChanges],["Student comms required",c.studentComms]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
+      <ScopeSec title="Section D — Marketing and communications">
+        {[["OCB changes?",c.ocbChanges],["Printed guide changes?",c.printedGuideChanges],["UG guide changes?",c.ugGuideChanges]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}
+        <div style={{display:"flex",gap:10,flexWrap:"wrap",paddingTop:8}}>
+          {c.studentComms&&<div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f7faf9",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.darkGreen}`,borderRadius:4,padding:"8px 10px"}}><div style={{fontSize:10,fontWeight:600,color:C.darkGreen,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Student communications</div><div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{c.studentComms}</div></div>}
+          {c.studentCommsFacultyComments&&<div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f0f4ff",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"8px 10px"}}><div style={{fontSize:10,fontWeight:600,color:C.lightBlue,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Faculty comments</div><div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{c.studentCommsFacultyComments}</div></div>}
+        </div>
+      </ScopeSec>
       <ConsolidatedActions course={c} sectionLabel="Section D" sections={[{label:"Marketing & communications",getActions:x=>x.marketingActions||[]}]}/>
       <ScopeSec title="Section E — Staff readiness">{[["Additional PD required?",c.pdRequired],["Facility constraints?",c.facilityConstraints],["Staffing viable?",c.staffingViable],["Digital capability constraints?",c.digitalCapability],["Notes",c.staffingNote]].map(([l,v])=><SRow key={l} label={l} value={v}/>)}</ScopeSec>
       <ConsolidatedActions course={c} sectionLabel="Section E" sections={[{label:"Staff readiness",getActions:x=>x.staffActions||[]}]}/>
-      <ScopeSec title="Section F — Risks"><SRow label="Risk summary" value={c.riskSummary}/><SRow label="Overall risk level" value={c.overallRisk}/></ScopeSec>
-      <ScopeSec title="Section G — Final details"><SRow label="Go live group" value={c.goLiveGroup}/><SRow label="Additional comments" value={c.additionalComments}/><SRow label="Additional conditions" value={c.additionalConditions}/></ScopeSec>
+      <ScopeSec title="Section F — Risks">
+        <div style={{display:"flex",gap:10,flexWrap:"wrap",paddingBottom:8}}>
+          {c.riskSummary&&<div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f7faf9",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.darkGreen}`,borderRadius:4,padding:"8px 10px"}}><div style={{fontSize:10,fontWeight:600,color:C.darkGreen,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Risk summary</div><div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{c.riskSummary}</div></div>}
+          {c.riskFacultyComments&&<div style={{flex:"1 1 calc(50% - 5px)",minWidth:200,background:"#f0f4ff",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"8px 10px"}}><div style={{fontSize:10,fontWeight:600,color:C.lightBlue,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Faculty comments</div><div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{c.riskFacultyComments}</div></div>}
+        </div>
+        <SRow label="Overall risk level" value={c.overallRisk}/>
+      </ScopeSec>
+      <ScopeSec title="Section G — Final details">
+        <SRow label="Go live group" value={c.goLiveGroup}/>
+        <SRow label="Additional comments" value={c.additionalComments}/>
+        <SRow label="Additional conditions" value={c.additionalConditions}/>
+        {c.goLiveFacultyComments&&<div style={{marginTop:8,background:"#f0f4ff",border:`1px solid ${C.lightBrown}`,borderTop:`2px solid ${C.lightBlue}`,borderRadius:4,padding:"8px 10px"}}><div style={{fontSize:10,fontWeight:600,color:C.lightBlue,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:5}}>Faculty comments</div><div style={{fontSize:12,color:C.charcoal,lineHeight:1.6}}>{c.goLiveFacultyComments}</div></div>}
+      </ScopeSec>
     </div>
     <div style={{background:C.charcoal,padding:"10px 20px",fontSize:10,color:C.lightBrown}}>© 2025 Charles Sturt University — TEQSA Provider Identification: PRV12018 (Australian University). CRICOS Provider: 00005F.</div>
   </div></div></div>);
@@ -420,198 +600,29 @@ function ImportModal({onImport,onClose}){
 function SecH(){
   const [openPanel,setOpenPanel]=useState(null);
   const toggle=k=>setOpenPanel(p=>p===k?null:k);
+  const Panel=({id,title,tag,tagBg,tagCol,children})=>{const open=openPanel===id;return(<div style={{border:`1px solid ${C.lightBrown}`,borderLeft:`3px solid ${tagBg}`,borderRadius:4,marginBottom:10,overflow:"hidden"}}><div onClick={()=>toggle(id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",gap:8}}><div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}><span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:3,background:tagBg,color:tagCol,flexShrink:0,letterSpacing:"0.04em"}}>{tag}</span><span style={{fontSize:14,fontWeight:500,color:C.charcoal}}>{title}</span></div><span style={{fontSize:12,color:C.darkBrown,flexShrink:0}}>{open?"▲":"▼"}</span></div>{open&&<div style={{padding:"16px 14px",borderTop:`1px solid ${C.lightBrown}`}}>{children}</div>}</div>);};
+  const Row=({label,children})=>(<div style={{display:"flex",flexWrap:"wrap",gap:8,padding:"9px 0",borderBottom:`1px solid ${C.pink}`,fontSize:13,alignItems:"flex-start"}}><span style={{color:C.darkBrown,minWidth:160,flexShrink:0,fontWeight:500,fontSize:12,paddingTop:1}}>{label}</span><span style={{color:C.charcoal,flex:1,lineHeight:1.6}}>{children}</span></div>);
+  const Pill=({label,color})=>{const styles={green:{bg:"#f0fdf4",col:"#14532d",br:"#4ade80"},amber:{bg:"#fffbeb",col:"#78350f",br:"#fbbf24"},blue:{bg:"#eff6ff",col:"#1e3a8a",br:"#93c5fd"},red:{bg:"#fff3e0",col:"#7c2d12",br:"#fb923c"},};const s=styles[color]||styles.blue;return <span style={{fontSize:11,fontWeight:500,padding:"2px 8px",borderRadius:4,background:s.bg,color:s.col,border:`1px solid ${s.br}`,whiteSpace:"nowrap"}}>{label}</span>;};
+  const Note=({children,color="amber"})=>{const bg=color==="green"?"#f0fdf4":color==="blue"?"#eff6ff":"#fffbeb";const border=color==="green"?"#4ade80":color==="blue"?"#93c5fd":"#fbbf24";const col=color==="green"?"#14532d":color==="blue"?"#1e3a8a":"#78350f";return <div style={{background:bg,border:`1px solid ${border}`,borderRadius:4,padding:"10px 12px",fontSize:12,color:col,lineHeight:1.65,marginTop:10}}>{children}</div>;};
+  return(<div><SecHdr>Section H — Operationalising this tool</SecHdr><div style={{background:C.pink,borderRadius:4,padding:"12px 14px",marginBottom:18,fontSize:13,color:C.darkBrown,lineHeight:1.65}}>This tab is a <strong>read-only reference</strong> for the project team. It documents what would need to be in place to move this tool from a personal prototype to a supported institutional system.</div>
+  <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10}}>1 — Backend &amp; data storage</div>
+  <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}><strong>Current state:</strong> All data is stored in <code style={{background:C.pink,padding:"1px 5px",borderRadius:3,fontSize:12}}>localStorage</code> in the user's browser.</div>
+  <Panel id="b1" title="Google Sheets via Apps Script" tag="SIMPLEST" tagBg="#3c8364" tagCol="#fff"><Row label="What it is">A Google Apps Script web app writes course data to a Google Sheet on save.</Row><Row label="Setup effort"><Pill label="Low" color="green"/> ~2–3 hours, no server required.</Row><Row label="Limitations">Nested data must be flattened. Data lives in Google infrastructure, not CSU's tenancy.</Row><Note color="amber">Confirm with IT that Google Workspace storage is acceptable under CSU's data governance policy.</Note></Panel>
+  <Panel id="b2" title="Airtable" tag="EASY API" tagBg="#5675bc" tagCol="#fff"><Row label="What it is">Cloud database with REST API. Each course is a record viewable in Airtable's own interface.</Row><Row label="Setup effort"><Pill label="Low–Medium" color="blue"/> ~4–6 hours.</Row><Row label="Limitations">Free tier limits apply. Third-party US-hosted service — data sovereignty considerations.</Row></Panel>
+  <Panel id="b3" title="SharePoint List (Microsoft 365)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff"><Row label="What it is">SharePoint List in CSU's Microsoft 365 tenancy as the database, read/written via Microsoft Graph API.</Row><Row label="Setup effort"><Pill label="Medium" color="amber"/> 1–2 days, DIT involvement required.</Row><Row label="Why recommended">Data stays in CSU's tenancy. Integrates with Active Directory. SSO built in.</Row><Note color="green">Most institutionally appropriate option. Aligns with existing IT governance.</Note></Panel>
+  <Panel id="b4" title="Supabase or Firebase" tag="MOST SCALABLE" tagBg="#222944" tagCol="#fff"><Row label="What it is">Full hosted relational database with real-time sync and role-based access.</Row><Row label="Setup effort"><Pill label="High" color="red"/> 3–5 days developer time. Ongoing maintenance required.</Row><Row label="Best for">If this becomes a sustained institutional system with many concurrent users.</Row></Panel>
+  <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>2 — Hosting options</div>
+  <Panel id="h1" title="Static web host (Netlify / GitHub Pages)" tag="CURRENT APPROACH" tagBg="#5675bc" tagCol="#fff"><Row label="Authentication">None built in. URL is public.</Row><Row label="Suitable for">Prototype sharing with a small trusted group only.</Row></Panel>
+  <Panel id="h2" title="SharePoint page (embedded)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff"><Row label="What it is">Tool embedded in a SharePoint page. Staff access via existing CSU login.</Row><Row label="Authentication">Automatic — CSU SSO via Microsoft Entra ID.</Row><Note color="green">Natural institutional home. Keeps everything in Microsoft 365.</Note></Panel>
+  <Panel id="h3" title="CSU-managed web server or Azure Static Web App" tag="IT-MANAGED" tagBg="#222944" tagCol="#fff"><Row label="What it is">DIT hosts the tool on CSU infrastructure or Azure. URL becomes csu.edu.au.</Row><Row label="Suitable for">Production deployment at scale. Full institutional ownership.</Row></Panel>
+  <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>3 — Authentication &amp; access control</div>
+  <Panel id="a1" title="No authentication (current)" tag="PROTOTYPE ONLY" tagBg="#71634e" tagCol="#fff"><Row label="Risk"><Pill label="High" color="red"/> Anyone with URL can view and edit all data.</Row></Panel>
+  <Panel id="a2" title="Microsoft Entra ID (CSU SSO)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff"><Row label="What it is">Staff log in with CSU credentials. Tool verifies identity before granting access.</Row><Row label="Role model">Course Director — own courses only · DLT Contact — assigned courses · Head of School — school view · Executive Dean / AD Academic — faculty view · DLT Manager — full access</Row><Note color="green">CSU already has Entra ID in place. Lowest-friction authentication path for institutional deployment.</Note></Panel>
+  <Panel id="a3" title="Simple password protection" tag="LIGHTWEIGHT OPTION" tagBg="#5675bc" tagCol="#fff"><Row label="What it is">Shared password gates access. No individual identity verified.</Row><Row label="Suitable for">Keeping prototype off public view without full SSO. Bridge measure only.</Row></Panel>
+  <div style={{marginTop:24,background:C.charcoal,borderRadius:4,padding:"14px 16px"}}><div style={{fontSize:11,fontWeight:500,color:C.lightBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10}}>Recommended path for CSU institutional deployment</div>{[["Backend","SharePoint List via Microsoft Graph API"],["Hosting","Embedded in SharePoint page, or Azure Static Web App under csu.edu.au"],["Authentication","Microsoft Entra ID (SSO) — staff log in with existing CSU credentials"],["First step","Raise a project brief with DIT to register an Azure App and provision a SharePoint List"]].map(([label,desc],i)=>(<div key={i} style={{display:"flex",gap:10,padding:"7px 0",borderBottom:`1px solid rgba(255,255,255,0.08)`,alignItems:"flex-start"}}><span style={{fontSize:11,fontWeight:700,color:C.orange,minWidth:120,flexShrink:0,paddingTop:1,textTransform:"uppercase",letterSpacing:"0.03em"}}>{label}</span><span style={{fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.6}}>{desc}</span></div>))}</div>
+  </div>);}
 
-  const Panel=({id,title,tag,tagBg,tagCol,children})=>{
-    const open=openPanel===id;
-    return(
-      <div style={{border:`1px solid ${C.lightBrown}`,borderLeft:`3px solid ${tagBg}`,borderRadius:4,marginBottom:10,overflow:"hidden"}}>
-        <div onClick={()=>toggle(id)} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 14px",cursor:"pointer",background:open?C.pink:"#fdfcfb",gap:8}}>
-          <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
-            <span style={{fontSize:10,fontWeight:700,padding:"2px 8px",borderRadius:3,background:tagBg,color:tagCol,flexShrink:0,letterSpacing:"0.04em"}}>{tag}</span>
-            <span style={{fontSize:14,fontWeight:500,color:C.charcoal}}>{title}</span>
-          </div>
-          <span style={{fontSize:12,color:C.darkBrown,flexShrink:0}}>{open?"▲":"▼"}</span>
-        </div>
-        {open&&<div style={{padding:"16px 14px",borderTop:`1px solid ${C.lightBrown}`}}>{children}</div>}
-      </div>
-    );
-  };
-
-  const Row=({label,children})=>(
-    <div style={{display:"flex",flexWrap:"wrap",gap:8,padding:"9px 0",borderBottom:`1px solid ${C.pink}`,fontSize:13,alignItems:"flex-start"}}>
-      <span style={{color:C.darkBrown,minWidth:160,flexShrink:0,fontWeight:500,fontSize:12,paddingTop:1}}>{label}</span>
-      <span style={{color:C.charcoal,flex:1,lineHeight:1.6}}>{children}</span>
-    </div>
-  );
-
-  const Pill=({label,color})=>{
-    const styles={
-      green:{bg:"#f0fdf4",col:"#14532d",br:"#4ade80"},
-      amber:{bg:"#fffbeb",col:"#78350f",br:"#fbbf24"},
-      blue:{bg:"#eff6ff",col:"#1e3a8a",br:"#93c5fd"},
-      red:{bg:"#fff3e0",col:"#7c2d12",br:"#fb923c"},
-    };
-    const s=styles[color]||styles.blue;
-    return <span style={{fontSize:11,fontWeight:500,padding:"2px 8px",borderRadius:4,background:s.bg,color:s.col,border:`1px solid ${s.br}`,whiteSpace:"nowrap"}}>{label}</span>;
-  };
-
-  const Note=({children,color="amber"})=>{
-    const bg=color==="green"?"#f0fdf4":color==="blue"?"#eff6ff":"#fffbeb";
-    const border=color==="green"?"#4ade80":color==="blue"?"#93c5fd":"#fbbf24";
-    const col=color==="green"?"#14532d":color==="blue"?"#1e3a8a":"#78350f";
-    return <div style={{background:bg,border:`1px solid ${border}`,borderRadius:4,padding:"10px 12px",fontSize:12,color:col,lineHeight:1.65,marginTop:10}}>{children}</div>;
-  };
-
-  return(
-    <div>
-      <SecHdr>Section H — Operationalising this tool</SecHdr>
-      <div style={{background:C.pink,borderRadius:4,padding:"12px 14px",marginBottom:18,fontSize:13,color:C.darkBrown,lineHeight:1.65}}>
-        This tab is a <strong>read-only reference</strong> for the project team. It documents what would need to be in place to move this tool from a personal prototype to a supported institutional system — covering where data lives, where the tool is hosted, and how access is controlled.
-      </div>
-
-      {/* BACKEND & DATA STORAGE */}
-      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:4}}>1 — Backend &amp; data storage</div>
-
-      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
-        <strong>Current state:</strong> All data is stored in <code style={{background:C.pink,padding:"1px 5px",borderRadius:3,fontSize:12}}>localStorage</code> in the user's browser. This means data is isolated per device, invisible to anyone else, and lost if the browser cache is cleared. For a shared institutional planning tool, data needs to live somewhere central.
-      </div>
-
-      <Panel id="b1" title="Google Sheets via Apps Script" tag="SIMPLEST" tagBg="#3c8364" tagCol="#fff">
-        <Row label="What it is">A free Google Apps Script deployed as a web app acts as a middleman. When a course is saved in the tool, it sends the data to the script, which writes a row into a Google Sheet.</Row>
-        <Row label="Setup effort"><Pill label="Low" color="green"/> No server required. Takes roughly 2–3 hours to configure end-to-end.</Row>
-        <Row label="Who sees data">Anyone with access to the Google Sheet. You control sharing permissions within Google Drive.</Row>
-        <Row label="Limitations">Not designed for complex nested data — the action tables and section C detail would need to be flattened into columns. Not ideal for concurrent multi-user editing. Data is held in Google's infrastructure, not CSU's.</Row>
-        <Row label="Best for">Early prototype validation with a small team. Quick to get running without IT involvement.</Row>
-        <Note color="amber">Google infrastructure sits outside CSU's Microsoft tenancy. Check with your IT team whether storing planning data in Google Workspace is acceptable under CSU's data governance policy.</Note>
-      </Panel>
-
-      <Panel id="b2" title="Airtable" tag="EASY API" tagBg="#5675bc" tagCol="#fff">
-        <Row label="What it is">Airtable is a cloud database with a clean REST API. Each course becomes a record. The tool posts data to Airtable on save. Data is visible and editable in Airtable's own interface as well as through the tool.</Row>
-        <Row label="Setup effort"><Pill label="Low–Medium" color="blue"/> Free tier available. API integration takes roughly 4–6 hours.</Row>
-        <Row label="Who sees data">Anyone added to the Airtable base. Granular field-level permissions available on paid plans.</Row>
-        <Row label="Limitations">Free tier has record and attachment limits. Airtable is a third-party US-hosted service — data sovereignty considerations apply. Not within CSU's Microsoft ecosystem.</Row>
-        <Row label="Best for">Prototypes where the team wants a nice visual interface for viewing and editing data alongside the tool.</Row>
-        <Note color="amber">As with Google, confirm with IT that storing course planning data in a third-party US cloud service is compliant with CSU's data classification requirements.</Note>
-      </Panel>
-
-      <Panel id="b3" title="SharePoint List (Microsoft 365)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
-        <Row label="What it is">A SharePoint List in CSU's Microsoft 365 tenancy acts as the database. The tool uses the Microsoft Graph API to read and write course records. Data stays within CSU's own Microsoft environment.</Row>
-        <Row label="Setup effort"><Pill label="Medium" color="amber"/> Requires a CSU Azure App Registration to generate API credentials. Estimated 1–2 days of technical setup, likely requiring DIT involvement.</Row>
-        <Row label="Who sees data">Controlled via SharePoint permissions — individuals, groups, or the whole tenancy. Integrates with CSU's existing Active Directory groups.</Row>
-        <Row label="Limitations">Graph API has a learning curve. Nested data structures (action tables, section C) require careful schema design in the List columns. Complex queries can be slow at scale.</Row>
-        <Row label="Best for">Any deployment beyond a small prototype. Data stays in CSU's tenancy, IT governance is straightforward, and SSO authentication is built in.</Row>
-        <Note color="green">This is the most institutionally appropriate option. It keeps data inside CSU's Microsoft 365 environment, aligns with existing IT governance, and enables SSO without additional infrastructure.</Note>
-      </Panel>
-
-      <Panel id="b4" title="Supabase or Firebase (full database)" tag="MOST SCALABLE" tagBg="#222944" tagCol="#fff">
-        <Row label="What it is">A proper hosted database (PostgreSQL via Supabase, or Firestore via Firebase). Full relational data model, real-time sync, multi-user support, and role-based access control built in.</Row>
-        <Row label="Setup effort"><Pill label="High" color="red"/> Requires a developer. Estimated 3–5 days of setup. Ongoing infrastructure management required.</Row>
-        <Row label="Who sees data">Fully configurable via row-level security policies. Can be as open or locked down as needed.</Row>
-        <Row label="Limitations">Overkill for a prototype. Requires ongoing technical maintenance. Third-party infrastructure unless self-hosted.</Row>
-        <Row label="Best for">If this tool becomes a sustained institutional system with many concurrent users and complex access control requirements.</Row>
-      </Panel>
-
-      {/* HOSTING */}
-      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>2 — Hosting options</div>
-
-      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
-        <strong>Current state:</strong> The tool is a single HTML file hosted on a personal website. This is fine for a prototype but has no access control, no institutional branding governance, and no IT support pathway.
-      </div>
-
-      <Panel id="h1" title="Static web host (Netlify / GitHub Pages)" tag="CURRENT APPROACH" tagBg="#5675bc" tagCol="#fff">
-        <Row label="What it is">The HTML file is deployed to a free static hosting service. Anyone with the URL can access it.</Row>
-        <Row label="Effort">Near zero. Drag-and-drop deployment in minutes.</Row>
-        <Row label="Authentication">None built in. URL is public unless the hosting provider's password protection is enabled (paid feature on Netlify).</Row>
-        <Row label="Suitable for">Prototype sharing with a small trusted group via a private URL. Not suitable for broader staff rollout.</Row>
-        <Note color="amber">No authentication means anyone who finds the URL can view and edit data. Fine for a prototype — not appropriate for institutional deployment.</Note>
-      </Panel>
-
-      <Panel id="h2" title="SharePoint page (embedded)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
-        <Row label="What it is">The tool is embedded into a SharePoint page as a web part or iframe, living within CSU's intranet. Staff access it through SharePoint with their existing CSU login.</Row>
-        <Row label="Effort"><Pill label="Medium" color="amber"/> Requires converting the React app to work within SharePoint's environment, or using SharePoint Framework (SPFx). DIT involvement likely needed.</Row>
-        <Row label="Authentication">Automatic — CSU SSO via Microsoft Entra ID. No separate login required for staff.</Row>
-        <Row label="Suitable for">Institutional deployment. Data stays in Microsoft 365, access is controlled by SharePoint permissions, and the tool sits alongside other DLT resources.</Row>
-        <Note color="green">Embedding in SharePoint is the natural institutional home for this tool. It removes the need for separate authentication infrastructure and keeps everything within CSU's existing Microsoft ecosystem.</Note>
-      </Panel>
-
-      <Panel id="h3" title="CSU-managed web server or Azure Static Web App" tag="IT-MANAGED" tagBg="#222944" tagCol="#fff">
-        <Row label="What it is">DIT hosts the tool on CSU's own web infrastructure or deploys it as an Azure Static Web App within CSU's Azure tenancy. The URL becomes a csu.edu.au address.</Row>
-        <Row label="Effort"><Pill label="High" color="red"/> Requires a formal IT request, security review, and ongoing infrastructure management by DIT.</Row>
-        <Row label="Authentication">Can be configured with CSU SSO via Microsoft Entra ID. Role-based access can be enforced at the server level.</Row>
-        <Row label="Suitable for">Production deployment at scale. Full institutional ownership. Appropriate if the tool becomes a formally supported DLT system.</Row>
-      </Panel>
-
-      {/* AUTHENTICATION */}
-      <div style={{fontWeight:500,fontSize:12,color:C.darkBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10,marginTop:22}}>3 — Authentication &amp; access control</div>
-
-      <div style={{background:"#fdfcfb",border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"12px 14px",marginBottom:10,fontSize:13,color:C.charcoal,lineHeight:1.65}}>
-        <strong>Current state:</strong> No authentication. Anyone with the URL can view and edit all courses. For institutional use, access needs to be controlled so that Course Directors only see their own courses, DLT managers see across faculties, and Executive Deans see their portfolio.
-      </div>
-
-      <Panel id="a1" title="No authentication (current)" tag="PROTOTYPE ONLY" tagBg="#71634e" tagCol="#fff">
-        <Row label="What it is">The tool is open to anyone with the URL. All data is visible and editable by all visitors.</Row>
-        <Row label="Risk"><Pill label="High" color="red"/> Any visitor can edit or delete any course record. Not suitable beyond a small trusted group.</Row>
-        <Row label="Suitable for">Solo use or prototype demonstration only.</Row>
-      </Panel>
-
-      <Panel id="a2" title="Microsoft Entra ID (CSU SSO)" tag="RECOMMENDED FOR CSU" tagBg="#07342d" tagCol="#fff">
-        <Row label="What it is">CSU's existing single sign-on system (Microsoft Entra ID, formerly Azure AD). Staff log in with their CSU credentials. The tool verifies their identity before granting access.</Row>
-        <Row label="Setup effort"><Pill label="Medium" color="amber"/> Requires an Azure App Registration and OAuth 2.0 integration in the tool's code. DIT involvement required. Once configured, login is seamless for all CSU staff.</Row>
-        <Row label="What it enables">Know who is accessing the tool. Restrict access to CSU staff only. Build role-based access rules (e.g. Course Director can only edit their own courses; DLT manager can see all).</Row>
-        <Row label="Role model suggestion">
-          <div style={{marginTop:4}}>
-            {[["Course Director","Can edit their own courses only"],["DLT Contact","Can view and comment on assigned courses"],["Head of School","Can view all courses in their school"],["Executive Dean / AD Academic","Can view all courses in their faculty"],["DLT Manager / Admin","Full read/write access across all courses"]].map(([role,desc],i)=>(
-              <div key={i} style={{display:"flex",gap:8,padding:"5px 0",borderBottom:`1px solid ${C.pink}`,alignItems:"flex-start"}}>
-                <span style={{fontSize:12,fontWeight:500,color:C.charcoal,minWidth:180,flexShrink:0}}>{role}</span>
-                <span style={{fontSize:12,color:C.darkBrown}}>{desc}</span>
-              </div>
-            ))}
-          </div>
-        </Row>
-        <Note color="green">CSU already has Microsoft Entra ID infrastructure in place. This is the lowest-friction authentication path for an institutional deployment — staff don't need new accounts or passwords.</Note>
-      </Panel>
-
-      <Panel id="a3" title="Simple password protection" tag="LIGHTWEIGHT OPTION" tagBg="#5675bc" tagCol="#fff">
-        <Row label="What it is">A shared password gates access to the tool. No individual identity is verified — anyone with the password can access everything.</Row>
-        <Row label="Setup effort"><Pill label="Very low" color="green"/> Can be implemented in the HTML file itself or via Netlify's password protection feature (paid).</Row>
-        <Row label="Limitations">Shared passwords get shared. No audit trail. No role-based access. Not scalable beyond a very small team.</Row>
-        <Row label="Suitable for">Keeping a prototype off public view without full SSO setup. Bridge measure only.</Row>
-      </Panel>
-
-      {/* SUMMARY */}
-      <div style={{marginTop:24,background:C.charcoal,borderRadius:4,padding:"14px 16px"}}>
-        <div style={{fontSize:11,fontWeight:500,color:C.lightBrown,textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:10}}>Recommended path for CSU institutional deployment</div>
-        {[
-          ["Backend","SharePoint List via Microsoft Graph API — data stays in CSU's Microsoft 365 tenancy"],
-          ["Hosting","Embedded in a SharePoint page, or Azure Static Web App under csu.edu.au"],
-          ["Authentication","Microsoft Entra ID (SSO) — staff log in with existing CSU credentials"],
-          ["First step","Raise a project brief with DIT to register an Azure App and provision a SharePoint List — this unlocks all three of the above"],
-        ].map(([label,desc],i)=>(
-          <div key={i} style={{display:"flex",gap:10,padding:"7px 0",borderBottom:`1px solid rgba(255,255,255,0.08)`,alignItems:"flex-start"}}>
-            <span style={{fontSize:11,fontWeight:700,color:C.orange,minWidth:120,flexShrink:0,paddingTop:1,textTransform:"uppercase",letterSpacing:"0.03em"}}>{label}</span>
-            <span style={{fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.6}}>{desc}</span>
-          </div>
-        ))}
-      </div>
-
-    </div>
-  );
-}
-
-// ─── OPERATIONALISE MODAL ────────────────────────────────────
-function OpModal({onClose}){
-  return(
-    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:100,display:"flex",alignItems:"flex-start",justifyContent:"center",padding:"1rem",overflowY:"auto"}}>
-      <div style={{background:C.white,borderRadius:8,width:"100%",maxWidth:720,marginTop:8,marginBottom:8}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px",borderBottom:`1px solid ${C.lightBrown}`,position:"sticky",top:0,background:C.white,zIndex:1,borderRadius:"8px 8px 0 0"}}>
-          <div><div style={{fontWeight:500,fontSize:16,color:C.charcoal}}>Operationalising this tool</div><div style={{fontSize:12,color:C.darkBrown,marginTop:2}}>Backend, hosting &amp; access control — reference for the project team</div></div>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:22,color:C.darkBrown,padding:"0 4px",lineHeight:1,cursor:"pointer"}}>×</button>
-        </div>
-        <div style={{padding:"20px"}}><SecH/></div>
-      </div>
-    </div>
-  );
-}
+function OpModal({onClose}){return(<div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.55)",zIndex:100,display:"flex",alignItems:"flex-start",justifyContent:"center",padding:"1rem",overflowY:"auto"}}><div style={{background:C.white,borderRadius:8,width:"100%",maxWidth:720,marginTop:8,marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"16px 20px",borderBottom:`1px solid ${C.lightBrown}`,position:"sticky",top:0,background:C.white,zIndex:1,borderRadius:"8px 8px 0 0"}}><div><div style={{fontWeight:500,fontSize:16,color:C.charcoal}}>Operationalising this tool</div><div style={{fontSize:12,color:C.darkBrown,marginTop:2}}>Backend, hosting &amp; access control</div></div><button onClick={onClose} style={{background:"none",border:"none",fontSize:22,color:C.darkBrown,padding:"0 4px",lineHeight:1,cursor:"pointer"}}>×</button></div><div style={{padding:"20px"}}><SecH/></div></div></div>);}
 
 // ─── FORM VIEW ────────────────────────────────────────────────
 const TABS=["A — Course details","B — Governance","C — Model gap","D — Marketing","E — Staff","F — Risks","G — Final"];
@@ -620,8 +631,7 @@ function FormView({course,upd,updGov,updC,activeTab,setActiveTab,onSave,onCancel
   <div style={{background:C.orange,padding:"8px 1rem"}}><div style={{maxWidth:900,margin:"0 auto"}}><p style={{color:"rgba(255,255,255,0.9)",fontSize:12}}>{course.courseName||"New course"} — Course Transition Plan</p></div></div>
   <div style={{maxWidth:900,margin:"0 auto",padding:"1rem"}}><div style={{overflowX:"auto",marginBottom:16,borderBottom:`2px solid ${C.orange}`}}><div style={{display:"flex",gap:0,whiteSpace:"nowrap"}}>{TABS.map((t,i)=>(<button key={i} onClick={()=>setActiveTab(i)} style={{background:activeTab===i?C.orange:"transparent",border:"none",borderRadius:"4px 4px 0 0",padding:"10px 12px",fontSize:12,cursor:"pointer",color:activeTab===i?C.white:C.darkBrown,fontWeight:activeTab===i?500:400,minHeight:40}}>{t}</button>))}</div></div>
   <div style={{background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,padding:"1rem"}}>{activeTab===0&&<SecA c={course} u={upd}/>}{activeTab===1&&<SecB c={course} u={upd} ug={updGov}/>}{activeTab===2&&<SecC c={course} uc={updC}/>}{activeTab===3&&<SecD c={course} u={upd}/>}{activeTab===4&&<SecE c={course} u={upd}/>}{activeTab===5&&<SecF c={course} u={upd}/>}{activeTab===6&&<SecG c={course} u={upd}/>}</div>
-  <div style={{display:"flex",justifyContent:"space-between",gap:8,marginTop:16,flexWrap:"wrap"}}><button onClick={onDelete} style={{padding:"10px 16px",background:"transparent",border:"1px solid #ef4444",borderRadius:4,fontSize:13,color:"#ef4444",minHeight:44}} className="hide-mobile">Delete course</button><div style={{display:"flex",gap:8,marginLeft:"auto"}}><button onClick={onCancel} style={{padding:"10px 18px",background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,fontSize:13,color:C.charcoal,minHeight:44}}>Cancel</button><button onClick={onSave} style={{padding:"10px 20px",background:C.orange,border:"none",borderRadius:4,fontSize:13,fontWeight:500,color:C.white,minHeight:44}}>Save course</button></div></div></div></div>);
-}
+  <div style={{display:"flex",justifyContent:"space-between",gap:8,marginTop:16,flexWrap:"wrap"}}><button onClick={onDelete} style={{padding:"10px 16px",background:"transparent",border:"1px solid #ef4444",borderRadius:4,fontSize:13,color:"#ef4444",minHeight:44}} className="hide-mobile">Delete course</button><div style={{display:"flex",gap:8,marginLeft:"auto"}}><button onClick={onCancel} style={{padding:"10px 18px",background:C.white,border:`1px solid ${C.lightBrown}`,borderRadius:4,fontSize:13,color:C.charcoal,minHeight:44}}>Cancel</button><button onClick={onSave} style={{padding:"10px 20px",background:C.orange,border:"none",borderRadius:4,fontSize:13,fontWeight:500,color:C.white,minHeight:44}}>Save course</button></div></div></div></div>);}
 
 // ─── COURSE CARD (mobile) ─────────────────────────────────────
 function CourseCard({c,onEdit,onScope}){
