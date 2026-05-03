@@ -400,28 +400,31 @@ function gradCapIcon(x,y){return '<g transform="translate('+x+','+y+')"><polygon
 function checkmarkIcon(x,y){return '<g transform="translate('+x+','+y+') scale(1.1)"><circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8"/><polyline points="6,12 10,16 18,8" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></g>';}
 function buildDiagramSVG(option){var TRGH=2*(TH_T+10)-10,Y1=38,BAR1=Y1+TRGH+36,ARR1=Y1+TRGH+12,Y2=BAR1+52+44,BAR2=Y2+TRGH+36,ARR2=Y2+TRGH+12,Y3=BAR2+52+44,GRAD=Y3+TRGH+52,TOTAL=GRAD+56+24,CX=GL+GW/2,isA=option==="A",isC=option==="C",BW=isA?GW:GW*0.62,BX=isA?GL:GL+(GW-BW)/2,CBARLABEL_COLOR="#5a3000",yl='font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#222"';
 if(isC){var s='<svg width="100%" viewBox="0 0 680 '+TOTAL+'" xmlns="http://www.w3.org/2000/svg" style="display:block">';
+var confX=GL+3*(TW+TGAP);
 s+='<text x="'+GL+'" y="'+(Y1-8)+'" '+yl+'>Year 1 subjects</text>';
-var y1g=subjectGrid(Y1,SUB_TAN,[1,3,4,6],false);
-y1g=y1g.replace(/<rect x="'+(GL+3*(TW+TGAP))+'"[^/]*/>/,'');
-s+=y1g;
-var cx1=GL+3*(TW+TGAP)+TW/2,cy1=Y1+TH_T/2;
-s+='<rect x="'+(GL+3*(TW+TGAP))+'" y="'+Y1+'" width="'+TW+'" height="'+TH_T+'" rx="5" fill="#c07a00" stroke="none"/>';
-s+=checkmarkIcon(GL+3*(TW+TGAP)+6,Y1+8);
-s+='<text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y1+20)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Confirmation</text><text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y1+33)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">subject</text><text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y1+44)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">Foundational CLOs</text>';
+s+=subjectGrid(Y1,SUB_TAN,[1,3,4,6],false);
+s+='<rect x="'+confX+'" y="'+Y1+'" width="'+TW+'" height="'+TH_T+'" rx="5" fill="#c07a00" stroke="none"/>';
+s+=checkmarkIcon(confX+6,Y1+8);
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y1+20)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Confirmation</text>';
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y1+33)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">subject</text>';
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y1+44)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">Foundational CLOs</text>';
 s+=hollowArrow(CX,ARR1);
 s+='<rect x="'+BX+'" y="'+BAR1+'" width="'+BW+'" height="50" rx="6" fill="rgba(192,122,0,0.15)" stroke="#c07a00" stroke-width="1.5"/>';
 s+=checkmarkIcon(BX+14,BAR1+12);
-s+='<text x="'+(BX+52)+'" y="'+(BAR1+20)+'" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#5a3000">Foundational CLOs confirmed</text><text x="'+(BX+52)+'" y="'+(BAR1+37)+'" font-family="Arial,sans-serif" font-size="11" fill="#7a5010">Decisive points within confirmation subjects</text>';
+s+='<text x="'+(BX+52)+'" y="'+(BAR1+20)+'" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#5a3000">Foundational CLOs confirmed</text>';
+s+='<text x="'+(BX+52)+'" y="'+(BAR1+37)+'" font-family="Arial,sans-serif" font-size="11" fill="#7a5010">Decisive points within confirmation subjects</text>';
 s+='<text x="'+GL+'" y="'+(Y2-8)+'" '+yl+'>Year 2 subjects</text>';
-var y2g=subjectGrid(Y2,SUB_BROWN,[0,2,5,7],false);
-s+=y2g;
-s+='<rect x="'+(GL+3*(TW+TGAP))+'" y="'+Y2+'" width="'+TW+'" height="'+TH_T+'" rx="5" fill="#c07a00" stroke="none"/>';
-s+=checkmarkIcon(GL+3*(TW+TGAP)+6,Y2+8);
-s+='<text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y2+20)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Confirmation</text><text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y2+33)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">subject</text><text x="'+(GL+3*(TW+TGAP)+TW/2)+'" y="'+(Y2+44)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">Developing CLOs</text>';
+s+=subjectGrid(Y2,SUB_BROWN,[0,2,5,7],false);
+s+='<rect x="'+confX+'" y="'+Y2+'" width="'+TW+'" height="'+TH_T+'" rx="5" fill="#c07a00" stroke="none"/>';
+s+=checkmarkIcon(confX+6,Y2+8);
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y2+20)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#fff">Confirmation</text>';
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y2+33)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="9" fill="rgba(255,255,255,0.85)">subject</text>';
+s+='<text x="'+(confX+TW/2)+'" y="'+(Y2+44)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="rgba(255,255,255,0.7)">Developing CLOs</text>';
 s+=hollowArrow(CX,ARR2);
 s+='<rect x="'+BX+'" y="'+BAR2+'" width="'+BW+'" height="50" rx="6" fill="rgba(192,122,0,0.15)" stroke="#c07a00" stroke-width="1.5"/>';
 s+=checkmarkIcon(BX+14,BAR2+12);
-s+='<text x="'+(BX+52)+'" y="'+(BAR2+20)+'" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#5a3000">Developing CLOs confirmed</text><text x="'+(BX+52)+'" y="'+(BAR2+37)+'" font-family="Arial,sans-serif" font-size="11" fill="#7a5010">Decisive points within confirmation subjects</text>';
+s+='<text x="'+(BX+52)+'" y="'+(BAR2+20)+'" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#5a3000">Developing CLOs confirmed</text>';
+s+='<text x="'+(BX+52)+'" y="'+(BAR2+37)+'" font-family="Arial,sans-serif" font-size="11" fill="#7a5010">Decisive points within confirmation subjects</text>';
 s+='<text x="'+GL+'" y="'+(Y3-8)+'" '+yl+'>Year 3 subjects</text>'+subjectGrid(Y3,SUB_NAVY,[1,3,4,6],true)+hollowArrow(CX,Y3+TRGH+12)+'<rect x="'+(CX-120)+'" y="'+GRAD+'" width="240" height="50" rx="6" fill="#f0572a" stroke="none"/>'+gradCapIcon(CX-108,GRAD+9)+'<text x="'+(CX+6)+'" y="'+(GRAD+30)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">Graduation</text></svg>';
 return s;}
 var s='<svg width="100%" viewBox="0 0 680 '+TOTAL+'" xmlns="http://www.w3.org/2000/svg" style="display:block">';s+='<text x="'+GL+'" y="'+(Y1-8)+'" '+yl+'>Year 1 subjects</text>'+subjectGrid(Y1,SUB_TAN,[1,3,4,6],false)+hollowArrow(CX,ARR1)+'<rect x="'+BX+'" y="'+BAR1+'" width="'+BW+'" height="50" rx="6" fill="#f0572a" stroke="none"/>'+(isA?barChartIcon(BX+14,BAR1+12):peopleIcon(BX+12,BAR1+10))+'<text x="'+(BX+52)+'" y="'+(BAR1+20)+'" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">'+(isA?"Zero-point 1":"Stage 1 review:")+'</text><text x="'+(BX+52)+'" y="'+(BAR1+38)+'" font-family="Arial,sans-serif" font-size="11" fill="#fde8e2">'+(isA?"Developmental CLO Confirmation":"Longitudinal Evidence")+'</text>';s+='<text x="'+GL+'" y="'+(Y2-8)+'" '+yl+'>Year 2 subjects</text>'+subjectGrid(Y2,SUB_BROWN,[0,2,5,7],false)+hollowArrow(CX,ARR2)+'<rect x="'+BX+'" y="'+BAR2+'" width="'+BW+'" height="50" rx="6" fill="#f0572a" stroke="none"/>'+(isA?barChartIcon(BX+14,BAR2+12):peopleIcon(BX+12,BAR2+10))+'<text x="'+(BX+52)+'" y="'+(BAR2+20)+'" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">'+(isA?"Zero-point 2":"Stage 2 review:")+'</text><text x="'+(BX+52)+'" y="'+(BAR2+38)+'" font-family="Arial,sans-serif" font-size="11" fill="#fde8e2">'+(isA?"Developmental CLO Confirmation":"Longitudinal Evidence")+'</text>';s+='<text x="'+GL+'" y="'+(Y3-8)+'" '+yl+'>Year 3 subjects</text>'+subjectGrid(Y3,SUB_NAVY,[1,3,4,6],true)+hollowArrow(CX,Y3+TRGH+12)+'<rect x="'+(CX-120)+'" y="'+GRAD+'" width="240" height="50" rx="6" fill="#f0572a" stroke="none"/>'+gradCapIcon(CX-108,GRAD+9)+'<text x="'+(CX+6)+'" y="'+(GRAD+30)+'" text-anchor="middle" font-family="Arial,sans-serif" font-size="16" font-weight="700" fill="#fff">Graduation</text></svg>';return s;}
