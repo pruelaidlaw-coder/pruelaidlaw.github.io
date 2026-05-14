@@ -222,10 +222,11 @@ h1{font-size:26px;font-weight:500;color:#2e2e2e;line-height:1.2}
   <div id="section-implementation" class="section"></div>
   <div id="section-faq" class="section"></div>
   <div id="section-glossary" class="section"></div>
+  <div id="section-dashboard" class="section"></div>
 </div>
 <script>
-var SECTIONS = ["The case for change","The model","Core elements","Delivery modes","Implementation","FAQs &amp; contact","Glossary"];
-var SECTION_IDS = ["case","model","elements","delivery","implementation","faq","glossary"];
+var SECTIONS = ["The case for change","The model","Core elements","Delivery modes","Implementation","FAQs &amp; contact","Glossary","Student dashboard"];
+var SECTION_IDS = ["case","model","elements","delivery","implementation","faq","glossary","dashboard"];
 var NEXT_TEXT = [
   "Next: what Embedded Curriculum-Based Confirmation is and why it works.",
   "Next: the three core elements of the model.",
@@ -233,6 +234,7 @@ var NEXT_TEXT = [
   "Next: the implementation pilot and policy requirements.",
   "Next: answers to questions leaders and course teams commonly ask.",
   "Next: a searchable glossary of key terms.",
+  "Next: a prototype student-facing capability dashboard.",
   ""
 ];
 
@@ -543,6 +545,216 @@ function toggleGloss(i) {
   renderGlossary(search);
 }
 
+// ---- SECTION 8: STUDENT DASHBOARD ----
+function renderDashboard() {
+  document.getElementById("section-dashboard").innerHTML = `
+<div style="background:#7a6455;border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.25rem">
+  <div style="font-size:13px;font-weight:500;color:#ffd4c2;letter-spacing:0.05em;margin-bottom:5px">PROTOTYPE &mdash; STUDENT CAPABILITY DASHBOARD</div>
+  <p style="font-size:16px;color:rgba(255,255,255,0.92);line-height:1.7;margin:0">This prototype illustrates what a student-facing dashboard could look like under Embedded Curriculum-Based Confirmation. Each CLO is tracked across the four developmental stages &mdash; students can see what has been confirmed, what is in progress, and what lies ahead. Hover each stage segment for detail.</p>
+</div>
+
+<div id="dash-root" style="font-family:Arial,sans-serif;color:#2e2e2e">
+
+<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap">
+  <div>
+    <div style="font-size:13px;color:#888;margin-bottom:2px">Bachelor of Nursing (BN) &mdash; Student view</div>
+    <div style="font-size:20px;font-weight:500;color:#2e2e2e">My capability progress</div>
+  </div>
+  <div style="font-size:12px;padding:5px 13px;border-radius:4px;background:#1e2d45;color:#fff;font-weight:500;border:1px solid #1e2d45;white-space:nowrap;align-self:flex-start">&#9655; You are in Stage 2 &mdash; Developing</div>
+</div>
+
+<div style="background:#fde8e2;border-radius:6px;padding:10px 14px;font-size:14px;color:#8a2e10;margin-bottom:1.25rem;border:1px solid rgba(240,87,42,0.2);display:flex;align-items:flex-start;gap:8px">
+  <span style="font-size:16px;flex-shrink:0;color:#f0572a">&#9432;</span>
+  <span>NRS302 &mdash; Clinical Practice 2 is your next confirmation subject. Two decisive assessments are due this session and will confirm CLO 3 and CLO 4 at Stage 2.</span>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:1.25rem;border-radius:6px;overflow:hidden;border:1px solid rgba(34,34,34,0.1)">
+  <div style="padding:0.875rem 0.75rem;text-align:center;background:#fff;border-right:1px solid rgba(34,34,34,0.08)">
+    <div style="font-size:20px;font-weight:700;color:#1e2d45">2 of 6</div>
+    <div style="font-size:12px;color:#666;margin-top:3px;line-height:1.4">CLOs confirmed<br>(this stage)</div>
+  </div>
+  <div style="padding:0.875rem 0.75rem;text-align:center;background:#fff;border-right:1px solid rgba(34,34,34,0.08)">
+    <div style="font-size:20px;font-weight:700;color:#f0572a">3</div>
+    <div style="font-size:12px;color:#666;margin-top:3px;line-height:1.4">CLOs in<br>progress</div>
+  </div>
+  <div style="padding:0.875rem 0.75rem;text-align:center;background:#fff;border-right:1px solid rgba(34,34,34,0.08)">
+    <div style="font-size:20px;font-weight:700;color:#7a6455">7 of 24</div>
+    <div style="font-size:12px;color:#666;margin-top:3px;line-height:1.4">Subjects<br>completed</div>
+  </div>
+  <div style="padding:0.875rem 0.75rem;text-align:center;background:#fff">
+    <div style="font-size:20px;font-weight:700;color:#2e2e2e">29%</div>
+    <div style="font-size:12px;color:#666;margin-top:3px;line-height:1.4">Course<br>completion</div>
+  </div>
+</div>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1rem;padding:10px 14px;background:#f7f4f0;border-radius:6px;border:1px solid rgba(34,34,34,0.08)">
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555"><div style="width:13px;height:13px;border-radius:2px;background:#1e2d45;flex-shrink:0"></div>Confirmed at this stage</div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555"><div style="width:13px;height:13px;border-radius:2px;background:repeating-linear-gradient(45deg,#f0572a,#f0572a 3px,#fde8e2 3px,#fde8e2 6px);flex-shrink:0"></div>Evidence building &mdash; decisive assessment due</div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555"><div style="width:13px;height:13px;border-radius:2px;background:#f0572a;flex-shrink:0"></div>In progress</div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555"><div style="width:13px;height:13px;border-radius:2px;background:#7a6455;flex-shrink:0"></div>Introduced</div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#555"><div style="width:13px;height:13px;border-radius:2px;background:#e8e4de;border:1px solid #ccc;flex-shrink:0"></div>Not yet reached</div>
+  <span style="font-size:11px;color:#aaa;margin-left:auto">Hover each stage for detail</span>
+</div>
+
+<div style="font-size:15px;font-weight:500;color:#2e2e2e;margin-bottom:10px">Course learning outcomes &mdash; stage by stage</div>
+
+<style>
+.dsh-clo{background:#fff;border:1.5px solid rgba(34,34,34,0.1);border-radius:8px;padding:14px 16px;margin-bottom:8px}
+.dsh-clo.active-stage{border-left:3px solid #f0572a;border-radius:0 8px 8px 0}
+.dsh-clo-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
+.dsh-clo-title{font-size:14px;font-weight:500;color:#2e2e2e;flex:1;line-height:1.5}
+.dsh-stage-labels{display:flex;gap:2px;margin-bottom:3px}
+.dsh-stage-lbl{flex:1;font-size:10px;color:#888;text-align:center;line-height:1.3}
+.dsh-bar{display:flex;height:20px;gap:3px}
+.dsh-seg{flex:1;border-radius:3px;position:relative;cursor:default;display:flex;align-items:center;justify-content:center}
+.dsh-seg-confirmed{background:#1e2d45}
+.dsh-seg-partial{background:repeating-linear-gradient(45deg,#f0572a,#f0572a 3px,#fde8e2 3px,#fde8e2 6px)}
+.dsh-seg-developing{background:#f0572a}
+.dsh-seg-introduced{background:#7a6455}
+.dsh-seg-future{background:#e8e4de;border:1px solid #ccc}
+.dsh-seg-tick{font-size:9px;color:#fff;font-weight:600;pointer-events:none}
+.dsh-seg-tick-dark{font-size:9px;color:#888;pointer-events:none}
+.dsh-pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.dsh-pill{font-size:11px;padding:3px 9px;border-radius:20px}
+.dsh-pill-confirmed{background:#e8ecf0;color:#1e2d45;border:1px solid rgba(30,45,69,0.2)}
+.dsh-pill-developing{background:#fde8e2;color:#8a2e10;border:1px solid rgba(240,87,42,0.2)}
+.dsh-pill-intro{background:#ede9e6;color:#4a3b32;border:1px solid rgba(122,100,85,0.2)}
+.dsh-pill-future{background:#f7f4f0;color:#888;border:1px solid rgba(34,34,34,0.1)}
+.dsh-badge{font-size:11px;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.dsh-badge-awaiting{background:#fde8e2;color:#8a2e10;border:1px solid rgba(240,87,42,0.2)}
+.dsh-badge-capstone{background:#f7f4f0;color:#888;border:1px solid rgba(34,34,34,0.1)}
+.dsh-tooltip-wrap{flex:1;position:relative}
+.dsh-tooltip-wrap:hover .dsh-tt{opacity:1}
+.dsh-tt{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1e2d45;border-radius:6px;padding:7px 11px;font-size:11px;color:#fff;white-space:nowrap;opacity:0;pointer-events:none;z-index:20;line-height:1.6}
+.dsh-tt strong{font-weight:500;color:#ffd4c2}
+</style>
+
+<!-- CLO 1 -->
+<div class="dsh-clo">
+  <div class="dsh-clo-head"><div class="dsh-clo-title">CLO 1 &mdash; Apply evidence-based nursing practice to assess, plan, and evaluate patient care</div></div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-confirmed"><span class="dsh-seg-tick">&#10003;</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Confirmed</strong><br>Confirmed in NRS105<br>4 assessments contributed</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-developing"><span class="dsh-seg-tick" style="font-size:10px">~</span></div><div class="dsh-tt"><strong>Stage 2 &mdash; In progress</strong><br>Evidence building in NRS201<br>Confirmation: NRS302 this session</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Not yet reached</strong></div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Not yet reached</strong></div></div>
+  </div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-confirmed">&#10003; Stage 1 confirmed &mdash; NRS105</span>
+    <span class="dsh-pill dsh-pill-developing">Stage 2 in progress &mdash; NRS302</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 ahead</span>
+  </div>
+</div>
+
+<!-- CLO 2 -->
+<div class="dsh-clo">
+  <div class="dsh-clo-head"><div class="dsh-clo-title">CLO 2 &mdash; Communicate professionally and therapeutically with patients, families and the healthcare team</div></div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-confirmed"><span class="dsh-seg-tick">&#10003;</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Confirmed</strong><br>Confirmed in NRS105<br>3 assessments contributed</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-developing"><span class="dsh-seg-tick" style="font-size:10px">~</span></div><div class="dsh-tt"><strong>Stage 2 &mdash; In progress</strong><br>NRS202 &middot; NRS205<br>Confirmation: NRS302 this session</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Not yet reached</strong></div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Not yet reached</strong></div></div>
+  </div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-confirmed">&#10003; Stage 1 confirmed &mdash; NRS105</span>
+    <span class="dsh-pill dsh-pill-developing">Stage 2 in progress &mdash; NRS302</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 ahead</span>
+  </div>
+</div>
+
+<!-- CLO 3 -->
+<div class="dsh-clo active-stage">
+  <div class="dsh-clo-head">
+    <div class="dsh-clo-title">CLO 3 &mdash; Exercise clinical reasoning and judgement in complex and unpredictable healthcare contexts</div>
+    <span class="dsh-badge dsh-badge-awaiting">&#9733; Decisive assessment due</span>
+  </div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-confirmed"><span class="dsh-seg-tick">&#10003;</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Confirmed</strong><br>Confirmed in NRS105<br>Introductory level</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-partial"></div><div class="dsh-tt"><strong>Stage 2 &mdash; Evidence building</strong><br>2 assessments completed<br>Decisive points due: Week 12 + 14<br>Must pass to confirm this stage</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Not yet reached</strong></div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Not yet reached</strong></div></div>
+  </div>
+  <div style="font-size:12px;color:#8a2e10;margin-top:6px;background:#fde8e2;padding:6px 10px;border-radius:4px;border:1px solid rgba(240,87,42,0.2)">&#9888; Clinical competency portfolio (Week 12) and case analysis exam (Week 14) in NRS302 must both be passed independently to confirm this CLO at Stage 2.</div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-confirmed">&#10003; Stage 1 confirmed</span>
+    <span class="dsh-pill dsh-pill-developing">&#9733; Stage 2 decisive due &mdash; NRS302</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 ahead</span>
+  </div>
+</div>
+
+<!-- CLO 4 -->
+<div class="dsh-clo active-stage">
+  <div class="dsh-clo-head">
+    <div class="dsh-clo-title">CLO 4 &mdash; Demonstrate ethical, legal and professional accountability in nursing practice</div>
+    <span class="dsh-badge dsh-badge-awaiting">&#9733; Decisive assessment due</span>
+  </div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-confirmed"><span class="dsh-seg-tick">&#10003;</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Confirmed</strong><br>Confirmed in NRS105</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-partial"></div><div class="dsh-tt"><strong>Stage 2 &mdash; Evidence building</strong><br>1 assessment completed<br>Decisive point due: Week 12<br>Must pass to confirm this stage</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Not yet reached</strong></div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Not yet reached</strong></div></div>
+  </div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-confirmed">&#10003; Stage 1 confirmed</span>
+    <span class="dsh-pill dsh-pill-developing">&#9733; Stage 2 decisive due &mdash; NRS302</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 ahead</span>
+  </div>
+</div>
+
+<!-- CLO 5 -->
+<div class="dsh-clo">
+  <div class="dsh-clo-head"><div class="dsh-clo-title">CLO 5 &mdash; Collaborate within interprofessional teams to optimise patient outcomes and safety</div></div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-introduced"><span class="dsh-seg-tick" style="font-size:8px;color:#fff">intro</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Introduced</strong><br>1 assessment contributed<br>Not a confirmation CLO at this stage</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-developing"><span class="dsh-seg-tick" style="font-size:10px">~</span></div><div class="dsh-tt"><strong>Stage 2 &mdash; Developing</strong><br>NRS203 simulation completed<br>Building towards Stage 3 confirmation</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Confirmation due</strong><br>This CLO confirmed here</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Not yet reached</strong></div></div>
+  </div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-intro">Stage 1 introduced</span>
+    <span class="dsh-pill dsh-pill-developing">Stage 2 developing</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 confirmation ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 ahead</span>
+  </div>
+</div>
+
+<!-- CLO 6 -->
+<div class="dsh-clo">
+  <div class="dsh-clo-head">
+    <div class="dsh-clo-title">CLO 6 &mdash; Integrate and apply nursing knowledge, skills and values as a graduate-ready practitioner</div>
+    <span class="dsh-badge dsh-badge-capstone">Capstone CLO</span>
+  </div>
+  <div class="dsh-stage-labels"><div class="dsh-stage-lbl">Stage 1<br>Foundational</div><div class="dsh-stage-lbl">Stage 2<br>Developing</div><div class="dsh-stage-lbl">Stage 3<br>Integrated</div><div class="dsh-stage-lbl">Stage 4<br>Mastered</div></div>
+  <div class="dsh-bar">
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-introduced"><span class="dsh-seg-tick" style="font-size:8px;color:#fff">intro</span></div><div class="dsh-tt"><strong>Stage 1 &mdash; Introduced</strong><br>Foundational capability building</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-introduced"><span class="dsh-seg-tick" style="font-size:8px;color:#fff">intro</span></div><div class="dsh-tt"><strong>Stage 2 &mdash; Introduced</strong><br>Continuing to develop</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 3 &mdash; Building</strong><br>Integrating towards capstone</div></div>
+    <div class="dsh-tooltip-wrap"><div class="dsh-seg dsh-seg-future"></div><div class="dsh-tt"><strong>Stage 4 &mdash; Capstone confirmation</strong><br>NRS401 &middot; Graduate-level mastery</div></div>
+  </div>
+  <div class="dsh-pills">
+    <span class="dsh-pill dsh-pill-intro">Stage 1 introduced</span>
+    <span class="dsh-pill dsh-pill-intro">Stage 2 introduced</span>
+    <span class="dsh-pill dsh-pill-future">Stage 3 ahead</span>
+    <span class="dsh-pill dsh-pill-future">Stage 4 capstone &mdash; NRS401</span>
+  </div>
+</div>
+
+<div style="margin-top:1.25rem;background:#f7f4f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#555;border:1px solid rgba(34,34,34,0.08)">
+  <strong style="color:#2e2e2e">Note on stage confirmation:</strong> Each stage is confirmed independently. Confirming CLO 1 at Stage 1 means you met the foundational threshold for that stage &mdash; you will confirm the same CLO again at a higher standard at subsequent stages. A confirmed CLO only represents full course-level attainment when confirmed at Stage 4.
+</div>
+
+</div>
+`;
+}
+
 // ---- INIT ----
 renderNav(0);
 renderCase();
@@ -552,6 +764,7 @@ renderDelivery();
 renderImplementation();
 renderFAQ();
 renderGlossary();
+renderDashboard();
 </script>
 </body>
 </html>
